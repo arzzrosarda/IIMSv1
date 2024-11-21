@@ -26,12 +26,6 @@ namespace IIMSv1.Controllers
         [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> CheckDuplicateSupply(string Supply)
         {
-            AccountUser? user = await _userManager.GetUserAsync(User);
-
-            AccountUser? currUser = await _context.AccountCredentials
-                .Include(x => x.Employee)
-                .SingleOrDefaultAsync(x => x.Id.Equals(user.Id));
-
             Supplies? supply = await _context.Supplies
                 .SingleOrDefaultAsync(x => x.supplyName.Equals(Supply));
 
@@ -50,12 +44,6 @@ namespace IIMSv1.Controllers
         [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> CheckDuplicateUnit(string Unit)
         {
-            AccountUser? user = await _userManager.GetUserAsync(User);
-
-            AccountUser? currUser = await _context.AccountCredentials
-                .Include(x => x.Employee)
-                .SingleOrDefaultAsync(x => x.Id.Equals(user.Id));
-
             ItemUnit? unit = await _context.ItemUnits
                 .SingleOrDefaultAsync(x => x.UnitName.Equals(Unit));
 
@@ -74,12 +62,6 @@ namespace IIMSv1.Controllers
         [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> CheckDuplicateSpecType(string SpecType)
         {
-            AccountUser? user = await _userManager.GetUserAsync(User);
-
-            AccountUser? currUser = await _context.AccountCredentials
-                .Include(x => x.Employee)
-                .SingleOrDefaultAsync(x => x.Id.Equals(user.Id));
-
             ItemSpecType? type = await _context.ItemSpecType
                 .SingleOrDefaultAsync(x => x.itemSpecType.Equals(SpecType));
 

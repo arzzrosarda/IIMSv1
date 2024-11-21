@@ -3,17 +3,73 @@
     $(function () {
         $("#Departmentlink").addClass("active");
     });
+    $("#btnDeleteConfirm").on("click", function () {
+        Swal.fire({
+            title: "DELETE",
+            html: "Are you sure you want to delete this department?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1c3d77",
+            confirmButtonText: "Yes, I am sure",
+            cancelButtonText: "No, Cancel it",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#btnSubmitDeleteItem").click();
+            }
+        });
+    });
+    $("#DepartmentNameInput").on("change", function () {
+        var val = $(this).val();
+        var filteredVal = val
+            .replace("of", "")
+            .replace("the", "")
+            .replace("The", "")
+            .replace("THE", "")
+            .replace("and", "")
+            .replace("And", "")
+            .replace("AND", "");
+        var sliced = [];
+        sliced = filteredVal.split(" ");
+        var SlicedVal = "";
+        for (var i = 0; i < sliced.length; i++) {
+            SlicedVal += sliced[i].slice(0, 1);
+        }
+        $("#DisplayDepartmentName").val(SlicedVal);
+    });
+
+    $("#DepartmentName").on("change", function () {
+        var val = $(this).val();
+        var filteredVal = val
+            .replace("of", "")
+            .replace("the", "")
+            .replace("The", "")
+            .replace("THE", "")
+            .replace("and", "")
+            .replace("And", "")
+            .replace("AND", "");
+        var sliced = [];
+        sliced = filteredVal.split(" ");
+        var SlicedVal = "";
+        for (var i = 0; i < sliced.length; i++) {
+            SlicedVal += sliced[i].slice(0, 1);
+        }
+        $("#DepartmentNameDisplay").val(SlicedVal);
+    });
+    $(".btnEditDept").on("click", function () {
+        var DeptId = $(this).attr("data-deptId");
+        var DeptName = $(this).attr("data-deptName");
+        var DeptDisplay = $(this).attr("data-deptDisplay");
+        var DeptCluster = $(this).attr("data-deptCluster");
+
+        $("#deptId").val(DeptId);
+        $("#DepartmentName").val(DeptName);
+        $("#DepartmentNameDisplay").val(DeptDisplay);
+        $("#DepartmentCluster").val(DeptCluster);
+        $("#modal-edit-dept").modal("show");
+    });
     $("#deptmaintbl").DataTable({
-        /* pageLength: 8,*/
-        // columnDefs: [
-        //     { orderable: false, className: 'reorder', targets: 0 },
-        //     { orderable: false, targets: 0 }
-        // ],
-        //scrollY: '420px',
-        //scrollX: false,
-        //scroller: false,
-        //scrollCollapse: true,
-        //"ordering": false,
         paging: false,
         "bPaginate": false,
         "bLengthChange": false,

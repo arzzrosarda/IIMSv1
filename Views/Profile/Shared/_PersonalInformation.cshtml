@@ -10,86 +10,84 @@
 }
 
 <form asp-action="Edit" asp-controller="Profile" name="editUserInfoForm">
-    <div class="col-lg-12">
-        <input asp-for="Id"/>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label asp-for="lastName"></label> <span class="text-danger">*</span>
-                    <input asp-for="lastName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
-                    <span asp-validation-for="lastName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label asp-for="firstName"></label> <span class="text-danger">*</span>
-                    <input asp-for="firstName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
-                    <span asp-validation-for="firstName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label asp-for="middleName"></label>
-                    <input asp-for="middleName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
-                    <span asp-validation-for="middleName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <label asp-for="nameExt"></label>
-                <input asp-for="nameExt" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" placeholder="(e.g. Jr., Sr., III)" />
-                <span asp-validation-for="nameExt" class="text-danger"></span>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label asp-for="displayName"></label> <span class="text-danger">*</span>
-                    <input asp-for="displayName" class="form-select" />
-                    <span asp-validation-for="displayName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label asp-for="Email"></label> <span class="text-danger">*</span>
-                    <input asp-for="Email" class="form-select" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label asp-for="Designation"></label> <span class="text-danger">*</span>
-                    <input asp-for="Designation" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
-                    <span asp-validation-for="Designation" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label asp-for="departmentId"></label> <span class="text-danger">*</span>
-                    <select asp-for="departmentId" class="form-select">
-                        @foreach (var dept in departments)
-                        {
-                            <option value="@dept.Id">(@dept.Name) @dept.NormalizedName</option>
-                        }
-                    </select>
-                    <span asp-validation-for="departmentId" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="row border-top pt-4">
-                    <div class="col-lg-6">
-                        <div class="float-left">
-                            <span class="text-danger">*</span> required
-                        </div>
+    <div class="card-body">
+        <div class="col-lg-12">
+            <input asp-for="Id" />
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="lastName"></label> <span class="text-danger">*</span>
+                        <input asp-for="lastName" class="form-control text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                        <span asp-validation-for="lastName" class="text-danger"></span>
                     </div>
-                    <div class="col-lg-6 text-right">
-                        <button type="reset" class="btn btn-light">Reset</button>&nbsp;
-                        <button type="button" class="btn btn-light" id="btnSaveChangesEditInfo">
-                            <span class="text-primary">
-                                <i class="bi bi-floppy-fill"></i> &nbsp;
-                            </span>
-                            Save Changes
-                        </button>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="firstName"></label> <span class="text-danger">*</span>
+                        <input asp-for="firstName" class="form-control text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                        <span asp-validation-for="firstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="middleName"></label>
+                        <input asp-for="middleName" class="form-control text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                        <span asp-validation-for="middleName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="nameExt"></label>
+                        <input asp-for="nameExt" class="form-control text-uppercase" onclick="$(this).val($(this).val().trim())" placeholder="(e.g. Jr., Sr., III)" />
+                        <span asp-validation-for="nameExt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="displayName"></label> <span class="text-danger">*</span>
+                        <input asp-for="displayName" class="form-control" />
+                        <span asp-validation-for="displayName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mt-3">
+                    <div class="form-group">
+                        <label asp-for="Email"></label> <span class="text-danger">*</span>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 mt-3">
+                    <div class="form-group">
+                        <label asp-for="Designation"></label> <span class="text-danger">*</span>
+                        <input asp-for="Designation" class="form-control text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                        <span asp-validation-for="Designation" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 mt-3">
+                    <div class="form-group">
+                        <label asp-for="departmentId"></label> <span class="text-danger">*</span>
+                        <select asp-for="departmentId" class="form-select">
+                            @foreach (var dept in departments)
+                            {
+                                <option value="@dept.Id">(@dept.Name) @dept.NormalizedName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="departmentId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="hstack">
+            <div class="badge bg-primary-subtle text-secondary badge-border w-auto">
+                <span class="text-danger">*</span> required
+            </div>
+            <button type="reset" class="btn btn-light btn-sm ms-auto">Reset</button>&nbsp;
+            <button type="button" class="btn btn-label btn-success btn-sm waves-effect waves-light" id="btnSaveChangesEditInfo">
+                <i class="ri-lg ri-save-3-line label-icon align-middle fs-16 me-2"></i>
+                Save Changes
+            </button>
         </div>
     </div>
 </form>

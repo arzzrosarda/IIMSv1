@@ -44,33 +44,27 @@
                                     <h6 class="mb-0 ">PERSONAL INFORMATION</h6>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                @await Html.PartialAsync("~/Views/Profile/Shared/_PersonalInformation.cshtml", new _UserEditInputModels(accountUser))
-                            </div>
+                            @await Html.PartialAsync("~/Views/Profile/Shared/_PersonalInformation.cshtml", new _UserEditInputModels(accountUser))
                         </div>
                     </div>
                     <div class="tab-pane fade" id="ChangePassword" role="tabpanel">
-                        <div class="card border-top border-info">
+                        <div class="card border-top border-primary">
                             <div class="card-header">
                                 <div class="col-lg-12">
                                     <h6 class="mb-0 ">CHANGE PASSWORD</h6>
                                 </div>
                             </div>
-                            <div class="card-body">
                                 @await Html.PartialAsync("~/Views/Profile/Shared/_ChangePassword.cshtml", new _UserChangePassword())
-                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="Credentials" role="tabpanel" aria-labelledby="credentials">
-                        <div class="card border-top border-warning">
+                        <div class="card border-top border-primary">
                             <div class="card-header">
                                 <div class="col-lg-12">
                                     <h6 class="mb-0">ACCOUNT CREDENTIALS</h6>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                @await Html.PartialAsync("~/Views/Profile/Shared/_Credentials.cshtml", new _UserUpdateCredentials())
-                            </div>
+                            @await Html.PartialAsync("~/Views/Profile/Shared/_Credentials.cshtml", new _UserUpdateCredentials())
                         </div>
                     </div>
                 </div>

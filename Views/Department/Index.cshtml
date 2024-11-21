@@ -95,41 +95,62 @@
                                                     }
                                                 </td>
                                                 <td class="text-center align-content-center">
-                                                    @if (dept.IsActive == true)
-                                                    {
-                                                        <a href="javascript:;" class="btn btn-label btn-secondary btn-sm waves-effect waves-light btnEditDept"
-                                                           data-deptId="@dept.Id"
-                                                           data-deptName="@dept.NormalizedName"
-                                                           data-deptDisplay="@dept.Name"
-                                                           data-deptCluster="@dept.DepartmentClusterID">
-                                                            <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
-                                                            Edit
-                                                        </a>
-                                                        <a href="javascript:;" class="btn btn-label btn-warning btn-sm waves-effect waves-light btnDisableDept" data-deptId="@dept.Id">
-                                                            <i class="ri-lg ri-toggle-line label-icon align-middle fs-16 me-2"></i>
-                                                            Disable
-                                                        </a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a href="javascript:;" class="btn btn-label btn-secondary btn-sm waves-effect waves-light btnEditDept"
-                                                           data-deptId="@dept.Id"
-                                                           data-deptName="@dept.NormalizedName"
-                                                           data-deptDisplay="@dept.Name"
-                                                           data-deptCluster="@dept.DepartmentClusterID">
-                                                            <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
-                                                            Edit
-                                                        </a>
-                                                        <a href="javascript:;" class="btn btn-label btn-success btn-sm waves-effect waves-light btnEnableDept" data-deptId="@dept.Id">
-                                                            <i class="ri-lg ri-toggle-fill label-icon align-middle fs-16 me-2"></i>
-                                                            Enable
-                                                        </a>
-                                                        <a href="javascript:;" class="btn btn-label btn-danger btn-sm waves-effect waves-light btnDeleteDept" data-deptId="@dept.Id">
-                                                            <i class="ri-lg ri-delete-bin-6-line label-icon align-middle fs-16 me-2"></i>
-                                                            Delete
-                                                        </a>
 
-                                                    }
+                                                    <div class="dropdown dropend">
+                                                        <a href="javascript:;" class="btn btn-label btn-sm btn-secondary waves-effect waves-light" role="button" id="dropdownActionDept" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="ri-more-fill label-icon align-middle fs-16 me-2"></i>
+                                                            More
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownActionDept">
+                                                            @if (dept.IsActive == true)
+                                                            {
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnEditDept"
+                                                                   data-deptId="@dept.Id"
+                                                                   data-deptName="@dept.NormalizedName"
+                                                                   data-deptDisplay="@dept.Name"
+                                                                   data-deptCluster="@dept.DepartmentClusterID">
+                                                                    <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
+                                                                    Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnDisableDept" data-deptId="@dept.Id">
+                                                                    <i class="ri-lg ri-toggle-line label-icon align-middle fs-16 me-2"></i>
+                                                                    Disable
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnEditDept"
+                                                                   data-deptId="@dept.Id"
+                                                                   data-deptName="@dept.NormalizedName"
+                                                                   data-deptDisplay="@dept.Name"
+                                                                   data-deptCluster="@dept.DepartmentClusterID">
+                                                                    <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
+                                                                    Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnEnableDept" data-deptId="@dept.Id">
+                                                                    <i class="ri-lg ri-toggle-fill label-icon align-middle fs-16 me-2"></i>
+                                                                    Enable
+                                                                </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnDeleteDept" data-deptId="@dept.Id">
+                                                                    <i class="ri-lg ri-delete-bin-6-line label-icon align-middle fs-16 me-2"></i>
+                                                                    Delete
+                                                                </a>
+                                                                </li>
+
+                                                            }
+                                                        </ul>
+                                                    </div>
+
+                                                   
                                                 </td>
                                             </tr>
                                         }

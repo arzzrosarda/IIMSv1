@@ -53,10 +53,38 @@
         </li>
         <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Inventory</span></li>
         <li class="nav-item">
-            <a class="nav-link menu-link" href="@Url.Action("Index", "Item")" id="ManageItemsLink">
-                <i class="ri-lg ri-box-2-line"></i>
-                Manage Inventory
-            </a>
+            <a class="nav-link menu-link collapsed" href="#inventoryDropDownItems" data-bs-toggle="collapse" role="button" aria-expanded="false" id="ManageItemsLink" aria-controls="inventoryDropDownItems">
+                <i class="ri-lg ri-box-2-line"></i> <span data-key="t-advance-ui">Manage Inventory</span>
+            </a>    
+            <div class="menu-dropdown collapse" id="inventoryDropDownItems" style="">
+                <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" id="ItemsLink" href="@Url.Action("Index", "Item")">
+                           Items
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="StocksLink" href="@Url.Action("Index", "Stocks")">
+                           Stocks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="ReleaseItemLink" href="@Url.Action("Index", "ReleaseItem")">
+                            Release
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="RecordsLink" href="@Url.Action("Index", "Records")">
+                            Records
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="ReleasedLink" href="@Url.Action("Index", "Released")">
+                            Released
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
         <li class="nav-item">
             <a class="nav-link menu-link" href="@Url.Action("Index", "Categories")" id="SpecificationLink">

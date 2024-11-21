@@ -41,94 +41,93 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 gap-1 mt-3">
-                    @if (Model.roletxt != "")
-                    {
-                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
-                            Filtered by User role: <strong>"@Model.roletxt"</strong>
-                        </div>
-                    }
-                    @if (Model.dept != "")
-                    {
-                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
-                            Filtered by Department: <strong>"@Model.dept"</strong>
-                        </div>
-                    }
-                    @if (Model.dateFrom != "" && Model.dateTo != "")
-                    {
-                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
-                            Filtered Date: From <strong>"@Model.dateFrom"</strong> to  <b>"@Model.dateTo"</b>
-                        </div>
-                    }
-                    @if (Model.SearchText != "")
-                    {
-                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
-                            Showing results for <strong>"@Model.SearchText"</strong>
-                        </div>
-                    }
-                </div>
+                        @if (Model.roletxt != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filtered by User role: <strong>"@Model.roletxt"</strong>
+                            </div>
+                        }
+                        @if (Model.dept != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filtered by Department: <strong>"@Model.dept"</strong>
+                            </div>
+                        }
+                        @if (Model.dateFrom != "" && Model.dateTo != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filtered Date: From <strong>"@Model.dateFrom"</strong> to  <b>"@Model.dateTo"</b>
+                            </div>
+                        }
+                        @if (Model.SearchText != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Showing results for <strong>"@Model.SearchText"</strong>
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-nowrap" id="usertblMain" style="font-size: 12px;">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="align-content-center">NAME</th>
-                                    <th class="align-content-center">EMAIL</th>
-                                    <th class="align-content-center">DEPARTMENT</th>
-                                    <th class="text-center align-content-center">USER ROLE</th>
-                                    <th class="text-center align-content-center">STATUS</th>
-                                    <th class="text-center align-content-center">DATE</th>
-                                    <th class="text-center align-content-center">ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (appusers.Count > 0)
-                                {
-                                    @foreach (var appuser in appusers)
+                            <table class="table table-striped table-bordered table-nowrap" id="usertblMain" style="font-size: 12px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="align-content-center">NAME</th>
+                                        <th class="align-content-center">EMAIL</th>
+                                        <th class="align-content-center">DEPARTMENT</th>
+                                        <th class="text-center align-content-center">USER ROLE</th>
+                                        <th class="text-center align-content-center">STATUS</th>
+                                        <th class="text-center align-content-center">DATE</th>
+                                        <th class="text-center align-content-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (appusers.Count > 0)
                                     {
-                                        <tr>
-                                            <td class="align-content-center">@appuser.Employee.fullName_LFM</td>
-                                            <td class="align-content-center">@appuser.Email</td>
-                                            <td class="align-content-center">@appuser.Employee.department.Name</td>
-                                            <td class="align-content-center">
-                                                @{
-                                                    bool isUserAdmin = await UserManager.IsInRoleAsync(appuser, InventoryAdminRole);
-                                                }
-                                                @if (isUserAdmin)
-                                                {
-                                                    <span>Inventory Administrator</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Inventory Manager</span>
-                                                }
-                                            </td>
-                                            <td class="text-center align-content-center">
-                                                @if (appuser.IsActive)
-                                                {
+                                        @foreach (var appuser in appusers)
+                                        {
+                                            <tr>
+                                                <td class="align-content-center">@appuser.Employee.fullName_LFM</td>
+                                                <td class="align-content-center">@appuser.Email</td>
+                                                <td class="align-content-center">@appuser.Employee.department.Name</td>
+                                                <td class="align-content-center">
+                                                    @{
+                                                        bool isUserAdmin = await UserManager.IsInRoleAsync(appuser, InventoryAdminRole);
+                                                    }
+                                                    @if (isUserAdmin)
+                                                    {
+                                                        <span>Inventory Administrator</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Inventory Manager</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center align-content-center">
+                                                    @if (appuser.IsActive)
+                                                    {
                                                         <span class="badge badge-label bg-success"><i class="mdi mdi-circle-medium"></i> Enabled</span>
-                                                }
-                                                else
-                                                {
+                                                    }
+                                                    else
+                                                    {
                                                         <span class="badge badge-label bg-warning"><i class="mdi mdi-circle-medium"></i> Disabled</span>
-                                                }
-                                            </td>
-                                            <td class="text-center align-content-center">
-                                                @appuser.Employee.DateCreated.ToShortDateString()
-                                            </td>
-                                            <td class="text-center align-content-center">
-                                                <a href="@Url.Action("Details", "User", new { Id = appuser.Id })">
-                                                    <span class="text-secondary">
-                                                        View More..
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                                    }
+                                                </td>
+                                                <td class="text-center align-content-center">
+                                                    @appuser.Employee.DateCreated.ToShortDateString()
+                                                </td>
+                                                <td class="text-center align-content-center">
+                                                    <a href="@Url.Action("Details", "User", new { Id = appuser.Id })" class="btn btn-label btn-sm btn-secondary waves-effect waves-light">
+                                                        <i class="ri-more-fill label-icon align-middle fs-16 me-2"></i>
+                                                        More
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
-                                }
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,14 @@
     $(function () {
         $("#DeptClusterlink").addClass("active");
     });
+    $(".btnEditDeptCluster").on("click", function () {
+        var DeptClusterId = $(this).attr("data-deptClusterId");
+        var DeptClusterName = $(this).attr("data-deptClusterName");
+
+        $("#ClusterId").val(DeptClusterId);
+        $("#DepartmentClusterName").val(DeptClusterName);
+        $("#modal-edit-deptCluster").modal("show");
+    });
     $("#deptClustermaintbl").DataTable({
         // scrollY: '420px',
         // scrollX: false,

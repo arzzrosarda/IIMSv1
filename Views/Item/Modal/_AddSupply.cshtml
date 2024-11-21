@@ -1,0 +1,35 @@
+﻿@using IIMSv1.Models.Shared
+@using IIMSv1.Models
+@model AddSupplyModel
+
+<form>
+    <div id="modal-add-supply" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-supply" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">SUPPLY TYPE</h5>
+                    <button type="reset" class="btn-close btnCancelAdd" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label asp-for="Supply"></label> <span class="text-danger">*</span>
+                                <input class="form-control" asp-for="Supply" />
+                                <span asp-validation-for="Supply" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-light waves-effect waves-light btnCancelAdd" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-label btn-secondary waves-effect waves-light btn-Add-Supply">
+                        <i class="ri-lg ri-save-3-line label-icon align-middle fs-16 me-2"></i>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

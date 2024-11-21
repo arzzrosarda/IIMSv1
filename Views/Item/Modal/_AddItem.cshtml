@@ -8,8 +8,8 @@
     var returnURl = Path + QueryStrings;
 }
 <form asp-action="_AddItem" asp-controller="Item" name="addItemForm">
-    <div id="modal-add-item" class="modal animated zoomIn" tabindex="-1" aria-labelledby="modal-add-item" data-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div id="modal-add-item" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-item" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title">NEW ITEM</h6>
@@ -21,62 +21,95 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <input asp-for="Item" class="form-select " id="ItemName" />
+                                <input asp-for="Item" class="form-control" id="ItemName" />
                             </div>
-                            <h6 class="border-bottom mb-3 mr-2 ml-2">Information</h6>
+                            <h5 class="border-bottom mb-3 mr-2 ml-2">Information</h5>
                             <input class="form-select" type="hidden" name="returnUrl" value="@returnURl" />
                             <div class="row pt-2 pb-2 pl-4 pr-4">
-                               <div class="col-lg-6">
+                               <div class="col-lg-12">
                                     @*Supply Type*@
-                                    <div class="form-group ">
+                                    <div class="form-group">
                                         <label asp-for="SupplyType"></label> <span class="text-danger">*</span>
-                                        <select asp-for="SupplyType" asp-items="@(new SelectList(Model.supplies, "Id" , "supplyName" ))" class="form-select" id="SupplyType">
-                                            <option value="">Select Supply Type</option>
-                                        </select>
+                                        <div class="hstack gap-2">
+                                            <select asp-for="SupplyType" asp-items="@(new SelectList(Model.supplies, "Id" , "supplyName" ))" class="form-select" id="SupplyType">
+                                                <option value="">Select Supply Type</option>
+                                            </select>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditSupplyType" type="button" disabled>
+                                                <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
+                                            </button>
+                                            <button class="btn btn-label btn-secondary waves-effect waves-light btnAddSupplyType" type="button">
+                                                <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i> Add
+                                            </button>
+                                        </div>
                                         <span asp-validation-for="SupplyType" class="text-danger"></span>
                                     </div>
-                                    @*Item Unit Type*@
-                                    <div class="form-group">
-                                        <label asp-for="Unit"></label> <span class="text-danger">*</span>
-                                        <select asp-for="Unit" asp-items="@(new SelectList(Model.unit, "Id", "UnitName"))" class="form-select ">
-                                            <option value="">Select Item Unit</option>
-                                        </select>
-                                        <span asp-validation-for="Unit" class="text-danger"></span>
-                                    </div>
                                </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     @*Item Type*@
-                                    <div class="form-group">
+                                    <div class="form-group mt-3">
                                         <label asp-for="ItemType"></label> <span class="text-danger">*</span>
-                                        <select asp-for="ItemType" class="form-select " id="ItemType">
-                                            <option value="">Select Item Type</option>
-                                        </select>
+                                        <div class="hstack gap-2">
+                                             <select asp-for="ItemType" class="form-select" id="ItemType">
+                                                <option value="">Select Item Type</option>
+                                            </select>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditItemType" type="button" disabled>
+                                                <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
+                                            </button>
+                                            <button class="btn btn-label btn-secondary waves-effect waves-light btnAddItemType" type="button" disabled>
+                                                <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i> Add
+                                            </button>
+                                        </div>
                                         <span asp-validation-for="ItemType" class="text-danger"></span>
                                     </div>
-                                    @*Other Item Type*@
-                                    <div class="form-group">
-                                        <label asp-for="OtherItemType"></label>
-                                        <input asp-for="OtherItemType" class="form-select " id="OtherItemType" disabled />
-                                        <span asp-validation-for="OtherItemType" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-12">
+                                    @*Item Unit Type*@
+                                    <div class="form-group mt-3">
+                                        <label asp-for="Unit"></label> <span class="text-danger">*</span>
+                                        <div class="hstack gap-2">
+                                            <select asp-for="Unit" id="unitInput" asp-items="@(new SelectList(Model.unit, "Id", "UnitName"))" class="form-select">
+                                                <option value="">Select Item Unit</option>
+                                            </select>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditUnitType" type="button" disabled>
+                                                <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
+                                            </button>
+                                            <button class="btn btn-label btn-secondary waves-effect waves-light btnAddUnitType" type="button">
+                                                <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i> Add
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="Unit" class="text-danger"></span>
                                     </div>
                                 </div>
-                           </div>
-                            <div class="form-group row">
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-lg-12">
-                                    <h6 class="border-bottom mb-4 mr-2 ml-2">Description</h6>
-                                    <div class="col-lg-12  pt-2 pb-2 pl-4 pr-4">
+                                    <div class="hstack border-bottom">
+                                        <h5 class="mb-0">Description</h5>
+                                        <button class="btn btn-label btn-secondary waves-effect btn-sm waves-light btnAddSpecsType ms-auto mb-2" type="button">
+                                            <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 pt-2 pb-2 pl-4 pr-4">
+                                    <div class="vstack gap-3">
                                         @foreach (var itemSpec in Model.itemSpecTypes)
                                         {
-
-                                            <div class="row">
-                                                <label class="col-lg-2">&nbsp;&nbsp;@itemSpec.itemSpecType </label>
-                                                <div class="custom-control custom-radio col-lg-10 text-md-center mb-3">
-                                                    <input type="checkbox" id="@itemSpec.Id" class="custom-control-input col-lg-2 checkboxValue" value="@itemSpec.itemSpecType" required>
-                                                    <label class="custom-control-label col-lg-12 w-100" for="@itemSpec.Id">
-                                                        <input class="form-select " id="Valueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
-                                                        <input class="form-select " id="IDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
-                                                        <input class="form-select  w-100" id="@itemSpec.itemSpecType" type="text" value="" disabled>
-                                                    </label>
+                                            <div class="form-group">
+                                                <div class="hstack gap-2">
+                                                    <label for="@itemSpec.itemSpecType">@itemSpec.itemSpecType</label>
+                                                    <a href="javascript:;" class="text-secondary pb-2 btnEditSpecsType">
+                                                        <i class="ri-lg ri-pencil-fill"></i> Edit
+                                                    </a>
+                                                </div>
+                                                <div class="hstack gap-2">
+                                                    <div class="input-group">
+                                                        <div class="input-group-text">
+                                                            <input type="checkbox" id="" class="form-check-input  checkboxValue" value="@itemSpec.itemSpecType" required>
+                                                        </div>
+                                                        <input class="form-control" id="Valueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
+                                                        <input class="form-control" id="IDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
+                                                        <input class="form-control" id="@itemSpec.itemSpecType" type="text" disabled autocomplete="off">
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -87,9 +120,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary w-100" type="button" id="SaveItem">Save Item</button>
+                    <div class="vstack gap-1">
+                        <button class="btn btn-secondary waves-effect waves-light w-100" type="button" id="SaveItem">Save Item</button>
+                        <button class="btn btn-light waves-effect waves-light w-100" data-bs-toggle="modal" type="reset">
+                            Cancel
+                        </button>
+                    </div>
                     <div id="SubmitAddItemBtnContainer">
-
                     </div>
                 </div>
             </div>

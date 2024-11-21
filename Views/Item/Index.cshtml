@@ -15,232 +15,175 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        @await Html.PartialAsync("~/Views/Shared/_Inventory-Nav.cshtml")
         <div class="card border-left border-right border-bottom">
             <div class="card-body">
                 <div class="row mb-0">
                     <div class="col-lg-12">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-1 pr-0">
-                                @if (Model.status == "" || Model.status == "true")
-                                {
-                                    <button class="btn btn-light btn-icon icon-left btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-add-item">
-                                        <span class="text-success">
-                                            <i class="fas fa-plus-circle" style="font-size: 12px;"></i>&nbsp;
-                                        </span>
-                                        New Item
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-light btn-icon icon-left btn-sm w-100 btnEnabledItemChecked" data-bs-toggle="modal" data-bs-target="#modal-enable-checkedItem" disabled>
-                                        <span class="text-success">
-                                            <i class="fas fa-toggle-on" style="font-size: 10px;"></i>&nbsp;
-                                        </span> 
-                                        Enable
-                                    </button>
-                                }
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-1 pr-0">
-                                @if (Model.status == "" || Model.status == "true")
-                                {
-                                    <button class="btn btn-light btn-icon icon-left btn-sm w-100 btnDisabledItemChecked " data-bs-toggle="modal" data-bs-target="#modal-disable-checkedItem" disabled>
-                                        <span class="text-warning">
-                                            <i class="fas fa-toggle-off" style="font-size: 10px;"></i>&nbsp;
-                                        </span>
-                                        Disable
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-light btn-icon icon-left btn-sm w-100 btnDeleteItemChecked " data-bs-toggle="modal" data-bs-target="#modal-delete-checkedItem" disabled>
-                                        <span class="text-danger">
-                                            <i class="fas fa-trash" style="font-size: 10px;"></i>&nbsp;
-                                        </span> 
-                                        Delete
-                                    </button>
-                                }
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 pl-4 pr-0">
-                                <div class="row">
-                                    @if (Model.dateFrom != "" && Model.dateTo != "")
-                                    {
-                                        <div class="alert alert-light mr-1 mb-0" style="padding: .35rem .8rem; font-size: 12px;">
-                                            Filter Date: From <b>"@Model.dateFrom"</b> to  <b>"@Model.dateTo"</b>
-                                        </div>
-                                    }
-                                    @if (Model.SearchText != "")
-                                    {
-                                        <div class="alert alert-light mr-1 mb-0" style="padding: .35rem .8rem; font-size: 12px;">
-                                            Showing results for <b>"@Model.SearchText"</b>
-                                        </div>
-                                    }
-                                    @if (Model.SupplyText != "")
-                                    {
-                                        <div class="alert alert-light mr-1 mb-0" style="padding: .35rem .8rem; font-size: 12px;">
-                                            Filter Supply: <b>"@Model.SupplyText"</b>
-                                        </div>
-                                    }
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                                <div class="form-icon right">
+                                    <input type="text" class="form-control form-control-icon" placeholder="Search" id="txtsearch" name="search" value="@Model.SearchText" style="height: 30px; font-size: 12px;" />
+                                    <i class="ri-lg ri-search-line"></i>
                                 </div>
                             </div>
-                                @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                            <div class="col-xs-4 col-sm-6 col-md-6 col-lg-7 col-xl-7">
+                                <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-filter">
+                                    <i class="ri-lg ri-filter-line label-icon align-middle fs-16 me-2"></i>
+                                    Filter
+                                </button>
+                                <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-add-item">
+                                    <i class="ri-lg ri-add-fill label-icon align-middle fs-16 me-2"></i>
+                                    New Item
+                                </button>
                             </div>
+                            @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                             <div class="table-responsive">
-                                 <table class="table-bordered table-striped" id="itemTbl" style="font-size: 12px;">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th scope="col" class="text-center align-content-center">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="checkbox-all">
-                                                    <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </th>
-                                            <th scope="col" class="align-content-center text-center">STATUS</th>
-                                            <th scope="col" class="align-content-center">ITEM</th>
-                                            <th scope="col" class="align-content-center text-center">SUPPLY TYPE</th>
-                                            <th scope="col" class="align-content-center text-center">DATE</th>
-                                            <th scope="col" class="text-center align-content-center ">ACTION</th>
-                                        </tr>
-                                    </thead>
-                                    <thead class="table-light">
-                                        <tr>
-                                            <form asp-action="Filter" asp-controller="Item" name="ItemsListForm">
-                                                @await Html.PartialAsync("~/Views/Item/Shared/_Filter.cshtml")
-                                            </form>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (items.Count > 0)
+                </div>
+                <div class="row mt-2">
+                    <div class="col-lg-12">
+                        @if (Model.dateFrom != "" && Model.dateTo != "")
+                        {
+                            <div class="badge bg-primary-subtle text-primary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filter Date: From <strong>"@Model.dateFrom"</strong> to  <b>"@Model.dateTo"</b>
+                            </div>
+                        }
+                        @if (Model.SearchText != "")
+                        {
+                            <div class="badge bg-primary-subtle text-primary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Showing results for <strong>"@Model.SearchText"</strong>
+                            </div>
+                        }
+                        @if (Model.SupplyText != "")
+                        {
+                            <div class="badge bg-primary-subtle text-primary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filter Supply: <strong>"@Model.SupplyText"</strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="itemTbl">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="align-content-center">ITEM</th>
+                                        <th scope="col" class="align-content-center text-center">SUPPLY TYPE</th>
+                                        <th scope="col" class="align-content-center text-center">DATE</th>
+                                        <th scope="col" class="align-content-center text-center">STATUS</th>
+                                        <th scope="col" class="text-center align-content-center ">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (items.Count > 0)
+                                    {
+                                        @foreach (var item in items)
                                         {
-                                            @foreach (var item in items)
-                                            {
-                                                <tr id="tr_@item.Id">
-                                                    <td scope="row" class="text-center" width="5%">
-                                                        @if (item.itemQuantity != null)
-                                                        {
-                                                            <div class="custom-checkbox custom-control">
-                                                                <input type="checkbox" data-checkboxes="" class="custom-control-input" id="checkbox_@item.Id" value="@item.Id" disabled>
-                                                                <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            <div class="custom-checkbox custom-control">
-                                                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input checkboxtbl" data-itemId="@item.Id" id="checkbox_@item.Id" value="@item.Id">
-                                                                <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
-                                                            </div>
-                                                        }
+                                            <tr>
 
-                                                    </td>
-                                                    <td class="text-center align-content-center" width="7%">
-                                                        @if (item.IsEnabled == true)
-                                                        {
-                                                            <span class="text-success p-2" style="font-size: 12px;">
-                                                                <i class="fas fa-circle" style="font-size: 12px;"></i> &nbsp;&nbsp;
-                                                                Enabled
-                                                            </span>
-                                                        }
-                                                        else
-                                                        {
-                                                        <span class="text-warning p-2" style="font-size: 12px;">
-                                                                <i class="fas fa-circle" style="font-size: 12px;"></i> &nbsp;&nbsp;
-                                                                Disabled
-                                                            </span>
-
-                                                        }
-                                                    </td>
-                                                    <td class="font-weight-bold align-content-center @(item.IsEnabled == false ? "text-muted" : "")" width="40%">@item.ItemName</td>
-                                                    <td class="align-content-center text-center @(item.IsEnabled == false ? "text-muted" : "")" width="16%">@item.itemType.supplies.supplyName</td>
-                                                    <td class="align-content-center text-center @(item.IsEnabled == false ? "text-muted" : "")" width="16%">@item.dateCreated.ToShortDateString()</td>
-                                                    <td class="text-center align-content-center" width="16%">
-                                                        @if (item.IsEnabled == true)
-                                                        {
-                                                            <button class="btn btn-sm btn-light btnViewItem"
-                                                                    data-itemId="@item.Id"
-                                                                    data-ItemCode="@item.ItemCode"
-                                                                    data-ItemName="@item.ItemName"
-                                                                    data-TypeId="@item.itemType.Id"
-                                                                    data-UnitId="@item.itemUnit.Id"
-                                                                    data-supplyId="@item.itemType.SuppliesId"
-                                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="View Item">
-                                                                <span class="text-primary"><i class="ri-lg ri-pencil-fill"></i></span>
-                                                            </button>
-                                                            if (item.itemQuantity != null)
+                                                <td class="font-weight-bold align-content-center" width="40%">@item.ItemName</td>
+                                                <td class="align-content-center text-center" width="16%">@item.itemType.supplies.supplyName</td>
+                                                <td class="align-content-center text-center" width="16%">@item.dateCreated.ToShortDateString()</td>
+                                                <td class="text-center align-content-center" width="12%">
+                                                    @if (item.IsEnabled == true)
+                                                    {
+                                                        <span class="badge badge-label bg-success"><i class="mdi mdi-circle-medium"></i> Enabled</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-label bg-warning"><i class="mdi mdi-circle-medium"></i> Disabled</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center align-content-center" width="16%">
+                                                    <div class="dropdown dropend">
+                                                        <a href="javascript:;" class="btn btn-label btn-sm btn-secondary waves-effect waves-light" role="button" id="dropdownActionItem" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="ri-more-fill label-icon align-middle fs-16 me-2"></i>
+                                                            More
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownActionItem">
+                                                            @if (item.IsEnabled == true)
                                                             {
-                                                                <span class="text-light">&nbsp;|&nbsp;</span>
-                                                                <button data-itemId="@item.Id" class="btn btn-sm btn-light btnDeactiveInStock"
-                                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Disable Item">
-                                                                    <span class="text-warning">
-                                                                        <i class="fas fa-toggle-off"></i>
-                                                                    </span>
-                                                                </button>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnViewItem"
+                                                                       data-itemId="@item.Id"
+                                                                       data-ItemCode="@item.ItemCode"
+                                                                       data-ItemName="@item.ItemName"
+                                                                       data-TypeId="@item.itemType.Id"
+                                                                       data-UnitId="@item.itemUnit.Id"
+                                                                       data-supplyId="@item.itemType.SuppliesId">
+                                                                        <i class="ri-lg ri-pencil-fill"></i>
+                                                                        Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    @if (item.itemQuantity != null)
+                                                                    {
+                                                                        <a href="javascript:;" data-itemId="@item.Id" class="dropdown-item waves-effect waves-light btnDeactiveInStock">
+                                                                            <i class="ri-lg ri-toggle-line"></i> Disable
+                                                                        </a>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="javascript:;" class="dropdown-item waves-effect waves-light btnDeactivate" data-itemId="@item.Id">
+                                                                            <i class="ri-lg ri-toggle-line"></i> Disable
+                                                                        </a>
+                                                                    }
+                                                                </li>
 
                                                             }
                                                             else
                                                             {
-                                                                <span class="text-light">&nbsp;|&nbsp;</span>
-                                                                <button class="btn btn-sm btn-light btnDeactivate" data-itemId="@item.Id"
-                                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Disable Item">
-                                                                    <span class="text-warning">
-                                                                        <i class="fas fa-toggle-off"></i>
-                                                                    </span>
-                                                                </button>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnActivate" data-itemId="@item.Id">
+                                                                        <i class="ri-lg ri-toggle-fill"></i> Enable
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" class="dropdown-item waves-effect waves-light btnDeleteItem" data-itemId="@item.Id">
+                                                                        <i class="ri-lg ri-delete-bin-6-line"></i> Delete
+                                                                    </a>
+                                                                </li>
+
                                                             }
+                                                        </ul>
+                                                    </div>
 
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="btn btn-sm btn-light btnActivate" data-itemId="@item.Id"
-                                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Enable Item">
-                                                                <span class="text-success">
-                                                                    <i class="fas fa-toggle-on"></i>
-                                                                </span>
-                                                            </button>
-                                                            <span class="text-light">&nbsp;|&nbsp;</span>
-                                                            <button class="btn btn-sm btn-light btnDeleteItem" data-itemId="@item.Id"
-                                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Item">
-                                                                <span class="text-danger">
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </span>
-                                                            </button>
-
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            }
+                                                </td>
+                                            </tr>
                                         }
+                                    }
 
-                                    </tbody>
-                                </table>
-                             </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            @if (items.Count() > 0)
-                            {
-                                @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
-                            }
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if (items.Count() > 0)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @section modals {
-        @await Html.PartialAsync("~/Views/Item/Modal/_ViewItem.cshtml", Model.EditItemInputModel)
-        @await Html.PartialAsync("~/Views/Item/Modal/_AddItem.cshtml", Model.ItemInputModel)
-        @await Html.PartialAsync("~/Views/Item/Modal/_ActivateItem.cshtml")
-        @await Html.PartialAsync("~/Views/Item/Modal/_DeleteItem.cshtml")
-        @await Html.PartialAsync("~/Views/Item/Modal/_DeactivateItem.cshtml")
-        @await Html.PartialAsync("~/Views/Item/Modal/_DisableItemChecked.cshtml")
-        @await Html.PartialAsync("~/Views/Item/Modal/_DeleteItemChecked.cshtml")
-        @await Html.PartialAsync("~/Views/Item/Modal/_EnableItemChecked.cshtml")
-    }
-    @section scripts {
-        @await Html.PartialAsync("~/Views/Item/Shared/_scripts.cshtml")
-    }
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/Item/Modal/_ViewItem.cshtml", Model.EditItemInputModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_AddItem.cshtml", Model.ItemInputModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_ActivateItem.cshtml")
+    @await Html.PartialAsync("~/Views/Item/Modal/_DeleteItem.cshtml")
+    @await Html.PartialAsync("~/Views/Item/Modal/_AddSpecsType.cshtml", Model.AddSpecModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_AddSupply.cshtml", Model.AddSupplyModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_AddUnit.cshtml", Model.AddUnitModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_AddItemType.cshtml", Model.AddItemTypeModel)
+    @await Html.PartialAsync("~/Views/Item/Modal/_DeactivateItem.cshtml")
+    @await Html.PartialAsync("~/Views/Item/Modal/_Filter.cshtml")
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Item/Shared/_scripts.cshtml")
+}

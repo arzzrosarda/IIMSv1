@@ -8,6 +8,10 @@ namespace IIMSv1.Models.ViewModel
         public _ItemInputModel ItemInputModel { get; set; } = new _ItemInputModel();
         public EditItemInputModel EditItemInputModel { get; set; } = new EditItemInputModel();
         public PaginationModel PaginationModel { get; set; }
+        public AddSpecModel AddSpecModel { get; set; } = new AddSpecModel();
+        public AddSupplyModel AddSupplyModel { get; set; } = new AddSupplyModel();
+        public AddUnitModel AddUnitModel { get; set; } = new AddUnitModel();
+        public AddItemTypeModel AddItemTypeModel { get; set; } = new AddItemTypeModel();
         public string SearchText { get; set; } = string.Empty;
         public string SupplyTextValue { get; set; } = string.Empty;
         public string SupplyText { get; set; } = string.Empty;

@@ -10,6 +10,24 @@
     $(function () {
         $("#Userlink").addClass("active");
     });
+        $("#btnUserAdd").on("click", function () {
+            var btnsubmitUser = $("#submitUserBtn");
+            Swal.fire({
+                title: "SAVE",
+                html: "Are you sure that all entered information are correct?",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#1c3d77",
+                confirmButtonText: "Yes, I am sure",
+                cancelButtonText: "No, Cancel it",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btnsubmitUser.click();
+                }
+            });
+        });
         $("#pageSel").on("change", function () {
             var val = $("#pageSel option:selected").val();
             $("#pageNumInput").val(val);

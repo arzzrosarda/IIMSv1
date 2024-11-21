@@ -1,0 +1,33 @@
+﻿@using IIMSv1.Models.Shared
+@using IIMSv1.Models
+@model AddSpecModel
+
+<div id="modal-add-specs" class="modal fade" tabindex="-1" aria-labelledby="modal-add-specs" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DESCRIPTION TYPE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label asp-for="SpecType"></label> <span class="text-danger">*</span>
+                            <input class="form-control" asp-for="SpecType" />
+                            <span asp-validation-for="SpecType" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-light waves-effect waves-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-label btn-secondary waves-effect waves-light btnAddSpecsType">
+                    <i class="ri-lg ri-save-3-line label-icon align-middle fs-16 me-2"></i>
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
