@@ -1,0 +1,82 @@
+﻿@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var returnUrl = Path + QueryStrings;
+}
+<div id="modal-select-item" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light pt-3 pb-3">
+                <h5 class="modal-title">SELECT ITEM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 table-responsive">
+                        <input class="form-select" type="hidden" id="ItemsSelContainer" />
+                        <table class="table table-bordered table-hover" id="selectItemTbl" width="100%" style="font-size: 12px;">
+                            <thead>
+                                <tr style="display:table; width: 100%; table-layout:fixed;" >
+                                    <td class="text-center" width="10%">
+                                       
+                                    </td>
+                                    <td width="70%">
+                                        ITEM NAME
+                                    </td>
+                                    <td class="text-center" width="22%">
+                                        REMAINING STOCKS
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody style="display:block;max-height:575px;overflow-y:auto;">
+                                @foreach (var item in Model.items)
+                                {
+                                    if (item.itemQuantity == 0)
+                                    {
+                                        
+                                        <tr id="tr_@item.Id" style="display:table; width: 100%; table-layout:fixed;">
+                                            <td class="text-center text-light" width="10%">
+                                                <div class="custom-checkbox custom-control">
+                                                    <input type="checkbox" data-checkboxes="" class="custom-control-input" id="checkbox_@item.Id" value="@item.Id" disabled>
+                                                    <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
+                                                </div>
+                                            </td>
+                                            <td width="70%" class="text-muted">
+                                                @item.ItemName
+                                            </td>
+                                            <td class="text-center text-muted" width="20%">
+                                                @item.itemQuantity
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    { 
+                                        <tr id="tr_@item.Id" class="btnSelectItemCheck" style="display:table; width: 100%; table-layout:fixed;cursor: pointer;" data-itemId="@item.Id">
+                                            <td class="text-center" width="10%">
+                                                <div class="custom-checkbox custom-control">
+                                                    <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" data-itemId="@item.Id" id="checkbox_@item.Id" value="@item.Id">
+                                                    <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
+                                                </div>
+                                            </td>
+                                            <td width="70%">
+                                                @item.ItemName
+                                            </td>
+                                            <td class="text-center" width="20%">
+                                                @item.itemQuantity
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100" id="btnContinuetoSel" data-bs-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

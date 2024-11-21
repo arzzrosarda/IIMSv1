@@ -1,0 +1,24 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewBag.title = "Department Collections";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+}
+<div class="col-lg-12">
+</div>
+@section modals {
+}
+@section scripts {
+    <script>
+        @Html.Raw(ViewBag.Modal)
+            $(function () {
+                $("#Dashboardlink").addClass("active");
+            });
+
+    </script>
+}

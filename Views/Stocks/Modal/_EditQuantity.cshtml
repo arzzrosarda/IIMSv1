@@ -1,0 +1,44 @@
+﻿@using IIMSv1.Models.Shared
+@using IIMSv1.Models
+@model StockEditModel
+@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var returnURl = Path + QueryStrings;
+}
+<form asp-action="_UpdateStocks" asp-controller="Stocks">
+    <div id="modal-edit-stocks" class="modal fade" tabindex="-1" aria-labelledby="modal-edit-stocks" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h5 class="modal-title">ITEM QUANTITY</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 mb-3">
+                            <h6 class="d-inline" id="ItemNameEditStock"></h6>
+                            <br />
+                            <br />
+                            <b>Remaining Quantity: </b><span id="QuantityEditStock"></span>
+                            <br />
+                        </div>
+                       <div class="col-lg-12 border border-white p-3">
+                            <input class="form-select" asp-for="returnUrl" value="@returnURl" type="hidden" />
+                           <input class="form-select" asp-for="ItemId" id="ItemIdInputStock" type="hidden"/>
+                            <input class="form-select" asp-for="QuantityBefore" id="BeforeQuantityStock" type="hidden" />
+                           <label asp-for="Quantity"></label>
+                           <input class="form-select" asp-for="Quantity" id="ItemQuantityStock"/>
+                           <span class="text-danger" asp-validation-for="Quantity"></span>
+                       </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100" >Add Quantity</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

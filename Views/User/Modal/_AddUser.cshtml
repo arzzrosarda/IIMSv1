@@ -1,0 +1,164 @@
+﻿@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.Shared
+
+@model _UserInputModels
+
+<form asp-action="_AddUser" asp-controller="User">
+    <div id="modal-user-add" class="modal fade" tabindex="-1" aria-labelledby="modal-add-app" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-3">NEW USER ACCOUNT</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12 mb-3">
+                                <h6 class="mb-0 border-bottom">Personal Information</h6>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="lastName"></label> <span class="text-danger">*</span>
+                                    <input asp-for="lastName" class="form-control text-uppercase" onchange="$(this).val($(this).val().trim())" />
+                                    <span asp-validation-for="lastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="firstName"></label> <span class="text-danger">*</span>
+                                    <input asp-for="firstName" class="form-control text-uppercase" onchange="$(this).val($(this).val().trim())" />
+                                    <span asp-validation-for="firstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="middleName"></label>
+                                    <input asp-for="middleName" class="form-control text-uppercase" onchange="$(this).val($(this).val().trim())" />
+                                    <span asp-validation-for="middleName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="nameExt"></label>
+                                    <input asp-for="nameExt" class="form-control text-uppercase" onchange="$(this).val($(this).val().trim())" placeholder="(e.g. Jr., Sr., III)" />
+                                    <span asp-validation-for="nameExt" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="displayName"></label> <span class="text-danger">*</span>
+                                    <input asp-for="displayName" class="form-control" />
+                                    <span asp-validation-for="displayName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Email"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Designation"></label> <span class="text-danger">*</span>
+                                    <input asp-for="Designation" class="form-control text-uppercase" onchange="$(this).val($(this).val().trim())" />
+                                    <span asp-validation-for="Designation"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="departmentID"></label> <span class="text-danger">*</span>
+                                    <select asp-for="departmentID" class="form-select">
+                                        <option value="">Select Department</option>
+                                        @foreach (var dept in Model.departments)
+                                        {
+                                            <option value="@dept.Id">(@dept.Name) @dept.NormalizedName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 mb-3">
+                                <h6 class="mb-0 border-bottom">Log-in Credentials</h6>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="UserName"></label> <span class="text-danger">*</span>
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label asp-for="UserRole"></label> <span class="text-danger">*</span>
+                                <select asp-for="UserRole" class="form-select">
+                                    <option value="">Select Role...</option>
+                                    <option value="Inventory Administrator">Inventory Administrator</option>
+                                    <option value="Inventory Manager">Inventory Manager</option>
+                                </select>
+                                <span asp-validation-for="UserRole" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Password"></label> <span class="text-danger">*</span>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword"></label> <span class="text-danger">*</span>
+                                    <input asp-for="ConfirmPassword" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 mt-3">
+                                <div class="alert alert-danger alert-border-left mb-0">
+                                    Password must have:
+                                    <ul>
+                                        <li>at least 6 characters</li>
+                                        <li>at least 1 non-alphanumeric character</li>
+                                        <li>at least 1 digit (0-9)</li>
+                                        <li>at least 1 UPPERCASE letter (A-Z)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <span><span class="text-danger"> * </span> required</span>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="reset" class="btn btn-light waves-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-success waves-light" id="btnUserAdd"><i class="fa fa-save"></i> Save</button>
+                            <button type="submit" class="b  tn btn-primary" id="submitUserBtn" style="display: none;"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

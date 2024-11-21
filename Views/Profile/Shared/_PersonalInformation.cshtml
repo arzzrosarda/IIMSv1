@@ -1,0 +1,95 @@
+﻿@using IIMSv1.Models
+@using IIMSv1.Models.Shared
+@using IIMSv1.Data;
+@using Microsoft.AspNetCore.Identity
+@model _UserEditInputModels
+
+@{
+    AccountUser user = ViewBag.User;
+    List<Department> departments = ViewBag.Departments;
+}
+
+<form asp-action="Edit" asp-controller="Profile" name="editUserInfoForm">
+    <div class="col-lg-12">
+        <input asp-for="Id"/>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label asp-for="lastName"></label> <span class="text-danger">*</span>
+                    <input asp-for="lastName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                    <span asp-validation-for="lastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label asp-for="firstName"></label> <span class="text-danger">*</span>
+                    <input asp-for="firstName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                    <span asp-validation-for="firstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label asp-for="middleName"></label>
+                    <input asp-for="middleName" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                    <span asp-validation-for="middleName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label asp-for="nameExt"></label>
+                <input asp-for="nameExt" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" placeholder="(e.g. Jr., Sr., III)" />
+                <span asp-validation-for="nameExt" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label asp-for="displayName"></label> <span class="text-danger">*</span>
+                    <input asp-for="displayName" class="form-select" />
+                    <span asp-validation-for="displayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label asp-for="Email"></label> <span class="text-danger">*</span>
+                    <input asp-for="Email" class="form-select" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label asp-for="Designation"></label> <span class="text-danger">*</span>
+                    <input asp-for="Designation" class="form-select text-uppercase" onclick="$(this).val($(this).val().trim())" />
+                    <span asp-validation-for="Designation" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label asp-for="departmentId"></label> <span class="text-danger">*</span>
+                    <select asp-for="departmentId" class="form-select">
+                        @foreach (var dept in departments)
+                        {
+                            <option value="@dept.Id">(@dept.Name) @dept.NormalizedName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="departmentId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="row border-top pt-4">
+                    <div class="col-lg-6">
+                        <div class="float-left">
+                            <span class="text-danger">*</span> required
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <button type="reset" class="btn btn-light">Reset</button>&nbsp;
+                        <button type="button" class="btn btn-light" id="btnSaveChangesEditInfo">
+                            <span class="text-primary">
+                                <i class="bi bi-floppy-fill"></i> &nbsp;
+                            </span>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

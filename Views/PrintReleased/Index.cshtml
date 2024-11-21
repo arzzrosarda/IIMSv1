@@ -1,0 +1,253 @@
+﻿@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@model PrintReleasedViewModel
+@{
+    ViewData["Title"] = "" + Model.year1Text == Model.year2Text ? "Released " + Model.year1Text : "Released " + Model.year1Text + " - " + Model.year2Text;
+    Layout = "~/Views/Shared/_landscapePrintLayout.cshtml";
+    List<Released> released = Model.Released;
+    List<Items> items = Model.items;
+    List<Department> department = Model.departments;
+    int deptIndex = 0;
+}
+<div class="table-responsive">
+    <table class="table-bordered table-striped" id="informationTbl" style="font-size: 12px;">
+        <thead class="table-dark">
+            <tr>
+                <td colspan="6" style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center">
+                    RELEASE INFORMATION SUMMARY
+                    @(Model.year1Text == Model.year2Text ? Model.year1Text : Model.year1Text + " - " + Model.year2Text)
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center" width="3%">No.</td>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center" width="37%">DEPARTMENT</td>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center" width="15%">TO RECEIVE</td>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center" width="15%">RECEIVED</td>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center" width="15%">PULLOUT</td>
+                <td style="padding: 5px; border: 2px solid #000;" class="text-white align-content-center text-center" width="15%">TOTAL RELEASED</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dept in department)
+            {
+                deptIndex += 1;
+                <tr>
+                    <td style="padding: 5px; border: 2px solid #000;" class="text-center align-content-center">@deptIndex</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center">@dept.NormalizedName</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                        @{
+                            int countToReceive = 0;
+                            foreach (var rel in released)
+                            {
+                                bool isToReceive = rel.DepartmentId == dept.Id && rel.Received == false && rel.Pullout == false && items.Any(x => x.Id.Equals(rel.ItemId));
+                                if (isToReceive)
+                                {
+                                    countToReceive += rel.ReleaseQuantity;
+                                }
+                            }
+                        }
+                        @countToReceive
+                    </td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                        @{
+                            int countReceived = 0;
+                            foreach (var rel in released)
+                            {
+                                bool isReceived = rel.DepartmentId == dept.Id && rel.Received == true && rel.Pullout == false && items.Any(x => x.Id.Equals(rel.ItemId));
+                                if (isReceived)
+                                {
+                                    countReceived += rel.ReleaseQuantity;
+                                }
+                            }
+                        }
+                        @countReceived
+                    </td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                        @{
+                            int countPullout = 0;
+                            foreach (var rel in released)
+                            {
+                                bool isPullout = rel.DepartmentId == dept.Id && rel.Received == false && rel.Pullout == true && items.Any(x => x.Id.Equals(rel.ItemId));
+                                if (isPullout)
+                                {
+                                    countPullout += rel.ReleaseQuantity;
+                                }
+                            }
+                        }
+                        @countPullout
+                    </td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                        @{
+                            int countTotal = 0;
+                            foreach (var rel in released)
+                            {
+                                bool isTotal = rel.DepartmentId == dept.Id && items.Any(x => x.Id.Equals(rel.ItemId));
+                                if (isTotal)
+                                {
+                                    countTotal += rel.ReleaseQuantity;
+                                }
+                            }
+                        }
+                        @countTotal
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+        @if (department.Count() > 1)
+        {
+            <tfoot>
+                <tr>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center"></td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center">TOTAL</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">@Model.toReceiveCount</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">@Model.receivedCount</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">@Model.pullOutCount</td>
+                    <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">@Model.TotalCount</td>
+                </tr>
+            </tfoot>
+        }
+    </table>
+</div>
+@foreach (var dept in department)
+{
+    int index = 0;
+    <div class="table-responsive mb-4">
+        <table class="table-striped table-bordered .ItemsReleasedTbl" style="font-size: 12px;">
+            <thead class="table-dark">
+                <tr>
+                    <th rowspan="2" style="padding: 10px; border: 2px solid #000;" class="text-white text-center font-weight-bold">No.</th>
+                    <th rowspan="2" style="padding: 10px; border: 2px solid #000;" class="text-white text-center font-weight-bold">ITEM</th>
+                    <th colspan="12" style="padding: 10px; border: 2px solid #000;" class="text-white text-center font-weight-bold">
+                        @dept.NormalizedName.ToUpper()
+                    </th>
+                </tr>
+                <tr>
+                    @foreach (var m in Model.Months)
+                    {
+                        <th style="padding: 5px; border: 2px solid #000;" class="text-white text-center font-weight-bold">@m.ToUpper()</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (items.Count() > 0)
+                {
+
+                    @foreach (var item in items)
+                    {
+                        index = index + 1;
+                        <tr>
+                            <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center" width="3%">
+                                @index
+                            </td>
+                            <td style="padding: 5px; border: 2px solid #000;" class="align-content-center " width="30%">@item.ItemName</td>
+                            @foreach (var m in Model.Months)
+                            {
+                                <td style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center" width="6%">
+                                    @if (released.Count() > 0)
+                                    {
+                                        List<Released> rels = released
+                                        .Where(x => x.DateReleased.ToString("MMMM").ToUpper().Equals(m.ToUpper()) && x.ItemId.Equals(item.Id) && x.DepartmentId.Equals(dept.Id))
+                                        .ToList();
+
+                                        if (rels.Count() > 0)
+                                        {
+                                            int Count = rels.Sum(x => x.ReleaseQuantity);
+                                            <span>@Count</span>
+                                        }
+
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14" style="padding: 5px; border: 2px solid #000;" class="text-center font-weight-bold" width="100%">* No Record *</td>
+                    </tr>
+                }
+            </tbody>
+            @if (department.Count() > 1)
+            {
+                <tfoot>
+                    <tr>
+                        <td colspan="2" style="padding: 5px; border: 2px solid #000;" class="align-content-center"></td>
+                        <td colspan="1" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            TO RECEIVE
+                        </td>
+                        <td colspan="2" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            @{
+                                int countToReceive = 0;
+                                foreach (var rel in released)
+                                {
+                                    bool isToReceive = rel.DepartmentId == dept.Id && rel.Received == false && rel.Pullout == false && items.Any(x => x.Id.Equals(rel.ItemId));
+                                    if (isToReceive)
+                                    {
+                                        countToReceive += rel.ReleaseQuantity;
+                                    }
+                                }
+                            }
+                            @countToReceive
+                        </td>
+                        <td colspan="1" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            RECEIVED
+                        </td>
+                        <td colspan="2" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            @{
+                                int countReceived = 0;
+                                foreach (var rel in released)
+                                {
+                                    bool isReceived = rel.DepartmentId == dept.Id && rel.Received == true && rel.Pullout == false && items.Any(x => x.Id.Equals(rel.ItemId));
+                                    if (isReceived)
+                                    {
+                                        countReceived += rel.ReleaseQuantity;
+                                    }
+                                }
+                            }
+                            @countReceived
+                        </td>
+                        <td colspan="1" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            PULLOUT
+                        </td>
+                        <td colspan="2" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            @{
+                                int countPullout = 0;
+                                foreach (var rel in released)
+                                {
+                                    bool isPullout = rel.DepartmentId == dept.Id && rel.Received == false && rel.Pullout == true && items.Any(x => x.Id.Equals(rel.ItemId));
+                                    if (isPullout)
+                                    {
+                                        countPullout += rel.ReleaseQuantity;
+                                    }
+                                }
+                            }
+                            @countPullout
+                        </td>
+                        <td colspan="1" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            TOTAL
+                        </td>
+                        <td colspan="2" style="padding: 5px; border: 2px solid #000;" class="align-content-center text-center">
+                            @{
+                                int countTotal = 0;
+                                foreach (var rel in released)
+                                {
+                                    bool isTotal = rel.DepartmentId == dept.Id && items.Any(x => x.Id.Equals(rel.ItemId));
+                                    if (isTotal)
+                                    {
+                                        countTotal += rel.ReleaseQuantity;
+                                    }
+                                }
+                            }
+                            @countTotal
+                        </td>
+                    </tr>
+                </tfoot>
+            }
+        </table>
+    </div>
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/PrintReleased/Shared/_scripts.cshtml")
+}

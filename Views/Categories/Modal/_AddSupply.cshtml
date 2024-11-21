@@ -1,0 +1,32 @@
+﻿@using IIMSv1.Models.Shared
+@using IIMSv1.Models
+@model AddSupplyInputModel
+
+<form asp-action="_AddSupply" asp-controller="Categories">
+    <div id="modal-add-supply" class="modal fade" tabindex="-1" aria-labelledby="modal-add-supply" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">SUPPLY TYPE</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                   <div class="col-lg-12">
+                            <div class="form-group">
+                                <label asp-for="Supply"></label> <span class="text-danger">*</span>
+                                <input class="form-select" asp-for="Supply" />
+                                <span asp-validation-for="Supply" class="text-danger"></span>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100" >SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

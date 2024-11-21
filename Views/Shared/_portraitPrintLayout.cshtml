@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/_Title-Meta.cshtml")
+    @Html.Partial("~/Views/Shared/_Head_CSS.cshtml")
+    <link href="~/css/portrait.css" rel="stylesheet" />
+</head>
+<body>
+    @await Html.PartialAsync("~/Views/Shared/_Main-Loader.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/_Loader.cshtml")
+    <div id="layout-wrapper">
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container p-0">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_Vendor_Scripts.cshtml")
+    @RenderSection("scripts", required: false)
+    <script>
+        window.addEventListener("load", (event) => {
+            $(".main-loader").fadeOut(200);
+        $("#layout-wrapper").fadeIn(200);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+﻿@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var returnURl = Path + QueryStrings;
+}
+<form asp-action="_DeactivateItem" asp-controller="Item">
+    <div id="modal-item-deactivate" class="modal fade" tabindex="-1" aria-labelledby="modal-item-deactivate" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h5 class="modal-title"><i class="fas fa-exclamation " style="font-size: 25px;"></i> &nbsp; Disable Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body p-5">
+                    <input class="form-select" type="hidden" name="returnUrl" value="@returnURl" />
+                    <input class="form-select" type="hidden" name="ItemId" id="ItemIdDeactivate"/>
+                    Disabling an item will also disable all associated data 
+                    and won't be able to change or access the information needed.
+                    <br /><br />
+                    Only continue with this action if you are ABSOLUTELY certain about disabling this item for now,
+                    you may activate it again in your "Disabled Items" page.
+                    <br /><br />
+                    Do you wish to disable this item anyway?
+                </div>
+                <div class="modal-footer">
+                    <buton class="btn btn-light" type="reset" data-bs-dismiss="modal">Cancel</buton>
+                    <button type="submit" class="btn btn-danger btndisableItem">Disable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

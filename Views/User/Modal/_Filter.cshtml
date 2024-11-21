@@ -1,0 +1,89 @@
+﻿<form asp-action="Search" asp-controller="User" name="UserListForm">
+    <div id="modal-filter" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-filter" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-3">FILTER: </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="hidden" name="search" id="searchInputVal" value="@Model.SearchText" />
+                    <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                    <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Status: </label>
+                                    <select class="form-select" name="status" id="statusSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Select</option>
+                                        <option value="true">Enabled</option>
+                                        <option value="false">Disabled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Department: </label>
+                                    <select class="form-select" name="dept" id="departmentSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Select</option>
+                                        @foreach (var dept in Model.userAddInputModel.departments)
+                                        {
+                                            <option value="@dept.Id"> @dept.NormalizedName </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>User Role: </label>
+                                    <select class="form-select" id="roleSel" name="role" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">All User Role</option>
+                                        <option value="Inventory Administrator">Inventory Administrator</option>
+                                        <option value="Inventory Manager">Inventory Manager</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Date: </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-5 pl-0 pr-0">
+                                        <input type="date" class="form-control" id="dateFrom" name="dateFrom" onkeydown="return false" style="height: 30px; font-size: 12px;" />
+                                    </div>
+                                    <div class="col-lg-2 pl-0 pr-0 align-content-center text-center">
+                                        <span>To:</span>
+                                    </div>
+                                    <div class="col-lg-5 pl-0 pr-0">
+                                        <input type="date" class="form-control " id="dateTo" name="dateTo" disabled onkeydown="return false" style="height: 30px; font-size: 12px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("Index", "User")" class="btn btn-light waves-effect waves-light">Reset</a>
+                    <button type="submit" class="btn btn-secondary waves-effect waves-light">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

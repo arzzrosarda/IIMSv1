@@ -1,0 +1,46 @@
+﻿@using IIMSv1.Data
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<AccountUser> UserManager
+
+@{
+    AccountUser currUser = await UserManager.GetUserAsync(User);
+    AccountUser appuser = ViewBag.User;
+    string currUrl = ViewContext.HttpContext.Request.Path;
+
+    bool isCurrentUser = currUser.Id.Equals(appuser.Id);
+
+}
+<div class="card border-primary border-top">
+    <div class="card-body text-center">
+        <div class="col-lg-12">
+            <img src="~/images/avatar.png" class="rounded-circle avatar-xl img-thumbnail mb-2" style="width: 100px;" />
+        </div>
+        <div class="col-lg-12">
+            <div class="border-bottom mb-2">
+                <h6>@appuser.Employee.fullName_LFM</h6>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            Department: <span>@appuser.Employee.department.NormalizedName</span>
+        </div>
+        <div class="col-lg-12">
+            @if (User.IsInRole("Inventory Administrator"))
+            {
+                <span>
+                    Inventory Administrator
+                </span>
+            }
+            else if (User.IsInRole("System Administrator"))
+            {
+                <span>
+                    System Administrator
+                </span>
+            }
+            else
+            {
+                <span>Inventory Manager</span>
+            }
+        </div>
+    </div>
+</div>

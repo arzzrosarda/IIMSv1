@@ -1,0 +1,76 @@
+﻿@using IIMSv1.Data
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<AccountUser> UserManager
+
+@{
+    AccountUser currUser = await UserManager.GetUserAsync(User);
+    AccountUser appuser = ViewBag.User;
+
+    string InventoryAdminRole = "Inventory Administrator";
+    string SystemAdminRole = "System Administrator";
+    string currUrl = ViewContext.HttpContext.Request.Path;
+
+    bool isCurrentUser = currUser.Id.Equals(appuser.Id);
+    bool isUserAdmin = await UserManager.IsInRoleAsync(appuser, InventoryAdminRole);
+    bool isCurrUserAdmin = await UserManager.IsInRoleAsync(currUser, SystemAdminRole);
+
+}
+<div class="card border-primary border-top">
+    <div class="card-body text-center">
+        <div class="col-lg-12">
+            <img src="~/images/avatar.png" class="rounded-circle avatar-xl img-thumbnail mb-2" style="width: 100px; height: 100px;" />
+        </div>
+        <div class="col-lg-12">
+            <div class="border-bottom mb-2">
+                <h6>@appuser.Employee.fullName_LFM</h6>
+            </div>
+        </div>
+        <div class="col-lg-12">
+           <span>@appuser.Employee.department.NormalizedName</span>
+        </div>
+        <div class="col-lg-12">
+            @if (isUserAdmin)
+            {
+                <span>
+                    Inventory Administrator
+                </span>
+            }
+            else
+            {
+                <span>Inventory Manager</span>
+            }
+        </div>
+    </div>
+</div>
+<div class="card border-primary border-top">
+    <div class="card-body text-center">
+        Status: @Html.Raw(appuser.IsActive ? "<span class=\"text-success fw-bold\">&nbsp; ACTIVE</span> " : "<span class=\"text-danger fw-bold\">DISABLED</span> ")
+        &nbsp;
+        @if (isCurrUserAdmin && !isCurrentUser)
+        {
+            if(appuser.IsActive)
+            {
+                <a href="#" class="btn btn-light btn-sm btnDisableUserAccount">
+                    <span class="text-primary">
+                        <i class="ri-lg ri-arrow-left-right-fill"></i> &nbsp;
+                    </span>
+                    change
+                </a>
+                <a href="@Url.Action("_Disable", "User", new { UserId = appuser.Id, returnUrl = currUrl})" style="display: none;" id="btnDisableUserAccount">
+                </a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-light btn-sm btnEnableUserAccount">
+                    <span class="text-primary">
+                        <i class="ri-lg ri-arrow-left-right-fill"></i> &nbsp;
+                    </span>
+                    change
+                </a>
+                <a href="@Url.Action("_Activate", "User", new { UserId = appuser.Id, returnUrl = currUrl})" style="display: none;" id="btnEnableUserAccount">
+                </a>
+            }
+        }
+    </div>
+</div>

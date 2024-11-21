@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AccountUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    if (User.IsInRole("System Administrator"))
+    {
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Home</span></li>
+        
+        <li class="nav-item">
+            <a class="nav-link  menu-link" href="@Url.Action("Index", "Admin")" id="Dashboardlink">
+                <i class="ri-lg ri-dashboard-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">User</span></li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "User")" id="Userlink">
+                <i class="ri-lg ri-team-line"></i>
+                <span>Manage Users</span>
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Department</span></li>
+        <li class="nav-item" >
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Department")" id="Departmentlink">
+                <i class="ri-lg ri-building-line" style="font-size: 15px;"></i>
+                <span>Department</span>
+            </a>
+        </li>
+        <li class="nav-item" >
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Cluster")" id="DeptClusterlink">
+                <i class="ri-lg ri-building-line" ></i>
+                <span>Department Cluster</span>
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Profile</span></li>
+        <li class="nav-item" >
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Profile")" id="Profilelink">
+                <i class="ri-lg ri-profile-line"></i>
+                <span>Manage Profile</span>
+            </a>
+        </li>
+    }
+    else if (User.IsInRole("Inventory Administrator"))
+    {
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Home</span></li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Inventory")" id="Dashboardlink">
+                <i class="ri-lg ri-dashboard-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Inventory</span></li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Item")" id="ManageItemsLink">
+                <i class="ri-lg ri-box-2-line"></i>
+                Manage Inventory
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Categories")" id="SpecificationLink">
+                <i class="ri-lg ri-list-check-2"></i>
+                Manage Categories
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Profile</span></li>
+        <li class="nav-item" id="Profilelink">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Profile")">
+                <i class="ri-lg ri-profile-line"></i>
+                Manage Profile
+            </a>
+        </li>
+    }
+    else if (User.IsInRole("Inventory Manager"))
+    {
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Home</span></li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Collection")" id="Dashboardlink">
+                <i class="ri-lg ri-dashboard-line"></i> 
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Inventory</span></li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Items")" id="ItemsLink">
+                <i class="fas fa-check-circle" ></i>
+                 TO RECEIVE
+            </a>
+        </li>
+        <li class="menu-title"><i class="ri-more-line"></i><span data-key="t-menu">Profile</span></li>
+        <li class="nav-item">
+            <a class="nav-link menu-link" href="@Url.Action("Index", "Profile")" id="Profilelink">
+                <i class="ri-lg ri-profile-line" ></i>
+                 Profile
+            </a>
+        </li>
+    }
+
+}

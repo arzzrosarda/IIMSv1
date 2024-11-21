@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-layout="vertical" data-theme="material" data-theme-colors="default" data-bs-theme="light">
+<head>
+    @Html.Partial("~/Views/Shared/_Title-Meta.cshtml")
+    @Html.Partial("~/Views/Shared/_Head_CSS.cshtml")
+    <style type="text/css">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+   @*  auth-bg-cover *@
+    <div class="auth-page-wrapper  py-5 d-flex justify-content-center align-items-center min-vh-100">
+        @* <div class="bg-overlay"></div> *@
+
+        <div class="auth-page-content overflow-hidden pt-lg-5">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </div>
+
+        @* <footer class="footer galaxy-border-none">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0">
+                                @* &copy; 
+                                2024,
+                                <a href="https://www.cavite.gov.ph" style="color:#ffffff !important;">Provincial Government of Cavite</a>.<br />
+                                Developed by PICTO
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer> *@
+
+    </div>
+    @Html.Partial("~/Views/Shared/_Vendor_Scripts.cshtml")
+    @RenderSection("scripts", required: false)
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/assets/js/pages/password-addon.init.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            iziToast.settings({
+                resetOnHover: true,
+                transitionIn: 'flipInX',
+                transitionOut: 'flipOutX',
+                progressBar: false,
+                targetFirst: true,
+                animateInside: true,
+                theme: "light",
+            });
+        });
+    </script>
+</body>
+</html>

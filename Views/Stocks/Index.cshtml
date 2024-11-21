@@ -1,0 +1,155 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model StocksViewModel
+@{
+    ViewBag.title = "Stocks Management";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+
+    List<Items> items = Model.WithStockItems;
+}
+<div class="row">
+    <div class="col-lg-12">
+        @await Html.PartialAsync("~/Views/Shared/_Inventory-Nav.cshtml")
+        <div class="card border-left border-right border-bottom">
+            <div class="card-body">
+                <div class="row mb-0">
+                    <div class="col-lg-2 pr-0">
+                        <div class="form-icon right">
+                            <input type="text" class="form-select form-select-icon w-100" placeholder="Search" id="txtsearch" name="search" value="@Model.SearchText" style="height: 30px; font-size: 12px;" />
+                            <i class="fas fa-search" style="font-size: 10px;"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 pr-0">
+                        <form asp-action="Filter" asp-controller="Stocks" name="StocksForm">
+                            <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                            <input type="hidden" class="form-select" placeholder="Search" id="txtsubmitsearch" name="search" value="@Model.SearchText" />
+                            <input type="hidden" class="form-select" placeholder="" id="SupplyInput" name="Supply" value="@Model.SupplyTextValue" />
+                            <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                            <select class="form-select" name="status" id="StatusSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                <option value="">Status</option>
+                                <option value="InStock">In Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-lg-1 pr-0">
+                        <select name="Supply" id="SupplyFilter" asp-items="@(new SelectList(Model.supplies, "Id", "supplyName"))" class="form-select" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                            <option value="">Supply Type</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 pl-4">
+                        <div class="row">
+                            @if (Model.status != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Filter by Status: <b>"@Model.status"</b>
+                                </div>
+                            }
+                            @if (Model.SearchText != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Showing results for <b>"@Model.SearchText"</b>
+                                </div>
+                            }
+                            @if (Model.SupplyText != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Filter Supply: <b>"@Model.SupplyText"</b>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table-bordered table-striped" id="stocksTbl" style="font-size: 12px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="text-center align-content-center">STATUS</th>
+                                        <th scope="col" class="align-content-center">ITEM</th>
+                                        <th scope="col" class="text-center align-content-center">SUPPLY</th>
+                                        <th scope="col" class="text-center align-content-center">QUANTITY</th>
+                                        <th scope="col" class="text-center align-content-center">UNIT</th>
+                                        <th scope="col" class="text-center align-content-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <thead class="table-light">
+                                    <tr>
+                                        <form asp-action="_AddStocks" asp-controller="Stocks" name="addStocksForm">
+                                            @await Html.PartialAsync("~/Views/Stocks/Shared/_AddStocks.cshtml", Model.StockInputModel)
+                                        </form>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (items.Count > 0)
+                                    {
+                                        @foreach (var item in items)
+                                        {
+
+                                            <tr>
+                                                <td class="text-center align-content-center" style="white-space: nowrap;">
+                                                    @if (item.itemQuantity > 0)
+                                                    {
+                                                        <span class="text-success p-2" style="font-size: 12px;">
+                                                            <i class="fas fa-circle" style="font-size: 12px;"></i> &nbsp;
+                                                            In Stock
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-warning p-2" style="font-size: 12px;">
+                                                            <i class="fas fa-circle" style="font-size: 12px;"></i> &nbsp;
+                                                            Out of Stock
+                                                        </span>
+                                                    }
+                                                </td>
+                                                <td scope="row" class="align-content-center @(item.itemQuantity == 0 ? "text-muted" : "")" style="white-space: nowrap;">@item.ItemName</td>
+                                                <td class="text-center align-content-center @(item.itemQuantity == 0 ? "text-muted" : "")" style="white-space: nowrap;">@item.itemType.supplies.supplyName</td>
+                                                <td class="text-center align-content-center @(item.itemQuantity == 0 ? "text-muted" : "")">@item.itemQuantity</td>
+                                                <td class="text-center align-content-center @(item.itemQuantity == 0 ? "text-muted" : "")">
+                                                    <span>@item.itemUnit.UnitName</span>
+                                                </td>
+                                                <td class="text-center align-content-center" style="white-space: nowrap;">
+                                                    <button class="btn btn-sm btn-light viewItemStocks"
+                                                            data-itemId="@item.Id"
+                                                            data-Quantity="@item.itemQuantity"
+                                                            data-ItemName="@item.ItemName"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Stocks">
+                                                        <span class="text-primary"><i class="fas fa-plus-circle"></i></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if(items.Count() > 0)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/Stocks/Modal/_EditQuantity.cshtml", Model.StockEditModel)
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Stocks/Shared/_scripts.cshtml")
+}

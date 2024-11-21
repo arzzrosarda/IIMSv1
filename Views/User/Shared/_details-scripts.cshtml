@@ -1,0 +1,41 @@
+﻿<script>
+    $(function () {
+        $("#Userlink").addClass("active");
+    });
+    
+
+    $(".btnDisableUserAccount").on("click", function () {
+        Swal.fire({
+            title: "DISABLE USER ACCOUNT",
+            html: "Are you sure you want to disable this user account?",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                InMainLoader();
+                document.getElementById("btnDisableUserAccount").click();
+            }
+        });
+    });
+    $(".btnEnableUserAccount").on("click", function () {
+        Swal.fire({
+            title: "ENABLE USER ACCOUNT",
+            html: "Are you sure you want to enable this user account?",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                InMainLoader();
+                document.getElementById("btnEnableUserAccount").click();
+            }
+        });
+    });
+</script>

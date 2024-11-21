@@ -1,0 +1,149 @@
+﻿<script>
+    $(function () {
+        $("#ManageItemsLink").addClass("active");
+        $("#ReleasedLink").addClass("active");
+    });
+    $("#informationTbl").dataTable({
+        "ordering": false,
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+    let dateDropdown = document.getElementById('yearly1');
+
+    let currentYear = new Date().getFullYear();
+    let earliestYear = "@Model.year";
+    while (currentYear >= earliestYear) {
+        let dateOption = document.createElement('option');
+        dateOption.text = currentYear;
+        dateOption.value = currentYear;
+        dateDropdown.add(dateOption);
+        currentYear -= 1;
+    }
+
+    $("#yearly1").on("change", function () {
+        var val = $("#yearly1 option:selected").val();
+        if (val != "") {
+
+            $("#yearly2").empty().append('<option>Year To</option>');
+            $("#yearFromInput").val(val);
+            $("#yearly2").removeAttr("Disabled", "Disabled");
+            $("#yearly2").attr("Required", "Required");
+            let dateDropdown = document.getElementById('yearly2');
+            let currentYear = new Date().getFullYear();
+            let earliestYear = val;
+            while (currentYear >= earliestYear) {
+                let dateOption = document.createElement('option');
+                dateOption.text = currentYear;
+                dateOption.value = currentYear;
+                dateDropdown.add(dateOption);
+                currentYear -= 1;
+            }
+        }
+        else{
+            $("#yearFromInput").val("");
+            $("#yearToInput").val("");
+            $("#yearly2").val("");
+            $("#yearly2").attr("Disabled", "Disabled");
+            $("#yearly2").removeAttr("Required", "Required");
+            InMainLoader();
+            $("form[name=ReleasedForm]").submit();
+        }
+    });
+    $("#yearly2").on("change", function () {
+        var val = $("#yearly2 option:selected").val();
+        if (val != "") {
+            $("#yearToInput").val(val);
+            InMainLoader();
+            $("form[name=ReleasedForm]").submit();
+        }
+        else {
+            $("#yearToInput").val("");
+        }
+
+    });
+    $("#pageSel").on("change", function () {
+        var val = $("#pageSel option:selected").val();
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+
+    $("#firstUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+    $("#previousUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+    $("#nextUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+    $("#lastUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+
+    var dept = "@Model.DeptId";
+    var YearFrom = "@Model.YearFrom";
+    var YearTo = "@Model.YearTo";
+    var perNum = "@Model.perPage";
+    $("#pagenumToDisplaySel").val(perNum);
+
+    $("#pagenumToDisplaySel").on("change", function () {
+        var val = $(this).val();
+        $("#pageNumPerInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+    if(YearFrom != ""){
+        $("#yearly1").val(YearFrom);
+            $("#yearly2").removeAttr("Disabled", "Disabled");
+            $("#yearly2").attr("Required", "Required");
+            let dateDropdown = document.getElementById('yearly2');
+            let currentYear = new Date().getFullYear();
+            let earliestYear = YearFrom;
+            while (currentYear >= earliestYear) {
+                let dateOption = document.createElement('option');
+                dateOption.text = currentYear;
+                dateOption.value = currentYear;
+                dateDropdown.add(dateOption);
+                currentYear -= 1;
+        }
+    }
+    if(YearTo != ""){
+        $("#yearly2").val(YearTo);
+    }
+
+    if(dept != ""){
+        $("#DepartmentSel").val(dept);
+    }
+
+    $("#DepartmentSel").on("change", function () {
+        var val = $("#DepartmentSel option:selected").val();
+        $("#DeptInput").val(val);
+        InMainLoader();
+        $("form[name=ReleasedForm]").submit();
+    });
+    var input = document.getElementById("txtsearch");
+    input.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            InMainLoader();
+            $("form[name=StocksForm]").submit();
+        }
+    });
+
+</script>

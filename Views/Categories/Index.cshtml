@@ -1,0 +1,60 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model CategoriesViewModel
+
+@{
+    ViewBag.title = "Category Management";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @await Html.PartialAsync("~/Views/Categories/Shared/_SpecsTable.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @await Html.PartialAsync("~/Views/Categories/Shared/_UnitTable.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @await Html.PartialAsync("~/Views/Categories/Shared/_SupplyTable.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/Categories/Modal/_AddSpecsType.cshtml", Model.AddSpecinputModel)
+    @await Html.PartialAsync("~/Views/Categories/Modal/_AddSupply.cshtml", Model.AddSupplyInputModel)
+    @await Html.PartialAsync("~/Views/Categories/Modal/_AddUnit.cshtml", Model.AddUnitInputModel)
+    @await Html.PartialAsync("~/Views/Categories/Modal/_DisableTypes.cshtml")
+    @await Html.PartialAsync("~/Views/Categories/Modal/_EnableTypes.cshtml")
+    @await Html.PartialAsync("~/Views/Categories/Modal/_EditType.cshtml")
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Categories/Shared/_scripts.cshtml")
+}

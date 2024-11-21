@@ -1,0 +1,107 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model ClusterViewModel
+@{
+    ViewBag.title = "Department Cluster Management";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+
+    List<_ClusterModel> clusters = Model.clusters;
+
+}
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-primary border-top">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                            <form asp-action="FilterCluster" asp-controller="Cluster" name="ClusterForm">
+                                <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                                <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                                <div class="form-icon right">
+                                    <input type="text" class="form-control form-select-icon" placeholder="Search" id="searchtxt" name="searchtxt" value="@Model.searchtxt" style="height: 30px; font-size: 12px;" />
+                                    <i class="ri-lg ri-search-line"></i>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-xs-4 col-sm-6 col-md-6 col-lg-7 col-xl-7">
+                            <button class="btn btn-label btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-deptCluster">
+                                <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i>
+                                New Cluster
+                            </button>
+                        </div>
+                        @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 gap-1 mt-3">
+                        @if (Model.searchtxt != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Showing results for <strong>"@Model.searchtxt"</strong>
+                            </div>
+                        }
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                           <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-nowrap" id="deptClustermaintbl" style="font-size: 12px;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-center align-content-center" width="5%">
+                                                NO.
+                                            </th>
+                                            <th class="align-content-center" width="85%">DEPARTMENT CLUSTER</th>
+                                            <th class="text-center align-content-center" width="10%">ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (clusters.Count > 0)
+                                        {
+                                            @foreach (var cluster in clusters)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@cluster.num</td>
+                                                    <td class="align-content-center">@cluster.Cluster</td>
+                                                    <td class="text-center align-content-center">
+                                                        <a href="javascript:;" class="btn btn-label btn-secondary btn-sm waves-effect waves-light btnEditDeptCluster"
+                                                           data-deptClusterId="@cluster.Id"
+                                                           data-deptClusterName="@cluster.Cluster">
+                                                            <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
+                                                            Edit
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @if(clusters.Count() > 0)
+                            {
+                                @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/Cluster/Modal/_AddDepartmentCluster.cshtml", Model.clusterInput)
+    @await Html.PartialAsync("~/Views/Cluster/Modal/_EditDepartmentCluster.cshtml", Model.clusterEdit)
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Cluster/Shared/_scripts.cshtml")
+}

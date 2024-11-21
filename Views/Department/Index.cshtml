@@ -1,0 +1,165 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model DepartmentViewModel
+@{
+    ViewBag.title = "Department Management";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+
+    List<Department> depts = Model.Department;
+
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card border-primary border-top">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-icon right">
+                            <input type="text" class="form-control form-control-icon" placeholder="Search" id="txtsearch" name="search" value="@Model.SearchTxt" style="height: 30px; font-size: 12px;" />
+                            <i class="ri-lg ri-search-line"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-6 col-md-6 col-lg-7 col-xl-7">
+
+                        <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-filter">
+                            <i class="ri-lg ri-filter-line label-icon align-middle fs-16 me-2"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-add-dept">
+                            <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i>
+                            New Department
+                        </button>
+                    </div>
+                    @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 gap-1 mt-3">
+                        @if (Model.SearchTxt != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Showing results for <strong>"@Model.SearchTxt"</strong>
+                            </div>
+                        }
+                        @if (Model.clusterName != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filtered by Cluster: <strong>"@Model.clusterName"</strong>
+                            </div>
+                        }
+                        @if (Model.status != "")
+                        {
+                            <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                                Filtered by Status: <strong>"@(Model.status == "true" ? "Enabled" : "Disabled")"</strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-nowrap" id="deptmaintbl" style="font-size: 12px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="align-content-center">DEPARTMENT</th>
+                                        <th class="align-content-center">DEPARTMENT NAME</th>
+                                        <th class="align-content-center">DEPARTMENT CLUSTER</th>
+                                        <th class="text-center align-content-center">STATUS</th>
+                                        <th class="text-center align-content-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (depts.Count > 0)
+                                    {
+                                        @foreach (var dept in depts)
+                                        {
+                                            <tr scope="row">
+                                                <td class="align-content-center">@dept.Name</td>
+                                                <td class="align-content-center">@dept.NormalizedName</td>
+                                                <td class="align-content-center">@dept.DepartmentCluster.Name</td>
+
+                                                <td class="text-center align-content-center">
+
+                                                    @if (dept.IsActive == true)
+                                                    {
+                                                        <span class="badge badge-label bg-success"><i class="mdi mdi-circle-medium"></i> Enabled</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-label bg-warning"><i class="mdi mdi-circle-medium"></i> Disabled</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center align-content-center">
+                                                    @if (dept.IsActive == true)
+                                                    {
+                                                        <a href="javascript:;" class="btn btn-label btn-secondary btn-sm waves-effect waves-light btnEditDept"
+                                                           data-deptId="@dept.Id"
+                                                           data-deptName="@dept.NormalizedName"
+                                                           data-deptDisplay="@dept.Name"
+                                                           data-deptCluster="@dept.DepartmentClusterID">
+                                                            <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
+                                                            Edit
+                                                        </a>
+                                                        <a href="javascript:;" class="btn btn-label btn-warning btn-sm waves-effect waves-light btnDisableDept" data-deptId="@dept.Id">
+                                                            <i class="ri-lg ri-toggle-line label-icon align-middle fs-16 me-2"></i>
+                                                            Disable
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:;" class="btn btn-label btn-secondary btn-sm waves-effect waves-light btnEditDept"
+                                                           data-deptId="@dept.Id"
+                                                           data-deptName="@dept.NormalizedName"
+                                                           data-deptDisplay="@dept.Name"
+                                                           data-deptCluster="@dept.DepartmentClusterID">
+                                                            <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i>
+                                                            Edit
+                                                        </a>
+                                                        <a href="javascript:;" class="btn btn-label btn-success btn-sm waves-effect waves-light btnEnableDept" data-deptId="@dept.Id">
+                                                            <i class="ri-lg ri-toggle-fill label-icon align-middle fs-16 me-2"></i>
+                                                            Enable
+                                                        </a>
+                                                        <a href="javascript:;" class="btn btn-label btn-danger btn-sm waves-effect waves-light btnDeleteDept" data-deptId="@dept.Id">
+                                                            <i class="ri-lg ri-delete-bin-6-line label-icon align-middle fs-16 me-2"></i>
+                                                            Delete
+                                                        </a>
+
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if(depts.Count() > 0)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/Department/Modal/_AddDepartment.cshtml", Model.departmentInputModel)
+    @await Html.PartialAsync("~/Views/Department/Modal/_DeleteDept.cshtml")
+    @await Html.PartialAsync("~/Views/Department/Modal/_DisableDept.cshtml")
+    @await Html.PartialAsync("~/Views/Department/Modal/_EnableDept.cshtml")
+    @await Html.PartialAsync("~/Views/Department/Modal/_EditDepartment.cshtml", Model.departmentEditModel)
+    @await Html.PartialAsync("~/Views/Department/Modal/_Filter.cshtml")
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Department/Shared/_scripts.cshtml")
+}

@@ -1,0 +1,105 @@
+﻿<script>
+    @Html.Raw(ViewBag.Modal)
+        $(function () {
+            $("#ManageItemsLink").addClass("active");
+            $("#StocksLink").addClass("active");
+        });
+
+    $("#pageSel").on("change", function () {
+        var val = $("#pageSel option:selected").val();
+        $("#pageNumInput").val(val);
+        InMainLoader();
+         $("form[name=StocksForm]").submit();
+    });
+    $("#firstUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+         $("form[name=StocksForm]").submit();
+    });
+    $("#previousUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+         $("form[name=StocksForm]").submit();
+    });
+    $("#nextUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+         $("form[name=StocksForm]").submit();
+    });
+    $("#lastUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+         $("form[name=StocksForm]").submit();
+    });
+
+    $(".viewItemStocks").on("click", function () {
+        InMainLoader();
+        var ItemId = $(this).attr("data-ItemId");
+        var Quantity = $(this).attr("data-Quantity");
+        var ItemName = $(this).attr("data-ItemName");
+        $("#BeforeQuantityStock").val(Quantity);
+        $("#QuantityEditStock").text(Quantity);
+        $("#ItemNameEditStock").text(ItemName);
+
+        $("#ItemQuantityStock").attr("min", "1");
+        $("#ItemIdInputStock").val(ItemId);
+
+        OutMainLoader();
+        $("#modal-edit-stocks").modal("show");
+    });
+    var ItemType = "@Model.ItemTypeValue";
+    var Supply = "@Model.SupplyTextValue";
+    var status = "@Model.status";
+    var perNum = "@Model.perPage";
+    $("#pagenumToDisplaySel").val(perNum);
+
+    $("#pagenumToDisplaySel").on("change", function () {
+        var val = $(this).val();
+        $("#pageNumPerInput").val(val);
+        InMainLoader();
+        $("form[name=StocksForm]").submit();
+    });
+
+    if(status != ""){
+       $("#StatusSel").val(status);
+    }
+    if(Supply != ""){
+       $("#SupplyFilter").val(Supply);
+    }
+    $("#StatusSel").on("change", function () {
+        InMainLoader();
+        $("form[name=StocksForm]").submit();
+    });
+
+    $("#SupplyFilter").on("change", function(){
+        var val = $("#SupplyFilter option:selected").val();
+        $("#SupplyInput").val(val);
+        InMainLoader();
+        $("form[name=StocksForm]").submit();
+    });
+
+    $("#txtsearch").on("input", function () {
+        var val = $(this).val();
+        $("#txtsubmitsearch").val(val);
+    });
+    let QuantityInput = document.getElementById("EstPriceQuantityStocks");
+    QuantityInput.addEventListener("keypress", function (key) {
+        var btn = 0 || key.keyCode || key.charCode;
+        if (btn == 13) {
+            key.preventDefault();
+            $("#btnSubmitAddStock").click();
+        }
+    });
+    var input = document.getElementById("txtsearch");
+    input.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            InMainLoader();
+            $("form[name=StocksForm]").submit();
+        }
+    });
+</script>

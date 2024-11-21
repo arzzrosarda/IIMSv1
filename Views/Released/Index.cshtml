@@ -1,0 +1,219 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model ReleasedViewModel
+@{
+    ViewBag.title = "Released";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+    List<_ItemReleasedModel> items = Model.items;
+    List<Released> relItems = Model.releasedItems;
+    List<Department> departments = Model.departments;
+    List<string> Months = Model.Months;
+}
+<div class="row">
+    <div class="col-lg-12">
+        @await Html.PartialAsync("~/Views/Shared/_Inventory-Nav.cshtml")
+        <div class="card border-bottom border-right border-left">
+            <div class="card-body">
+                <div class="row mb-0">
+                    <div class="col-lg-12">
+                        <div class="row pl-3">
+                            @if (Model.searchtxt != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Showing results for <b>"@Model.searchtxt"</b>
+                                </div>
+                            }
+                            @if (Model.deptText != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Department: <b>"@Model.deptText"</b>
+                                </div>
+                            }
+
+                            @if (Model.YearFrom != "" || Model.YearTo != "")
+                            {
+                                <div class="alert alert-light mr-1 mb-0" style="padding: .30rem .7rem; font-size: 12px;">
+                                    Year: From <b>"@Model.YearFrom"</b> To <b>"@Model.YearTo"</b>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                            <table class="table-bordered table-striped" id="informationTbl" style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <td colspan="4" style="padding: 5px;" class="align-content-center text-center">
+                                        <form asp-action="Index" asp-controller="PrintReleased" method="post" target="_blank">
+                                            <input class="form-select" name="searchtxt" value="@Model.searchtxt" type="hidden" />
+                                            <input class="form-select" name="department" value="@Model.DeptId" type="hidden" />
+                                            <input class="form-select" name="year1" value="@Model.YearFrom" type="hidden" />
+                                            <input class="form-select" name="year2" value="@Model.YearTo" type="hidden" />
+                                            <span class="mr-2">@(Model.deptText != "" ? "SUMMARY FOR: \"" + Model.deptText.ToUpper() + "\"" : "OVERALL SUMMARY")</span>
+                                            <button type="submit" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
+                                                <span class="text-primary">
+                                                    <i class="bi bi-printer-fill" style="font: 30px;"></i>
+                                                </span>
+                                            </button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;" class="align-content-center text-center" width="15%">TO RECEIVE</td>
+                                        <td style="padding: 5px;" class="align-content-center text-center" width="15%">RECEIVED</td>
+                                        <td style="padding: 5px;" class="align-content-center text-center" width="15%">PULLOUT</td>
+                                        <td style="padding: 5px;" class="align-content-center text-center" width="15%">TOTAL RELEASED</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 5px;" class="align-content-center text-center">@Model.toReceiveCount</td>
+                                        <td style="padding: 5px;" class="align-content-center text-center">@Model.receivedCount</td>
+                                        <td style="padding: 5px;" class="align-content-center text-center">@Model.pullOutCount</td>
+                                    <td style="padding: 5px;" class="align-content-center text-center">
+                                        @Model.TotalCount</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                    <div class="col-lg-2 pr-0">
+                        <form asp-action="Filter" asp-controller="Released" name="ReleasedForm">
+                            <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                            <input class="form-select" type="hidden" name="dept" id="DeptInput" value="@Model.DeptId" />
+                            <input class="form-select" type="hidden" name="yearFrom" id="yearFromInput" value="@Model.YearFrom" />
+                            <input class="form-select" type="hidden" name="yearTo" id="yearToInput" value="@Model.YearTo" />
+                            <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                            <div class="input-group">
+                                <input type="text" class="form-select" placeholder="Search" id="txtsearch" name="search" value="@Model.searchtxt" style="height: 30px; font-size: 12px;" title="Search" />
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text pt-1 pb-1 pr-2 pl-2" style="height: 30px;" title="Search">
+                                        <i class="fas fa-search" style="font-size: 10px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 pr-0">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-2 pl-0 pr-0 text-right align-content-center">
+                                    <span>Filter:</span>
+                                </div>
+                                <div class="col-lg-10">
+                                    <select class="form-select" id="DepartmentSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Department...</option>
+                                        @foreach (var dept in departments)
+                                        {
+                                            <option value="@dept.Id">@dept.Name - @dept.NormalizedName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 pr-0 text-center">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-1 text-center mt-1 pl-1 pr-1 align-content-center">
+                                    <label>From:</label>
+                                </div>
+                                <div class="col-lg-5 pl-0 pr-0">
+                                    <select class="form-select w-100" id="yearly1" name="yearly1" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Year</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 text-center mt-1 pl-1 pr-1 align-content-center">
+                                    <label>To:</label>
+                                </div>
+                                <div class="col-lg-5 pl-0 pr-0">
+                                    <select class="form-select w-100" id="yearly2" name="yearly2" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;" disabled>
+                                        <option value="">Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+
+                    </div>
+                    @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                    <div class="col-lg-12">
+                            <table class="table-bordered table-striped" id="itemTbl" style="font-size: 13px;">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" scope="col" class="text-center align-content-center" style="padding: 5px;">
+                                            No.
+                                        </th>
+                                        <th rowspan="2" class="text-center align-content-center" style="padding: 5px;">
+                                            ITEM
+                                        </th>
+                                        <th colspan="12" class="text-center align-content-center" style="padding: 5px;">MONTHS</th>
+                                    </tr>
+                                    <tr>
+                                        @foreach (var m in Months)
+                                        {
+                                            <th class="text-center align-content-center" style="padding: 5px;">
+                                                @m.Substring(0, 3)
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (items.Count > 0)
+                                    {
+                                        @foreach (var item in items)
+                                        {
+                                            <tr>
+                                                <td scope="row" class="text-center align-content-center" width="3%" style="padding: 5px;">@item.num</td>
+                                                <td class="font-weight-bold align-content-center" width="25%" style="padding: 5px;">@item.Name</td>
+                                                @foreach (var m in Months)
+                                                {
+                                                    <td class="text-center align-content-center" style="padding: 5px;" width="6%">
+                                                        @if (relItems.Count() > 0)
+                                                        {
+                                                            List<Released> rels = relItems
+                                                            .Where(x => x.DateReleased.ToString("MMMM").ToUpper().Equals(m) && x.ItemId.Equals(item.Id))
+                                                            .ToList();
+                                                            if (rels.Count() > 0)
+                                                            {
+                                                                int Count = rels.Sum(x => x.ReleaseQuantity);
+                                                                <span>@Count.ToString()</span>
+                                                            }
+
+                                                        }
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    }
+
+
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if (items.Count() > 0)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section modals {
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Released/Shared/_scripts.cshtml")
+}

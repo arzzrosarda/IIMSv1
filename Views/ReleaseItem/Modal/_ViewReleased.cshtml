@@ -1,0 +1,77 @@
+﻿<div id="modal-released-items" class="modal fade" tabindex="-1" aria-labelledby="modal-released-items" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    
+                </button>
+            </div>
+            <div class="modal-body">
+               <div class="row">
+                    <div class="col-lg-12 mb-3">
+                        <table class="table-bordered" id="ReleaseDescriptionTbl">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>
+                                        INFORMATION
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="align-content-center" width="30%">
+                                        RECORD NUMBER
+                                    </td>
+                                    <td class="align-content-center" width="70%">
+                                        <span id="relNumberText"></span>&nbsp;<a href="" class="fw-normal" id="copyClipBoardNum"><i class="bi bi-copy"></i> copy</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-content-center" width="30%">
+                                        DEPARTMENT
+                                    </td>
+                                    <td class="align-content-center" id="releaseDepartment" width="70%">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-content-center" width="30%">
+                                        DATE RELEASED
+                                    </td>
+                                    <td class="align-content-center" id="dateReleased" width="70%">
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table-bordered table-striped" id="releasedItemsTbl">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center align-content-center" width="5%">No.</th>
+                                    <th class="align-content-center" width="85%">
+                                        ITEM
+                                    </th>
+                                    <th class="text-center align-content-center" width="10%">
+                                        QUANTITY
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyReleasedItems">
+                            </tbody>
+                        </table>
+                    </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

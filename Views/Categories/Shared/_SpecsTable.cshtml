@@ -1,0 +1,76 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model CategoriesViewModel
+@{
+
+    List<ItemSpecType> specs = Model.itemSpecTypes;
+}
+
+<table class="table-bordered table-striped" id="specsTable" style="font-size: 12px;">
+    <thead class="table-light">
+        <tr>
+            <th>DESCRIPTION TYPE</th>
+            <th class="text-center">STATUS</th>
+            <th class="text-center">ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (specs.Count() > 0)
+        {
+            foreach (var spec in specs)
+            {
+                <tr>
+                    <td>@spec.itemSpecType</td>
+                    <td class="text-center">
+                        @if (spec.IsEnabled == true)
+                        {
+                            <span class="text-success p-2" style="font-size: 12px;">
+                                <i class="fas fa-circle" style="font-size: 12px;"></i>&nbsp;
+                                Enabled
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-warning p-2" style="font-size: 12px;">
+                                <i class="fas fa-circle" style="font-size: 12px;"></i>&nbsp;
+                                Disabled
+                            </span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-light btnEditType" data-typeId="@spec.Id" data-ValueEdit="@spec.itemSpecType"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                            <span class="text-primary">
+                                <i class="ri-lg ri-pencil-fill"></i>
+                            </span>
+                            </button>
+                        <span class="text-light">&nbsp;|&nbsp;</span>
+                        @if (spec.IsEnabled == true)
+                        {
+                            <button class="btn btn-sm btn-light btnDisabledType" data-typeId="@spec.Id"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Disable">
+                                <span class="text-warning">
+                                    <i class="fas fa-toggle-off"></i>
+                                </span>
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-light btnEnableType" data-typeId="@spec.Id"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Enable">
+                                <span class="text-success">
+                                    <i class="fas fa-toggle-on"></i>
+                                </span>
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

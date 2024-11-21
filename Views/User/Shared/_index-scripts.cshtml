@@ -1,0 +1,96 @@
+﻿<script>
+    $("#usertblMain").dataTable({
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+
+    $(function () {
+        $("#Userlink").addClass("active");
+    });
+        $("#pageSel").on("change", function () {
+            var val = $("#pageSel option:selected").val();
+            $("#pageNumInput").val(val);
+            InMainLoader();
+            $("form[name=UserListForm]").submit();
+        });
+        $("#firstUrlBtn").on("click", function () {
+            var val = $(this).attr("data-page");
+            $("#pageNumInput").val(val);
+            InMainLoader();
+            $("form[name=UserListForm]").submit();
+        });
+        $("#previousUrlBtn").on("click", function () {
+            var val = $(this).attr("data-page");
+            $("#pageNumInput").val(val);
+            InMainLoader();
+            $("form[name=UserListForm]").submit();
+        });
+        $("#nextUrlBtn").on("click", function () {
+            var val = $(this).attr("data-page");
+            $("#pageNumInput").val(val);
+            InMainLoader();
+            $("form[name=UserListForm]").submit();
+        });
+        $("#lastUrlBtn").on("click", function () {
+            var val = $(this).attr("data-page");
+            $("#pageNumInput").val(val);
+            InMainLoader();
+            $("form[name=UserListForm]").submit();
+        });
+            var dateFrom = "@Model.dateStart";
+            var dateTo = "@Model.dateEnd";
+            var status = "@Model.status";
+            var department = "@Model.department";
+            var perNum = "@Model.perPage";
+            var roletxt = "@Model.roletxt";
+            $("#pagenumToDisplaySel").val(perNum);
+            if(department != "")
+            {
+                $("#departmentSel").val(department);
+            }
+            if(roletxt != ""){
+                $("#roleSel").val(roletxt);
+            }
+            if(status != "")
+            {
+                $("#statusSel").val(status);
+            }
+            $("#pagenumToDisplaySel").on("change", function () {
+                var val = $(this).val();
+                $("#pageNumPerInput").val(val);
+                InMainLoader();
+                $("form[name=UserListForm]").submit();
+            });
+            if (dateFrom != "" && dateTo != "") {
+                $("#dateFrom").val(dateFrom);
+                $("#dateTo").val(dateTo);
+                $("#dateTo").removeAttr("Disabled", "Disabled");
+                $("#dateTo").attr("min", dateFrom);
+            }
+            $("#dateFrom").on("change", function () {
+                var val = $(this).val();
+                var dateTo = $("#dateTo").val();
+                if (val != "") {
+                    $("#dateTo").removeAttr("Disabled", "Disabled");
+                    $("#dateTo").attr("min", val);
+                    
+                }
+                else {
+                    $("#dateTo").attr("Disabled", "Disabled");
+                    $("#dateTo").val("");
+                }
+            });
+            var input = document.getElementById("txtsearch");
+            input.addEventListener("keypress", function (event) {
+                // If the user presses the "Enter" key on the keyboard
+                if (event.key === "Enter") {
+                    var val = $(this).val();
+                    $("#searchInputVal").val(val);
+                    InMainLoader();
+                     $("form[name=UserListForm]").submit();
+                }
+            });
+</script>

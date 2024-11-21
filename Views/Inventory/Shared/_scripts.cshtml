@@ -1,0 +1,283 @@
+﻿<script>
+    $(function () {
+        $("#Dashboardlink").addClass("active");
+    });
+    AjaxReleased("");
+    $(".btnSelectDept").on("click", function () {
+        $(".btnSelectDept.active").removeClass("active");
+        $(this).addClass("active");
+        var Id = $(this).attr("data-DeptId");
+        var Name = $(this).attr("data-DeptName");
+        $("#select-department").text(Name);
+        $("#ReleasesText").text("-");
+        $("#ToReceiveText").text("-");
+        $("#ReceivedText").text("-");
+        $("#PulloutText").text("-");
+        $.ajax({
+            url: "/Inventory/GetRecords",
+            method: "Post",
+            data: { DeptId: Id },
+            success: function (response) {
+                var arrResponse = [];
+                arrResponse = response.split(",");
+                $("#ReleasesText").text(arrResponse[0]);
+                $("#ToReceiveText").text(arrResponse[1]);
+                $("#ReceivedText").text(arrResponse[2]);
+                $("#PulloutText").text(arrResponse[3]);
+            }
+        });
+        $(".partialTblLoader").show();
+        $("#releasedListTbl").hide();
+        if(Id != "All"){
+            AjaxReleased(Id);
+        }
+        else {
+            AjaxReleased("");
+        }
+    });
+    let dateDropdown = document.getElementById('yearly1');
+
+    let currentYear = new Date().getFullYear();
+    let earliestYear = "@Model.year";
+    while (currentYear >= earliestYear) {
+        let dateOption = document.createElement('option');
+        dateOption.text = currentYear;
+        dateOption.value = currentYear;
+        dateDropdown.add(dateOption);
+        currentYear -= 1;
+    }
+    var arrMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var strM = arrMonth.toString();
+
+    GetMonthData("", "", "", strM, arrMonth);
+
+    $("#departmentSel").on("change", function () {
+        var val = $("#yearly1 option:selected").val();
+        var val1 = $("#yearly2 option:selected").val();
+        var depts = $("#departmentSel option:selected").val();
+         $("#year1print").val(val);
+         $("#year2print").val(val1);
+         $("#departmentprint").val(depts);
+        GetMonthData(depts, val, val1, strM, arrMonth);
+    });
+
+    $("#yearly1").on("change", function () {
+        var val = $("#yearly1 option:selected").val();
+        var val1 = $("#yearly2 option:selected").val();
+        var depts = $("#departmentSel option:selected").val();
+        if (val != "") {
+            $("#yearly2").empty().append('<option value="">Year To</option>');
+            $("#yearly2").removeAttr("Disabled", "Disabled");
+            $("#yearly2").attr("Required", "Required");
+            let dateDropdown = document.getElementById('yearly2');
+            let currentYear = new Date().getFullYear();
+            let earliestYear = val;
+            while (currentYear >= earliestYear) {
+                let dateOption = document.createElement('option');
+                dateOption.text = currentYear;
+                dateOption.value = currentYear;
+                dateDropdown.add(dateOption);
+                currentYear -= 1;
+            }
+            $("#year1print").val(val);
+            $("#year2print").val(val1);
+            $("#departmentprint").val(depts);
+        }
+        else {
+            $("#yearly2").val("");
+            $("#yearly2").attr("Disabled", "Disabled");
+            $("#yearly2").removeAttr("Required", "Required");
+            $("#year1print").val("");
+            $("#year2print").val("");
+            $("#departmentprint").val(depts);
+            GetMonthData(depts, val, "", strM, arrMonth);
+        }
+    });
+    $("#yearly2").on("change", function () {
+        var val = $("#yearly1 option:selected").val();
+        var val1 = $("#yearly2 option:selected").val();
+        var depts = $("#departmentSel option:selected").val();
+        if (val1 != "" && val != "") {
+            $("#year1print").val(val);
+            $("#year2print").val(val1);
+            $("#departmentprint").val(depts);
+            GetMonthData(depts, val, val1, strM, arrMonth);
+        }
+    });
+
+    function AjaxReleased(dept){
+        $.ajax({
+            url: "/Inventory/_GetReleased",
+            method: "Post",
+            data: { dept: dept },
+            success: function (response) {
+                var Tbody = $("#tBodyRelListTbl");
+                Tbody.empty();
+                var t = "";
+                console.log(response);
+                for(var i = 0; i < response.length; i++){
+                    var arrRelnum = []
+                    arrRelnum = response[i].releaseNumber.split("-");
+                    var year = arrRelnum[1];
+                    var RelNum = arrRelnum[2];
+                    t += '<tr>'
+                        +'<td class="align-content-center">'
+                            + response[i].releaseNumber
+                            +'<div class="table-links">'
+                                +'<a href="@Url.Action("Index", "Records")?relnum=' + RelNum + '&year=' + year + '&toreceive=true">'
+                                   +'To Receive - '
+                                   +'<span id="toReceiveCount-'+response[i].releaseNumber+'"></span>'
+                                +'</a>'
+                                +'<div class="bullet"></div>'
+                                    
+                                +'<a href="@Url.Action("Index", "Records")?relnum=' + RelNum + '&year=' + year + '&received=true">'
+                                    +'Received - '
+                                    +'<span id="ReceivedCount-'+response[i].releaseNumber+'"></span>'
+                                +'</a>'
+                                +'<div class="bullet"></div>'
+                                +'<a href="@Url.Action("Index", "Records")?relnum=' + RelNum + '&year=' + year + '&pullout=true">'
+                                    +'Pullout - '
+                                    +'<span id="PulloutCount-'+response[i].releaseNumber+'"></span>'
+                                +'</a>'
+                                +'<div class="bullet"></div>'
+                                +'<a href="@Url.Action("Index", "Records")?relnum=' + RelNum + '&year=' + year + '">'
+                                    +'View'
+                                +'</a>'
+                            +'</div>'
+                        +'</td>'
+                        +'</tr>';
+                    GetCountReleased(response[i].releaseNumber);
+                }
+                Tbody.html(t);
+                $(".partialTblLoader").hide();
+                $("#releasedListTbl").show();
+            }
+        })
+    }
+    function GetCountReleased(RelNum){
+        $.ajax({
+            url: "Inventory/_GetCountReleased",
+            method: "Post",
+            data: { relnum : RelNum},
+            success: function (response) {
+                 console.log(response);
+                 $("#toReceiveCount-" + RelNum).text(response[0]);
+                 $("#ReceivedCount-" + RelNum).text(response[1]);
+                 $("#PulloutCount-" + RelNum).text(response[2]);
+            }
+        });
+
+                
+    }
+    function GetMonthData(dept, year1, year2, StrMonths, Month) {
+        $(".partialLoader").show();
+        $(".releaseChart").hide();
+        var arrayData = [];
+        $("canvas#release-Chart").remove();
+        $("div.releaseChart").append('<canvas id="release-Chart" height="140"></canvas>');
+        var arrayTr = [];
+                $.ajax({
+                    url: "/Inventory/_GetToReceiveQuantity",
+                    method: "Post",
+                    data: { Months: StrMonths, year1: year1, year2: year2, dept: dept },
+                    success: function (tr) {
+                        for (var i = 0; i < tr.length; i++) {
+                            arrayTr.push(tr[i]);
+                        }
+                        var arrayRec = [];
+                        $.ajax({
+                            url: "/Inventory/_GetReceivedQuantity",
+                            method: "Post",
+                            data: { Months: StrMonths, year1: year1, year2: year2, dept: dept },
+                            success: function (rec) {
+                                for (var i = 0; i < rec.length; i++) {
+                                    arrayRec.push(rec[i]);
+                                }
+                                var arrayPull = [];
+                                $.ajax({
+                                    url: "/Inventory/_GetPulloutQuantity",
+                                    method: "Post",
+                                    data: { Months: StrMonths, year1: year1, year2: year2, dept: dept },
+                                    success: function (pull) {
+                                        $(".partialLoader").hide();
+                                        $(".releaseChart").show();
+                                        for (var i = 0; i < pull.length; i++) {
+                                            arrayPull.push(pull[i]);
+                                        }
+                                        GetChart(Month, arrayTr, arrayRec, arrayPull);
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+    }
+
+    function GetChart(arrayLabels, arrayToReceive, arrayReceived, arrayPullout) {
+        var ctx = document.getElementById("release-Chart").getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: arrayLabels,
+                datasets: [
+                {
+                    type: 'line',
+                    label: 'To Receive Stocks',
+                    data: arrayToReceive,
+                    borderWidth: 0,
+                    backgroundColor: 'rgba(134, 142, 150, 0.5)',
+                    borderColor: 'rgba(134, 142, 150, 0.8)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointRadius: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Received Stocks',
+                    data: arrayReceived,
+                    borderWidth: 0,
+                    backgroundColor: 'rgba(0, 134, 11, 0.5)',
+                    borderColor: 'rgba(0, 134, 11, 0.8)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointRadius: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Pullout Stocks',
+                    data: arrayPullout,
+                    borderWidth: 0,
+                    backgroundColor: 'rgba(255, 164, 38, 0.5)',
+                    borderColor: 'rgba(255, 164, 38, 0.8)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointRadius: 2
+                }
+                ]
+            },
+            options: {
+                legend: {
+                    display: true
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            drawBorder: true,
+                            color: '#f2f2f2',
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 150
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: true
+                        }
+                    }]
+                },
+            }
+        });
+    }
+</script>

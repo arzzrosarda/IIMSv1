@@ -1,0 +1,37 @@
+﻿@using IIMSv1.Models.Shared
+
+@model PaginationModel
+@{
+    int firstUrlData = 1;
+    int previousUrlData = Model.PageNum - 1;
+    int nextUrlData = Model.PageNum + 1;
+    int lastUrlData = Model.PageTotal;
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-lg-6 col-xl-8 align-content-center">
+        Showing records @Model.RecordStart to @Model.RecordEnd of @Model.RecordTotal.ToString("N0")
+    </div>
+    <div class="offset-md-2 col-md-8 offset-lg-0 col-lg-6 col-xl-4">
+        <div class="input-group gap-1">
+            <a href="javascript:;" id="firstUrlBtn" data-page="@firstUrlData" class="btn btn-light btn-sm waves-effect waves-light align-content-center @(Model.PageNum == 1 || Model.PageTotal == 0 ? "disabled" : "")" title="First"><i class="ri-lg ri-skip-back-fill"></i> </a>
+            <a href="javascript:;" id="previousUrlBtn" data-page="@previousUrlData" class="btn btn-light btn-sm waves-effect waves-light align-content-center @(Model.PageNum == 1 || Model.PageTotal == 0 ? "disabled" : "")" title="Previous">@* <i class="fas fa-arrow-left"></i> *@Previous</a>
+            <select class="form-select mr-1" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;" id="pageSel" @(Model.PageTotal == 0 ? "disabled" : "")>
+                @for(int i = 1; i <= Model.PageTotal; i++)
+                {
+                    if (i == Model.PageNum)
+                    {
+                        <option value="@i" selected>Page @i</option>
+                    }
+                    else
+                    {
+                        <option value="@i">Page @i</option>
+                    }
+                }
+            </select>
+            <a href="javascript:;" id="nextUrlBtn" data-page="@nextUrlData" class="btn btn-light btn-sm waves-effect waves-light align-content-center @(Model.PageNum == Model.PageTotal || Model.PageTotal == 0 ? "disabled" : "")" title="Next">@* <i class="fas fa-arrow-right"></i> *@ Next</a>
+            <a href="javascript:;" id="lastUrlBtn" data-page="@lastUrlData" class="btn btn-light btn-sm waves-effect waves-light align-content-center @(Model.PageNum == Model.PageTotal || Model.PageTotal == 0 ? "disabled" : "")" title="Last"><i class="ri-lg ri-skip-forward-fill"></i></a>
+        </div>
+    </div>
+</div>

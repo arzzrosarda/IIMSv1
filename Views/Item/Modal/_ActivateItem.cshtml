@@ -1,0 +1,33 @@
+﻿
+@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var Url = Path + QueryStrings;
+}
+<form asp-action="_ActivateItem" asp-controller="Item">
+    <div id="modal-item-activate" class="modal fade" tabindex="-1" aria-labelledby="modal-item-activate" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h5 class="modal-title"><i class="fas fa-check-circle " style="font-size: 25px;"></i> &nbsp; Enable Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body p-5">
+                    <input class="form-select" type="hidden" name="returnUrl" value="@Url" />
+                    <input class="form-select" type="hidden" name="ItemId" id="ItemIdActivate"/>
+                    You are about to enable this item!
+                    <br /><br />
+                    Only continue with this action if you are ABSOLUTELY certain about enabling this item.
+                    <br /><br />
+                    are you sure you want to enable this item?
+                </div>
+                <div class="modal-footer">
+                    <buton class="btn btn-light" type="reset" data-bs-dismiss="modal">Cancel</buton>
+                    <button type="submit" class="btn btn-success btnenableItem">Enable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

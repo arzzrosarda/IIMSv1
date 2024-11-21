@@ -1,0 +1,102 @@
+﻿@using IIMSv1.Models.Shared
+@using IIMSv1.Models
+@model EditItemInputModel
+
+@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var returnURl = Path + QueryStrings;
+}
+<form asp-action="_UpdateItem" asp-controller="Item" name="updateItemForm">
+    <div id="modal-edit-item" class="modal animated zoomIn" tabindex="-1" aria-labelledby="modal-edit-item" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ITEM</h5>
+                    <button type="button" class="close " data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h6 class="border-bottom mb-4">Information</h6>
+                            <div class="form-group">
+                                <input class="form-select" type="hidden" name="returnUrl" value="@returnURl" />
+                                @*ItemId*@
+                                <input asp-for="ItemId" id="ItemIdEdit" />
+                                @* Item *@
+                                <input asp-for="Item" class="form-select" id="ItemNameEdit" />
+                            </div>
+                           <div class="row">
+                               <div class="col-lg-6">
+                                    @*Supply Type*@
+                                    <div class="form-group">
+                                        <label asp-for="Supply"></label> <span class="text-danger">*</span>
+                                        <select asp-for="Supply" id="SupplyTypeEdit" class="form-select " asp-items="@(new SelectList(Model.supplies, "Id" , "supplyName" ))">
+                                            <option value="">Select Supply Type</option>
+                                        </select>
+                                        <span asp-validation-for="Supply" class="text-danger"></span>
+                                    </div>
+                               </div>
+                               <div class="col-lg-6">
+                                    @*Item Type*@
+                                    <div class="form-group">
+                                        <label asp-for="ItemType"></label> <span class="text-danger">*</span>
+                                        <select asp-for="ItemType" id="ItemTypeEdit" class="form-select ">
+                                        </select>
+                                        <span asp-validation-for="ItemType" class="text-danger"></span>
+                                    </div>
+                               </div>
+                           </div>
+                           <div class="row">
+                               <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label asp-for="Unit"></label> <span class="text-danger">*</span>
+                                        <select asp-for="Unit" id="UnitEdit" class="form-select" asp-items="@(new SelectList(Model.unit, "Id", "UnitName"))">
+                                            <option value="">Select Item Unit</option>
+                                        </select>
+                                        <span asp-validation-for="Unit" class="text-danger"></span>
+                                    </div>
+                               </div>
+                               <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label asp-for="OtherItemType"></label>
+                                        <input asp-for="OtherItemType" class="form-select" id="OtherItemTypeEdit" disabled />
+                                        <span asp-validation-for="OtherItemType" class="text-danger"></span>
+                                    </div>
+                               </div>
+                           </div>
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <h6 class="border-bottom mb-4">DESCRIPTION</h6>
+                                    <div class="col-lg-12 pb-1 pt-4">
+                                        @foreach (var itemSpec in Model.itemSpecTypes)
+                                        {
+                                            <div class="row">
+                                                <label class="col-lg-2">&nbsp;&nbsp;@itemSpec.itemSpecType </label>
+                                                <div class="custom-control custom-radio col-lg-10 text-md-center mb-3">
+                                                    <input type="checkbox" id="Edit_@itemSpec.Id" class="custom-control-input col-lg-2 checkboxValueEdit" value="@itemSpec.itemSpecType" required>
+                                                    <label class="custom-control-label col-lg-12 w-100" for="Edit_@itemSpec.Id">
+                                                        <input class="form-select editValueof" id="EditValueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
+                                                        <input class="form-select editIdof" id="EditIDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
+                                                        <input class="form-select w-100 inputEditSpecs" id="EditInput_@itemSpec.itemSpecType" type="text" data-value="@itemSpec.itemSpecType" value="" disabled>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary w-100" type="button" id="updateItem">UPDATE ITEM</button>
+                    <div id="SubmitUpdateItemBtnContainer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

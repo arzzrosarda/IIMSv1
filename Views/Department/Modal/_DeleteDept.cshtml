@@ -1,0 +1,36 @@
+﻿@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var returnURl = Path + QueryStrings;
+}
+<form asp-action="_DeleteDept" asp-controller="Department">
+    <div id="modal-delete-dept" class="modal fade" tabindex="-1" aria-labelledby="modal-delete-dept" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h4 class="modal-title"><i class="ri-lg ri-error-warning-line" style="font-size: 25px;"></i> &nbsp; DELETE DEPARTMENT</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-select" type="hidden" name="returnUrl" value="@returnURl" />
+                    <input class="form-select" type="hidden" name="DeptId" id="DeptIdDelete" />
+                    Deleting a Department will also delete all associated data 
+                    including user account created for this department.
+                    This action is not reversible, therefore, continuing is <b>NOT RECOMMENDED</b>.
+                    <br /><br />
+                    Only continue with this action if you are ABSOLUTELY certain about deleting this department.
+                    Think twice before continuing and there will be no data needed.
+                    <br /><br />
+                    Do you wish to delete this department anyway?
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-light waves-effect waves-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary waves-effect waves-light" id="btnDeleteConfirm"><i class="ri-lg ri-delete-6-line">Delete</i></button>
+                    <button type="submit" class="btn btn-secondary" id="btnSubmitDeleteItem" style="display: none;"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

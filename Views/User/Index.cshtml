@@ -1,0 +1,155 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AccountUser> UserManager
+
+@model UserViewModel
+@{
+    List<AccountUser> appusers = Model.accountUsers;
+    ViewBag.title = "User Management";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewData["title"]
+                        + "</div>";
+
+    string InventoryAdminRole = "Inventory Administrator";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card border-primary border-top">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-icon right">
+                            <input type="text" class="form-control form-control-icon" placeholder="Search" id="txtsearch" name="search" value="@Model.SearchText" style="height: 30px; font-size: 12px;" />
+                            <i class="ri-lg ri-search-line"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-6 col-md-6 col-lg-7 col-xl-7">
+                        <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-filter">
+                            <i class="ri-lg ri-filter-line label-icon align-middle fs-16 me-2"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-label btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal-user-add">
+                            <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i>
+                            New User
+                        </button>
+                    </div>
+                    @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 gap-1 mt-3">
+                    @if (Model.roletxt != "")
+                    {
+                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                            Filtered by User role: <strong>"@Model.roletxt"</strong>
+                        </div>
+                    }
+                    @if (Model.dept != "")
+                    {
+                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                            Filtered by Department: <strong>"@Model.dept"</strong>
+                        </div>
+                    }
+                    @if (Model.dateFrom != "" && Model.dateTo != "")
+                    {
+                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                            Filtered Date: From <strong>"@Model.dateFrom"</strong> to  <b>"@Model.dateTo"</b>
+                        </div>
+                    }
+                    @if (Model.SearchText != "")
+                    {
+                        <div class="badge bg-primary-subtle text-secondary badge-border w-auto" style="padding: .35rem .8rem; font-size: 12px;">
+                            Showing results for <strong>"@Model.SearchText"</strong>
+                        </div>
+                    }
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-nowrap" id="usertblMain" style="font-size: 12px;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="align-content-center">NAME</th>
+                                    <th class="align-content-center">EMAIL</th>
+                                    <th class="align-content-center">DEPARTMENT</th>
+                                    <th class="text-center align-content-center">USER ROLE</th>
+                                    <th class="text-center align-content-center">STATUS</th>
+                                    <th class="text-center align-content-center">DATE</th>
+                                    <th class="text-center align-content-center">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (appusers.Count > 0)
+                                {
+                                    @foreach (var appuser in appusers)
+                                    {
+                                        <tr>
+                                            <td class="align-content-center">@appuser.Employee.fullName_LFM</td>
+                                            <td class="align-content-center">@appuser.Email</td>
+                                            <td class="align-content-center">@appuser.Employee.department.Name</td>
+                                            <td class="align-content-center">
+                                                @{
+                                                    bool isUserAdmin = await UserManager.IsInRoleAsync(appuser, InventoryAdminRole);
+                                                }
+                                                @if (isUserAdmin)
+                                                {
+                                                    <span>Inventory Administrator</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Inventory Manager</span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-content-center">
+                                                @if (appuser.IsActive)
+                                                {
+                                                        <span class="badge badge-label bg-success"><i class="mdi mdi-circle-medium"></i> Enabled</span>
+                                                }
+                                                else
+                                                {
+                                                        <span class="badge badge-label bg-warning"><i class="mdi mdi-circle-medium"></i> Disabled</span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-content-center">
+                                                @appuser.Employee.DateCreated.ToShortDateString()
+                                            </td>
+                                            <td class="text-center align-content-center">
+                                                <a href="@Url.Action("Details", "User", new { Id = appuser.Id })">
+                                                    <span class="text-secondary">
+                                                        View More..
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @if (appusers.Count() > 0)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/User/Modal/_AddUser.cshtml", Model.userAddInputModel)
+    @await Html.PartialAsync("~/Views/User/Modal/_Filter.cshtml")
+}
+
+@section scripts {
+    @await Html.PartialAsync("~/Views/User/Shared/_index-scripts.cshtml")
+}
+

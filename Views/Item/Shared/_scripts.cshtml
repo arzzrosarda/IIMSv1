@@ -1,0 +1,76 @@
+﻿<script>
+    $(function () {
+        $("#ManageItemsLink").addClass("active");
+        $("#ItemsLink").addClass("active");
+    });
+
+    $("#pageSel").on("change", function () {
+        var val = $("#pageSel option:selected").val();
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+    $("#firstUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+    $("#previousUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+    $("#nextUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+    $("#lastUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+
+    var Supply = "@Model.SupplyTextValue";
+    var dateFrom = "@Model.dateStart";
+    var dateTo = "@Model.dateEnd";
+    var status = "@Model.status";
+    var perNum = "@Model.perPage";
+
+    $("#pagenumToDisplaySel").val(perNum);
+
+    $("#statusSel").val(status);
+
+    $("#SupplyFilter").val(Supply);
+
+    $("#statusSel").on("change", function () {
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+    if (dateFrom != "" && dateTo != "") {
+        $("#dateFrom").val(dateFrom);
+        $("#dateTo").val(dateTo);
+        $("#dateTo").removeAttr("Disabled", "Disabled");
+        $("#dateTo").attr("min", dateFrom);
+    }
+    $("#pagenumToDisplaySel").on("change", function () {
+        var val = $(this).val();
+        $("#pageNumPerInput").val(val);
+        InMainLoader();
+        $("form[name=ItemsListForm]").submit();
+    });
+
+    var input = document.getElementById("txtsearch");
+    input.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            InMainLoader();
+            $("form[name=ItemsListForm]").submit();
+        }
+    });
+
+
+</script>

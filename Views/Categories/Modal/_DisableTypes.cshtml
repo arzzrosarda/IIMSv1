@@ -1,0 +1,27 @@
+﻿<form asp-action="_DisableType" asp-controller="Categories">
+    <div id="modal-disable-type" class="modal fade" tabindex="-1" aria-labelledby="modal-disable-type" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h4 class="modal-title"><i class="fas fa-exclamation-triangle " style="font-size: 25px;"></i> &nbsp; Disable Category</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body p-5">
+                    <input class="form-select" type="hidden" name="TypeId" id="TypeId" />
+                    Disabling this type will make this hidden and not usable for your items,
+                    Note: previous items that are bind with this type will not be affected.
+
+                    Only continue with this action if you are ABSOLUTELY certain about disabling this.
+                    <br /><br />
+                    Do you wish to disable this anyway?
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-toggle-off"></i> Disable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

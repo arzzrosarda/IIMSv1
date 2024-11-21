@@ -1,0 +1,94 @@
+﻿<script>
+
+    $(function () {
+        $("#Departmentlink").addClass("active");
+    });
+    $("#deptmaintbl").DataTable({
+        /* pageLength: 8,*/
+        // columnDefs: [
+        //     { orderable: false, className: 'reorder', targets: 0 },
+        //     { orderable: false, targets: 0 }
+        // ],
+        //scrollY: '420px',
+        //scrollX: false,
+        //scroller: false,
+        //scrollCollapse: true,
+        //"ordering": false,
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+    $(".btnDeleteDept").on("click", function () {
+        var val = $(this).attr("data-DeptId");
+        $("#DeptIdDelete").val(val);
+        $("#modal-delete-dept").modal("show");
+    });
+    $(".btnEnableDept").on("click", function () {
+        var val = $(this).attr("data-DeptId");
+        $("#DeptIdEnable").val(val);
+        $("#modal-enable-dept").modal("show");
+    });
+    $(".btnDisableDept").on("click", function () {
+        var val = $(this).attr("data-DeptId");
+        $("#DeptIdDisable").val(val);
+        $("#modal-disable-dept").modal("show");
+    });
+
+    $("#pageSel").on("change", function () {
+        var val = $("#pageSel option:selected").val();
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    $("#firstUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    $("#previousUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    $("#nextUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    $("#lastUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    var status = "@Model.status";
+    var clusterTxt = "@Model.cluster";
+    var perNum = "@Model.perPage";
+
+    $("#pagenumToDisplaySel").val(perNum);
+    $("#statusSel").val(status);
+    $("#clusterSel").val(clusterTxt);
+
+    $("#pagenumToDisplaySel").on("change", function () {
+        var val = $(this).val();
+        $("#pageNumPerInput").val(val);
+        InMainLoader();
+        $("form[name=DepartmentForm]").submit();
+    });
+    var input = document.getElementById("txtsearch");
+    input.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            var val = $(this).val();
+            $("#searchInputVal").val(val);
+            InMainLoader();
+            $("form[name=DepartmentForm]").submit();
+        }
+    });
+
+</script>

@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using IIMSv1.Data
+<div class="app-menu navbar-menu">
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <!-- Dark Logo-->
+        <a href="@Url.Content("~/")" class="logo logo-dark">
+            <span class="logo-sm fs-17 fw-bold">
+                IIMS
+            </span>
+            <span class="logo-lg fs-22 fw-bold">
+                @* <img id="img-logo" src="~/images/Cavite_Province.png" style="height: 100px; width: 100px;"> *@
+                IIMS
+            </span>
+        </a>
+
+        <a href="@Url.Content("~/")" class="logo logo-light" style="color:white !important">
+            <span class="logo-sm fs-17 fw-bold">
+                IIMS
+            </span>
+            <span class="logo-lg fs-22 fw-bold">
+                @* <img id="img-logo" src="~/images/Cavite_Province.png" style="height: 100px; width: 100px;"> *@
+                IIMS
+            </span>
+        </a>
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+            <i class="ri-record-circle-line"></i>
+        </button>
+    </div>
+
+    <div id="scrollbar">
+        <div class="container-fluid">
+            <div id="two-column-menu"></div>
+
+            <ul class="navbar-nav" id="navbar-nav">
+                @Html.Partial("~/Views/Shared/_LoginPartial.cshtml")
+            </ul>
+        </div>
+    </div>
+
+    <div class="sidebar-background"></div>
+</div>
+
+<div class="vertical-overlay"></div>

@@ -1,0 +1,64 @@
+﻿<script>
+
+    $(function () {
+        $("#DeptClusterlink").addClass("active");
+    });
+    $("#deptClustermaintbl").DataTable({
+        // scrollY: '420px',
+        // scrollX: false,
+        // scroller: false,
+        // scrollCollapse: true,
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+    $("#pageSel").on("change", function () {
+        var val = $("#pageSel option:selected").val();
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+    $("#firstUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+    $("#previousUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+    $("#nextUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+    $("#lastUrlBtn").on("click", function () {
+        var val = $(this).attr("data-page");
+        $("#pageNumInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+
+    var perNum = "@Model.perPage";
+    $("#pagenumToDisplaySel").val(perNum);
+    $("#pagenumToDisplaySel").on("change", function () {
+        var val = $(this).val();
+        $("#pageNumPerInput").val(val);
+        InMainLoader();
+        $("form[name=ClusterForm]").submit();
+    });
+    var input = document.getElementById("txtsearch");
+    input.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            $("form[name=ClusterForm]").submit();
+        }
+    });
+
+</script>

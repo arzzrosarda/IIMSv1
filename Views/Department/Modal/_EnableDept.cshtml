@@ -1,0 +1,33 @@
+﻿
+@{
+    var Path = Context.Request.Path;
+    var QueryStrings = Context.Request.QueryString;
+    var Url = Path + QueryStrings;
+}
+<form asp-action="_EnableDept" asp-controller="Department">
+    <div id="modal-enable-dept" class="modal fade" tabindex="-1" aria-labelledby="modal-enable-dept" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light pt-3 pb-3">
+                    <h5 class="modal-title"><i class="ri-lg ri-check-double-line" style="font-size: 25px;"></i> &nbsp; ENABLE DEPARTMENT</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-select" type="hidden" name="returnUrl" value="@Url" />
+                    <input class="form-select" type="hidden" name="DeptId" id="DeptIdEnable" />
+                    You are about to enable this department and it's user account/s!
+                    <br /><br />
+                    Only continue with this action if you are ABSOLUTELY certain about enabling this department.
+                    <br /><br />
+                    are you sure you want to enable this department?
+                </div>
+                <div class="modal-footer">
+                    <buton class="btn btn-light waves-effect waves-light" type="reset" data-bs-dismiss="modal">Cancel</buton>
+                    <button type="submit" class="btn btn-secondary waves-effect waves-light">Enable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

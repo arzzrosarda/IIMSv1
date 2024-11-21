@@ -1,0 +1,125 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using IIMSv1.Data
+@using IIMSv1.Models
+@using IIMSv1.Models.ViewModel
+@using IIMSv1.Models.Shared
+@using Microsoft.AspNetCore.Identity
+@model ReleaseItemViewModel
+
+@{
+    ViewBag.title = "Item Release";
+    ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
+                        + ViewBag.title
+                        + "</div>";
+}
+<div class="row">
+    <div class="col-lg-12">
+        @await Html.PartialAsync("~/Views/Shared/_Inventory-Nav.cshtml")
+        <div class="card border-left border-right border-bottom">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="row" style="display: none;">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <select class="form-select select2" id="ItemSel" multiple="" placeholder="" required>
+                                        <option value="" disabled>Select Item to Release.....</option>
+                                        @foreach (var item in Model.items)
+                                        {
+                                            <option value="@item.Id">@item.ItemName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <select class="form-select" id="DepartmentSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                            <option value="">Select Department...</option>
+                            @foreach (var dept in Model.departments)
+                            {
+                                <option value="@dept.Id">@dept.Name - @dept.NormalizedName</option>
+                            }
+                        </select>
+                        <span class="text-danger" id="DeptSelTextValidation"></span>
+                    </div>
+                    <div class="col-lg-9 text-right">
+                        <input class="form-select" type="hidden" id="ItemContainerPrev" />
+                        <button class="btn btn-light btn-sm" id="btnSelectItemModalOpen">
+                            <i class="fas fa-plus-circle"></i>&nbsp;
+                            Select Items
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form asp-action="_ReleaseItem" asp-controller="ReleaseItem" name="BulkReleaseItem">
+                            <input class="form-select" type="hidden" name="DeptId" id="deptInput" />
+                            <div class="table-responsive">
+                                <table class="table-bordered table-striped" id="ReleaseItemTbl" style="font-size: 12px;">
+                                    <thead class="table-light">
+                                        <tr data-dt-order="disable">
+                                            <th class="text-center">
+                                                NO.
+                                            </th>
+                                            <th class="">
+                                                ITEM
+                                            </th>
+                                            <th class="text-center">
+                                                AVAILABLE STOCKS
+                                            </th>
+                                            <th class="text-center">
+                                                QUANTITY TO RELEASE
+                                            </th>
+                                            <th class="text-center">
+                                                REMAINING STOCKS
+                                            </th>
+                                            <th class="text-center">
+                                                UNIT
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ItemsContainer">
+                                    </tbody>
+                                    <tfoot class="table-light">
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <span>TOTAL ITEM: </span><span id="TotalItemContainer">0</span>
+                                            </td>
+                                            <td class="text-center" id="TotalStocksToReleaseContainer">
+                                                0
+                                            </td>
+                                            <td class="text-center" id="TotalQuantityToReleaseContainer">
+                                                0
+                                            </td>
+                                            <td class="text-center" id="RemainingStocksToReleaseContainer">
+                                                0
+                                            </td>
+                                            <td class="text-center">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row mb-0 mt-0">
+                                <div class="col-lg-12 text-right">
+                                    <button type="button" class="btn btn-primary" id="btnDeptCheckifSel" style="display: none;">RELEASE</button>
+                                    <button type="button" class="btn btn-primary" id="btnSubmitReleaseItemBulk" style="display: none;"></button>
+                                    <button class="btn btn-primary" type="submit" id="btnSubmitFormRelease" style="display: none;">
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modals {
+    @await Html.PartialAsync("~/Views/ReleaseItem/Modal/_SelectItem.cshtml");
+    @await Html.PartialAsync("~/Views/ReleaseItem/Modal/_ViewReleased.cshtml")
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/ReleaseItem/Shared/_scripts.cshtml")
+}

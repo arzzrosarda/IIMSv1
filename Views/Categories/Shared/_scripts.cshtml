@@ -1,0 +1,23 @@
+﻿<script>
+    $(function () {
+        $("#SpecificationLink").addClass("active")
+    });
+
+    $(".btnDisabledType").on("click", function () {
+        var val = $(this).attr("data-typeId");
+        $("#TypeId").val(val);
+        $("#modal-disable-type").modal("show");
+    });
+    $(".btnEnableType").on("click", function () {
+        var val = $(this).attr("data-typeId");
+        $("#EnableTypeId").val(val);
+        $("#modal-enable-type").modal("show");
+    });
+    $(".btnEditType").on("click", function () {
+        var Id = $(this).attr("data-typeId");
+        var val = $(this).attr("data-ValueEdit");
+        $("#TypeIdEdit").val(Id);
+        $("#ValueEdit").val(val);
+        $("#modal-edit-type").modal("show");
+    });
+</script>

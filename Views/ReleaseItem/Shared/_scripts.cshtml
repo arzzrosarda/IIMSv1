@@ -1,0 +1,350 @@
+﻿<script>
+    $(function () {
+        $("#ReleaseItemLink").addClass("active");
+        $("#ManageItemsLink").addClass("active");
+        $("#btnSubmitFormRelease").click(function () {
+            window.onbeforeunload = null;
+        });
+    });
+    var selectItemTbl = $("#selectItemTbl").dataTable({
+        columnDefs: [
+            { orderable: false, className: '', targets: 0, icon: '' }
+        ],
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false
+    });
+    $("#ReleaseDescriptionTbl").dataTable({
+        "ordering": false,
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+    var releasedItemtbl = $("#releasedItemsTbl").dataTable({
+        pageLength: 10,
+        layout: {
+            bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        },
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous',
+            }
+        },
+        "ordering": false,
+        paging: true,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": true
+    });
+
+    var ReleaseItems = "@ViewBag.Released";
+    var releaseInfo = "@ViewBag.releaseInfo";
+    if (ReleaseItems != "" && releaseInfo != "") {
+        var arrDetails = [];
+        arrDetails = releaseInfo.split(",");
+        $("#releaseDepartment").text(arrDetails[1]);
+
+        var arrCopyClip = [];
+        arrCopyClip = arrDetails[0].split("-");
+
+        $("#copyClipBoardNum").attr("href", "javascript: navigator.clipboard.writeText('" + arrCopyClip[2] + "')");
+        $("#copyClipBoardNum").attr("data-value", arrCopyClip[2]);
+        $("#dateReleased").text(arrDetails[2]);
+        $("#relNumberText").text(arrDetails[0]);
+        var Tbody = $("#tbodyReleasedItems");
+        var arrItems = [];
+        arrItems = ReleaseItems.split(",");
+        for (var i = 0; i < arrItems.length; i++){
+            var Num = Number(i) + 1;
+            var seperateItem = [];
+            seperateItem = arrItems[i].split("|||");
+            if (seperateItem[0] != "" && seperateItem[1] != "") {
+                var t = "<tr>"
+                    + "<td class='text-center align-content-center'>"
+                    + Num
+                    + "</td>"
+                    + "<td class='align-content-center'>"
+                    + seperateItem[0]
+                    + "</td>"
+                    + "<td class='text-center align-content-center'>"
+                    + seperateItem[1]
+                    + "</td>"
+                    + "</tr>";
+                releasedItemtbl.DataTable().row.add($(t).get(0)).draw()
+            }
+        }
+        $("#modal-released-items").modal("show");
+    }
+    $("#btnSelectItemModalOpen").on("click", function () {
+        var val = $("#ItemContainerPrev").val();
+        var arrVal = [];
+        arrVal = val.split(",");
+        if(val != ""){
+            $("#ItemsSelContainer").val(val);
+            for (var i = 0; i < arrVal.length; i++){
+                $("#checkbox_" + arrVal[i]).prop("checked", true);
+            }
+        }
+        $("#modal-select-item").modal("show");
+    });
+    $("#copyClipBoardNum").on("click", function () {
+        var val = $(this).attr("data-value");
+        iziToast.show({
+            title: "Copied",
+            message: '"' + val + '"',
+            position: "bottomCenter",
+            icon: "bi bi-clipboard-fill",
+            iconColor: "#00860b"
+        })
+    });
+
+    var tableRelease = $("#ReleaseItemTbl").dataTable({
+        scrollY: '470px',
+        scrollCollapse: true,
+        paging: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false
+    });
+    var array = [];
+    $(".btnSelectItemCheck").on("click", function(){
+        var dataVal = $(this).attr("data-itemId");
+        checkBoxOnClick(dataVal);
+    });
+    function checkBoxOnClick(dataVal){
+        var checkBox =  $("#checkbox_" + dataVal);
+        var Tr = $("#tr_" + dataVal);
+        var Container = $("#ItemsSelContainer");
+        if(checkBox.is(":checked")){
+            Tr.removeClass("bg-light");
+            checkBox.prop("checked", false);
+            array = $.grep(array, function(value) {
+              return value != checkBox.val();
+            });
+
+        }else{
+            Tr.addClass("bg-light");
+            checkBox.prop("checked", true);
+            array.push(checkBox.val());
+        }
+        Container.val(array.toString());
+    }
+    $("#DepartmentSel").on("change", function () {
+        var val = $(this).val();
+        if(val != ""){
+            $("#deptInput").val(val);
+            $("#DeptSelTextValidation").text("");
+        }
+        else {
+            $("#DepartmentSel").focus();
+            $("#DeptSelTextValidation").text("The department field is required!");
+        }
+
+    });
+    $("#btnContinuetoSel").on("click", function () {
+        InMainLoader();
+        var value = $("#ItemsSelContainer").val();
+        var arrVal = [];
+        arrVal = value.split(",");
+        $("#ItemContainerPrev").val(value);
+        $("#ItemSel").val(arrVal).trigger('change');
+    });
+    $("#ItemSel").on("change", function () {
+        adapter = $(this).data().select2.dataAdapter;
+        var selected = $("#ItemSel").select2('data');
+        var arrSelectedId = [];
+        var stringSelectedId = "";
+        for (var i = 0; i < selected.length; i++) {
+            arrSelectedId += selected[i].id;
+            stringSelectedId += selected[i].id + ",";
+        }
+        var arrAllOptions = "";
+        var alloptions = $(this).children();
+        alloptions.each(function () {
+            var value = adapter.item($(this));
+            if (value.id != "") {
+                if (arrSelectedId.indexOf(value.id) !== -1) {
+                }
+                else{
+                    arrAllOptions += value.id + ",";
+                }
+            }
+        });
+
+        RemoveItems(arrAllOptions, stringSelectedId);
+    });
+
+
+    function RemoveItems(val, newVal) {
+        var splitVal = [];
+        splitVal = val.split(",");
+        for (var i = 0; i < splitVal.length; i++) {
+            var row = document.getElementById('Rowfor' + splitVal[i]);
+            var TotalItem = $("#TotalItemContainer");
+            var ItemTotal = $("#TotalItemContainer").text();
+            var itemNum = Number(ItemTotal);
+
+            if (row != null) {
+                tableRelease.DataTable().row('#Rowfor' + splitVal[i]).remove().draw()
+                var newItem = itemNum - 1;
+                TotalItem.text(newItem);
+            }
+            var totalQuantityContainer = $("#TotalQuantityToReleaseContainer");
+            var sum = 0;
+            $(".ItemQValue").each(function () {
+                var Value = $(this).val();
+                var QuantityValue = Number(Value);
+                sum += + QuantityValue;
+            });
+            totalQuantityContainer.text(sum.toString());
+
+            var totalRemainingContainter = $("#RemainingStocksToReleaseContainer");
+            var TotalRemaining = 0;
+            $(".RemainingQuantity").each(function () {
+                var Value = $(this).text();
+                var RemainingValue = Number(Value);
+                TotalRemaining += + RemainingValue;
+            });
+            totalRemainingContainter.text(TotalRemaining.toString());
+
+            var TotalStockQuantityContainer = $("#TotalStocksToReleaseContainer");
+            var TotalStockQuantity = 0;
+            $(".allQuantity").each(function () {
+                var Value = $(this).text();
+                var Quantityval = Number(Value);
+                TotalStockQuantity += + Quantityval;
+            });
+            TotalStockQuantityContainer.text(TotalStockQuantity.toString());
+
+            AjaxItems(newVal);
+        }
+
+    }
+    function AjaxItems(val){
+        var tbody = $("#ItemsContainer");
+        var TotalItem = $("#TotalItemContainer");
+        var TotalEstPrice = $("#EstPriceToReleaseContainer");
+        var TotalStocks = $("#TotalStocksToReleaseContainer");
+        $.ajax({
+            url: "/ReleaseItem/GetItems",
+            type: "Post",
+            data: { ItemId: val },
+            success: function (response) {
+                if (response.length == 0) {
+                    $("#btnDeptCheckifSel").hide();
+                     window.onbeforeunload = null;
+                     OutMainLoader();
+                }else{
+                    window.onbeforeunload = function () {
+                        return "Your changes may not be saved. Are you sure you want to exit this page?";
+                    }
+                    $(".numColumn").text("");
+                    var x = 1;
+                    $("#btnDeptCheckifSel").show();
+                    var item = response.length;
+                    for (var i = 0; i < response.length; i++) {
+                        var row = document.getElementById('Rowfor' + response[i].id);
+                        var Index = Number(i) + 1;
+                        if (row == null) {
+                            var TotalQuantityText = $("#EstPriceToReleaseContainer").text();
+                            var s = '<tr id="Rowfor' + response[i].id + '">'
+                                + '<td class="text-center align-content-center pt-2 pb-2 numColumn">'
+                                + '</td>'
+                                + '<td class="align-content-center pt-2 pb-2" style="white-space: nowrap;">'
+                                + response[i].itemName
+                                + '</td>'
+                                + '<td id="Quantity' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 allQuantity" style="white-space: nowrap; width: fit-content;">'
+                                + response[i].itemQuantity
+                                + '</td>'
+                                + '<td class="pt-2 pb-2">'
+                                + '<input id="ItemQuantity' + response[i].id + '" type="hidden" name="ItemQuantity" class="form-select" style="height: 30px; font-size: 12px;"/>'
+                                + '<input id="ItemQValue' + response[i].id + '"  class="form-select ItemQValue" type="number" required max="' + response[i].itemQuantity + '" data-ValueId="' + response[i].id + '" min="1" style="height: 30px; font-size: 12px;"/>'
+                                + '</td>'
+                                + '<td id="Remaining' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 RemainingQuantity" style="white-space: nowrap; width: fit-content;">'
+
+                                + '</td>'
+                                + '<td class="text-center align-content-center pt-2 pb-2" style="white-space: nowrap; width: fit-content;">'
+                                + response[i].itemUnit.unitName
+                                + '</td>'
+                                + '</tr>';
+                            tableRelease.DataTable().row.add($(s).get(0)).draw()
+                            AjaxPerItem(response[i].id);
+                            var Num = Number(response[i].itemEstPrice);
+                            var NumTotal = Number(TotalQuantityText);
+                            var AddNumNumTotal = Num + NumTotal;
+                            TotalEstPrice.text(AddNumNumTotal.toString());
+                        }
+                        TotalItem.text(item);
+                    }
+                    $(".numColumn").each(function () {
+                        var val = $(this);
+                        val.text(x++);
+                    });
+                    tableRelease.DataTable().draw();
+                    OutMainLoader();
+                }
+            }
+        });
+    }
+
+    function AjaxPerItem(val) {
+        var TotalQuantity = $("#TotalQuantityToReleaseContainer");
+        var TotalRemainingQuantity = $("#RemainingStocksToReleaseContainer");
+        var TotalStockQuantityContainer = $("#TotalStocksToReleaseContainer");
+        $.ajax({
+            url: "/ReleaseItem/GetPerItems",
+            type: "Post",
+            data: { ItemId: val },
+            success: function (response) {
+                var TotalStockQuantity = 0;
+                $(".allQuantity").each(function () {
+                    var Value = $(this).text();
+                    var Quantityval = Number(Value);
+                    TotalStockQuantity += + Quantityval;
+                });
+                TotalStockQuantityContainer.text(TotalStockQuantity.toString());
+                    $("#ItemQValue" + response.id).on("change", function () {
+                        var ThisId = $(this).attr("data-ValueId");
+                        var val1 = $(this).val();
+                        var thisContainer = $("#ItemQuantity" + ThisId);
+                        thisContainer.val(ThisId + "," + val1);
+                        var sum = 0;
+                        $(".ItemQValue").each(function () {
+                            var Value = $(this).val();
+                            var QuantityValue = Number(Value);
+                            sum += + QuantityValue;
+                        });
+                        TotalQuantity.text(sum.toString());
+
+                        var val2 = $("#Quantity" + ThisId).text();
+                        var TotalRemainingVal = Number(val2) - Number(val1);
+
+                        $("#Remaining" + ThisId).text(TotalRemainingVal.toString());
+
+
+
+                        var TotalRemaining = 0;
+                        $(".RemainingQuantity").each(function () {
+                            var Value = $(this).text();
+                            var RemainingValue = Number(Value);
+                            TotalRemaining += + RemainingValue;
+                        });
+                        TotalRemainingQuantity.text(TotalRemaining.toString());
+
+                    });
+            }
+        });
+    }
+
+</script>
