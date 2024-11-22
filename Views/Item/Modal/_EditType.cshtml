@@ -1,28 +1,38 @@
 ﻿@using IIMSv1.Models.Shared
 @using IIMSv1.Models
+@model EditTypeModel
 
-<div id="modal-edit-type" class="modal fade" tabindex="-1" aria-labelledby="modal-edit-type" aria-hidden="true">
-    <div class="modal-dialog ">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <input id="TypeIdEdit" name="TypeId" class="form-select" type="hidden" />
-                        <div class="form-group">
-                            <label>Value</label> <span class="text-danger">*</span>
-                            <input class="form-select" name="Value" id="ValueEdit" required />
+<form name="editTypeForm">
+    <div id="modal-edit-type" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-edit-type">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit <span class="title-type"></span></h5>
+                    <button type="button" class="btn-close btnCancelAdd" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input asp-for="actionSel" class="form-control" id="action" />
+                            <input asp-for="typeId" class="form-control" id="TypeIdInput"/>
+                            <input asp-for="supplyId" class="form-control" id="supplyIdInput" />
+                            <div class="form-group">
+                                <label class="title-type"></label> <span class="text-danger">*</span>
+                                <input class="form-control" asp-for="type" id="TypeName" required autocomplete="off" />
+                                <span asp-validation-for="type" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-light waves-effect waves-light btnCancelAdd" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-label btn-secondary waves-effect waves-light btn-Edit-Type">
+                        <i class="ri-lg ri-save-3-line label-icon align-middle fs-16 me-2"></i>
+                        Save
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>

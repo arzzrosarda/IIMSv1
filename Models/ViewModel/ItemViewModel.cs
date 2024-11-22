@@ -12,6 +12,7 @@ namespace IIMSv1.Models.ViewModel
         public AddSupplyModel AddSupplyModel { get; set; } = new AddSupplyModel();
         public AddUnitModel AddUnitModel { get; set; } = new AddUnitModel();
         public AddItemTypeModel AddItemTypeModel { get; set; } = new AddItemTypeModel();
+        public EditTypeModel EditTypeModel { get; set; } = new EditTypeModel();
         public string SearchText { get; set; } = string.Empty;
         public string SupplyTextValue { get; set; } = string.Empty;
         public string SupplyText { get; set; } = string.Empty;

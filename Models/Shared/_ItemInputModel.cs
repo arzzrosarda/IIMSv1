@@ -101,5 +101,19 @@ namespace IIMSv1.Models.Shared
 
     }
    
+    public class EditTypeModel
+    {
+        [Required]
+        [HiddenInput]
+        public string actionSel { get; set; } = string.Empty;
+        [HiddenInput]
+        public string? supplyId { get; set; } = string.Empty;
+        [Required]
+        [HiddenInput]
+        public string typeId { get; set; } = string.Empty;
 
+        [Required]
+        [Remote("CheckforDuplicate", "Item", AdditionalFields = "actionSel, typeId, supplyId")]
+        public string type { get; set; } = string.Empty;
+    }
 }

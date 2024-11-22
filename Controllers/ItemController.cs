@@ -20,6 +20,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Data;
 using Microsoft.AspNetCore.Http.Extensions;
 using IIMSv1.Models.ViewModel;
+using System.Drawing.Drawing2D;
 
 namespace IIMSv1.Controllers
 {
@@ -35,13 +36,415 @@ namespace IIMSv1.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        //_AddSpecType
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> _AddSpecType(AddSpecModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+
+            if (currUser == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                List<ItemSpecType> itemSpecType = _context.ItemSpecType
+                    .Where(x => x.itemSpecType.Equals(model.SpecType))
+                    .ToList();
+
+                if (itemSpecType.Count() > 0)
+                {
+                    return Json("0");
+                }
+                else
+                {
+                    ItemSpecType newSpecType = new ItemSpecType()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        itemSpecType = model.SpecType.Trim().ToString().ToUpper(),
+                        IsEnabled = true,
+                    };
+                    _context.Add(newSpecType);
+                    await _context.SaveChanges(currUser.Id, "New Description Type");
+
+                    List<ItemSpecType> getType = _context.ItemSpecType
+                        .OrderBy(x => x.itemSpecType)
+                        .Where(x => x.IsEnabled.Equals(true))
+                        .ToList();
+
+                    List<ItemSpecType> type = getType
+                        .OrderBy(x => x.itemSpecType.EndsWith("OTHERS"))
+                        .Where(x => x.IsEnabled.Equals(true))
+                        .ToList();
+
+                    return Json(type);
+                }
+
+            }
+        }
+
+        //_AddUnitType
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> _AddUnitType(AddUnitModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+
+            if (currUser == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                List<ItemUnit> itemUnit = _context.ItemUnits
+                    .Where(x => x.UnitName.Equals(model.Unit))
+                    .ToList();
+
+                if (itemUnit.Count() > 0)
+                {
+                    return Json("0");
+                }
+                else
+                {
+                    ItemUnit newUnit = new ItemUnit()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UnitName = model.Unit.Trim().ToString().ToUpper(),
+                        IsEnabled = true,
+                    };
+                    _context.Add(newUnit);
+                    await _context.SaveChanges(currUser.Id, "New Unit Type");
+
+                    List<ItemUnit> type = _context.ItemUnits
+                        .Where(x => x.IsEnabled.Equals(true))
+                        .ToList();
+
+                    return Json(type);
+                }
+
+            }
+        }
+
+        //_AddItemType
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> _AddItemType(AddItemTypeModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+
+            if (currUser == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                List<ItemType> itemType = _context.ItemType
+                    .Where(x => x.Id != model.SupplyId && x.itemType.Equals(model.ItemType))
+                    .ToList();
+
+                if (itemType.Count() > 0)
+                {
+                    return Json("0");
+                }
+                else
+                {
+                    ItemType newItemType = new ItemType()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        itemType = model.ItemType.Trim().ToString(),
+                        SuppliesId = model.SupplyId.Trim().ToString(),
+                        IsEnabled = true,
+                    };
+                    _context.Add(newItemType);
+                    await _context.SaveChanges(currUser.Id, "New Item Type");
+
+                    List<ItemType> type = _context.ItemType
+                        .Where(x => x.IsEnabled.Equals(true) && x.SuppliesId.Equals(model.SupplyId))
+                        .ToList();
+
+                    return Json(type);
+                }
+
+            }
+        }
+
+        //ActionEditType
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> ActionEditType(EditTypeModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+            switch (model.actionSel)
+            {
+                case "Supply Type":
+                    Supplies? supplies = await _context.Supplies
+                        .SingleOrDefaultAsync(x => x.Id != model.typeId && x.supplyName.Equals(model.type));
+
+                    if(supplies != null)
+                    {
+                        return Json("0");
+                    }
+                    else
+                    {
+                        Supplies? nochanges = await _context.Supplies
+                        .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId) && x.supplyName.Equals(model.type));
+
+                        if(nochanges != null)
+                        {
+                            return Json("1");
+                        }
+                        else
+                        {
+                            Supplies? getType = await _context.Supplies
+                                .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId));
+
+                            if(getType != null)
+                            {
+                                getType.supplyName = model.type.Trim().ToString();
+
+                                await _context.SaveChangesAsync(currUser.Id, "Edited Type");
+
+                                return Json(getType);
+                            }
+                            else
+                            {
+                                return Json("0");
+                            }
+                        }
+                        
+                    }
+                case "Item Type":
+                    ItemType? itemType = await _context.ItemType
+                        .SingleOrDefaultAsync(x => x.SuppliesId != model.supplyId && x.itemType.Equals(model.type));
+
+                    if (itemType != null)
+                    {
+                        return Json("0");
+                    }
+                    else
+                    {
+                        ItemType? nochanges = await _context.ItemType
+                        .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId) && x.SuppliesId.Equals(model.supplyId) && x.itemType.Equals(model.type));
+
+                        if (nochanges != null)
+                        {
+                            return Json("1");
+                        }
+                        else
+                        {
+                            ItemType? getType = await _context.ItemType
+                                .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId));
+
+                            if (getType != null)
+                            {
+                                getType.itemType = model.type.Trim().ToString();
+
+                                await _context.SaveChangesAsync(currUser.Id, "Edited Type");
+
+                                return Json(getType);
+                            }
+                            else
+                            {
+                                return Json("0");
+                            }
+                        }
+                    }
+                case "Unit Type":
+                    ItemUnit? Unit = await _context.ItemUnits
+                        .SingleOrDefaultAsync(x => x.Id != model.typeId && x.UnitName.Equals(model.type));
+
+                    if (Unit != null)
+                    {
+                        return Json("0");
+                    }
+                    else
+                    {
+                        ItemUnit? nochanges = await _context.ItemUnits
+                        .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId) && x.UnitName.Equals(model.type));
+
+                        if (nochanges != null)
+                        {
+                            return Json("1");
+                        }
+                        else
+                        {
+                            ItemUnit? getType = await _context.ItemUnits
+                                .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId));
+
+                            if (getType != null)
+                            {
+                                getType.UnitName = model.type.Trim().ToString();
+
+                                await _context.SaveChangesAsync(currUser.Id, "Edited Type");
+
+                                return Json(getType);
+                            }
+                            else
+                            {
+                                return Json("0");
+                            }
+                        }
+                    }
+                case "Description Type":
+                    ItemSpecType? SpecType = await _context.ItemSpecType
+                        .SingleOrDefaultAsync(x => x.Id != model.typeId && x.itemSpecType.Equals(model.type));
+
+                    if (SpecType != null)
+                    {
+                        return Json("0");
+                    }
+                    else
+                    {
+                        ItemSpecType? nochanges = await _context.ItemSpecType
+                        .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId) && x.itemSpecType.Equals(model.type));
+
+                        if (nochanges != null)
+                        {
+                            return Json("1");
+                        }
+                        else
+                        {
+                            ItemSpecType? getType = await _context.ItemSpecType
+                                .SingleOrDefaultAsync(x => x.Id.Equals(model.typeId));
+
+                            if (getType != null)
+                            {
+                                getType.itemSpecType = model.type.Trim().ToString();
+
+                                await _context.SaveChangesAsync(currUser.Id, "Edited Type");
+
+                                return Json(getType);
+                            }
+                            else
+                            {
+                                return Json("0");
+                            }
+                        }
+                    }
+                default:
+                    return Json("0");
+
+            }
+        }
+
+        //CheckforDuplicate
+        [Route("{controller}/{action}")]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> CheckforDuplicate(string typeId, string supplyId, string actionSel, string type)
+        {
+            if(actionSel == "Supply Type")
+            {
+                Supplies? actType = await _context.Supplies
+                .SingleOrDefaultAsync(x => x.Id != typeId && x.supplyName.Equals(type));
+
+                if (actType != null)
+                {
+                    return Json("The name of the " + actionSel + " already exists.");
+                }
+                else
+                {
+                    return Json(true);
+                }
+            }
+            else if(actionSel == "Item Type")
+            {
+                ItemType? actType = await _context.ItemType
+                .SingleOrDefaultAsync(x => x.SuppliesId != supplyId && x.itemType.Equals(type));
+
+                if (actType != null)
+                {
+                    return Json("The name of the " + actionSel + " already exists.");
+                }
+                else
+                {
+                    return Json(true);
+                }
+            }
+            else if(actionSel == "Unit Type")
+            {
+                ItemUnit? actType = await _context.ItemUnits
+                 .SingleOrDefaultAsync(x => x.Id != typeId && x.UnitName.Equals(type));
+
+                if (actType != null)
+                {
+                    return Json("The name of the " + actionSel + " already exists.");
+                }
+                else
+                {
+                    return Json(true);
+                }
+            }
+            else if(actionSel == "Description Type")
+            {
+                ItemSpecType? actType = await _context.ItemSpecType
+                  .SingleOrDefaultAsync(x => x.Id != typeId && x.itemSpecType.Equals(type));
+
+                if (actType != null)
+                {
+                    return Json("The name of the " + actionSel + " already exists.");
+                }
+                else
+                {
+                    return Json(true);
+                }
+            }
+            else
+            {
+                return Json(true);
+            }
+            
+        }
+
+        //Add Supply Type
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> _AddSupply(AddSupplyModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+
+            if (currUser == null) { 
+                return NotFound();
+            }
+            else
+            {
+                List<Supplies> supplies = _context.Supplies
+                    .Where(x => x.IsEnabled.Equals(true) && x.supplyName.Equals(model.Supply))
+                    .ToList();
+
+                if(supplies.Count() > 0)
+                {
+                    return Json("0");
+                }
+                else
+                {
+                    Supplies newSupply = new Supplies()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        supplyName = model.Supply.Trim().ToString(),
+                        IsEnabled = true,
+                    };
+                    _context.Add(newSupply);
+                    await _context.SaveChanges(currUser.Id, "New Supply Type");
+
+                    List<Supplies> supp = _context.Supplies
+                        .Where(x => x.IsEnabled.Equals(true))
+                        .ToList();
+
+                    return Json(supp);
+                }
+                
+            }
+        }
+
         //Check Item Type
         [Route("{controller}/{action}")]
         [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> CheckDuplicateItemType(string SupplyId, string ItemType)
         {
             ItemType? Itemtype = await _context.ItemType
-                .SingleOrDefaultAsync(x => x.SuppliesId != SupplyId && x.itemType.Equals(ItemType));
+                .SingleOrDefaultAsync(x => x.SuppliesId == SupplyId && x.itemType.Equals(ItemType));
 
             if (Itemtype != null)
             {

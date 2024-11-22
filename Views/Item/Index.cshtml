@@ -182,6 +182,7 @@
     @await Html.PartialAsync("~/Views/Item/Modal/_AddUnit.cshtml", Model.AddUnitModel)
     @await Html.PartialAsync("~/Views/Item/Modal/_AddItemType.cshtml", Model.AddItemTypeModel)
     @await Html.PartialAsync("~/Views/Item/Modal/_DeactivateItem.cshtml")
+    @await Html.PartialAsync("~/Views/Item/Modal/_EditType.cshtml", Model.EditTypeModel);
     @await Html.PartialAsync("~/Views/Item/Modal/_Filter.cshtml")
 }
 @section scripts {

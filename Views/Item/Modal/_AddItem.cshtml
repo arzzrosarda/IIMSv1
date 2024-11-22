@@ -8,7 +8,7 @@
     var returnURl = Path + QueryStrings;
 }
 <form asp-action="_AddItem" asp-controller="Item" name="addItemForm">
-    <div id="modal-add-item" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-item" data-backdrop="static" aria-hidden="true">
+    <div id="modal-add-item" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-item" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -34,7 +34,7 @@
                                             <select asp-for="SupplyType" asp-items="@(new SelectList(Model.supplies, "Id" , "supplyName" ))" class="form-select" id="SupplyType">
                                                 <option value="">Select Supply Type</option>
                                             </select>
-                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditSupplyType" type="button" disabled>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditType" id="supplyTypeBtn" data-type="Supply Type" type="button" disabled>
                                                 <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
                                             </button>
                                             <button class="btn btn-label btn-secondary waves-effect waves-light btnAddSupplyType" type="button">
@@ -52,7 +52,7 @@
                                              <select asp-for="ItemType" class="form-select" id="ItemType">
                                                 <option value="">Select Item Type</option>
                                             </select>
-                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditItemType" type="button" disabled>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditType" id="ItemTypeBtn" data-type="Item Type" type="button" disabled>
                                                 <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
                                             </button>
                                             <button class="btn btn-label btn-secondary waves-effect waves-light btnAddItemType" type="button" disabled>
@@ -67,10 +67,10 @@
                                     <div class="form-group mt-3">
                                         <label asp-for="Unit"></label> <span class="text-danger">*</span>
                                         <div class="hstack gap-2">
-                                            <select asp-for="Unit" id="unitInput" asp-items="@(new SelectList(Model.unit, "Id", "UnitName"))" class="form-select">
+                                            <select asp-for="Unit" id="unitSel" asp-items="@(new SelectList(Model.unit, "Id", "UnitName"))" class="form-select">
                                                 <option value="">Select Item Unit</option>
                                             </select>
-                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditUnitType" type="button" disabled>
+                                            <button class="btn btn-label btn-primary waves-effect waves-light btnEditType" id="UnitTypeBtn" data-type="Unit Type" type="button" disabled>
                                                 <i class="ri-lg ri-pencil-fill label-icon align-middle fs-16 me-2"></i> Edit
                                             </button>
                                             <button class="btn btn-label btn-secondary waves-effect waves-light btnAddUnitType" type="button">
@@ -91,20 +91,20 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 pt-2 pb-2 pl-4 pr-4">
-                                    <div class="vstack gap-3">
+                                    <div class="vstack gap-3" id="checkboxContainer">
                                         @foreach (var itemSpec in Model.itemSpecTypes)
                                         {
-                                            <div class="form-group">
+                                            <div class="form-group" id="@itemSpec.itemSpecType _ @itemSpec.Id">
                                                 <div class="hstack gap-2">
-                                                    <label for="@itemSpec.itemSpecType">@itemSpec.itemSpecType</label>
-                                                    <a href="javascript:;" class="text-secondary pb-2 btnEditSpecsType">
+                                                    <label id="label_@itemSpec.Id" for="@itemSpec.itemSpecType">@itemSpec.itemSpecType</label>
+                                                    <a href="javascript:;" class="text-secondary pb-2 btnEditType" id="@itemSpec.Id" data-actName="@itemSpec.itemSpecType"  data-id="@itemSpec.Id" data-type="Description Type">
                                                         <i class="ri-lg ri-pencil-fill"></i> Edit
                                                     </a>
                                                 </div>
                                                 <div class="hstack gap-2">
                                                     <div class="input-group">
                                                         <div class="input-group-text">
-                                                            <input type="checkbox" id="" class="form-check-input  checkboxValue" value="@itemSpec.itemSpecType" required>
+                                                            <input type="checkbox" id="" class="form-check-input checkboxValue" value="@itemSpec.itemSpecType" required>
                                                         </div>
                                                         <input class="form-control" id="Valueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
                                                         <input class="form-control" id="IDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
