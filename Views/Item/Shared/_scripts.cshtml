@@ -148,14 +148,12 @@
     //Btn Add Supply Type
     $(".btnAddSupplyType").on("click", function(){
         $("#modal-add-item").modal("hide");
-        $("form[name=AddSupplyForm]")[0].reset();
         $("#modal-add-supply").modal("show");
     });
 
     //Btn Add Item Type
     $(".btnAddItemType").on("click", function(){
         var val = $("#SupplyType option:selected").val();
-        $("form[name=AddItemTypeForm]")[0].reset();
         $("#supplyIdAdd").val(val);
         $("#modal-add-item").modal("hide");
         $("#modal-add-itemtype").modal("show");
@@ -164,7 +162,6 @@
     //Btn Add Unit Type
     $(".btnAddUnitType").on("click", function(){
         $("#modal-add-item").modal("hide");
-        $("form[name=AddUnitForm]")[0].reset();
         $("#modal-add-unit").modal("show");
     });
 
@@ -305,7 +302,6 @@
         event.preventDefault();
 
         var form = new FormData(this);
-        var container = $("#checkboxContainer");
         $.ajax({
             url: "/Item/_AddSpecType",
             method: "Post",
@@ -316,35 +312,13 @@
             success: function(data) {
                 if(data != 0){
                     var afterHtml = "";
-                    var html = "";
                     for (var i = 0; i < data.length; i++) {
                         var row = document.getElementById(data[i].itemSpecType + ' _ ' + data[i].id);
                         if(row == null){
-                            html = '<div class="form-group" id="'+ data[i].itemSpecType + '_' + data[i].id +'">'
-                                    + '<div class="hstack gap-2">'
-                                    + '<label id="label_'+ data[i].id +'" for="' + data[i].itemSpecType +'">' + data[i].itemSpecType + '</label>'
-                                        + '<a href="javascript:;" class="text-secondary pb-2 btnEditType" id="' + data[i].id + '" data-actName="' + data[i].itemSpecType + '"  data-id="'+ data[i].id +'" data-type="Description Type">'
-                                        + '<i class="ri-lg ri-pencil-fill"></i> Edit'
-                                        + '</a>'
-                                    + '</div>'
-                                    + '<div class="hstack gap-2">'
-                                    + '<div class="input-group">'
-                                    + '<div class="input-group-text">'
-                                    + '<input type="checkbox" id="" class="form-check-input checkboxValue" value="' + data[i].itemSpecType + '" required>'
-                                    + '</div>'
-                                    + '<input class="form-control" id="Valueof_' + data[i].itemSpecType + '" name="NewItemSpecs" value="" type="hidden" />'
-                                    + '<input class="form-control" id="IDof_' + data[i].itemSpecType + '" value="' + data[i].id + '" type="hidden" />'
-                                    + '<input class="form-control" id="' + data[i].itemSpecType + '" type="text" disabled autocomplete="off">'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</div>';
 
-                            var toInsertAfter = document.getElementById(afterHtml);
-                            $(html).insertAfter(toInsertAfter);
-                            console.log("this is the item:"+html);
-                            console.log("This is after:" + afterHtml);
-                            fncCheckBoxVal();
-                            formEditType();
+                            var Id = data[i].id;
+                            var type = data[i].itemSpecType;
+                            AddCheckBoxSpecs(type, Id, afterHtml);
                         }
                         else {
                             afterHtml = data[i].itemSpecType + ' _ ' + data[i].id;
@@ -372,6 +346,35 @@
             }
         });
     });
+
+
+    function AddCheckBoxSpecs(type, Id, afterHtml){
+         html = '<div class="form-group" id="'+ type + ' _ ' + Id +'">'
+                                    + '<div class="hstack gap-2">'
+                                    + '<label id="label_'+ Id +'" for="' + type +'">' + type + '</label>'
+                                        + '<a href="javascript:;" class="text-secondary pb-2 btnEditType" id="' + Id + '" data-actName="' + type + '"  data-id="'+ Id +'" data-type="Description Type">'
+                                        + '<i class="ri-lg ri-pencil-fill"></i> Edit'
+                                        + '</a>'
+                                    + '</div>'
+                                    + '<div class="hstack gap-2">'
+                                    + '<div class="input-group">'
+                                    + '<div class="input-group-text">'
+                                    + '<input type="checkbox" id="" class="form-check-input checkboxValue" value="' + type + '" required>'
+                                    + '</div>'
+                                    + '<input class="form-control" id="Valueof_' + type + '" name="NewItemSpecs" value="" type="hidden" />'
+                                    + '<input class="form-control" id="IDof_' + type + '" value="' + Id + '" type="hidden" />'
+                                    + '<input class="form-control" id="' + type + '" type="text" disabled autocomplete="off">'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</div>';
+
+                            var toInsertAfter = document.getElementById(afterHtml);
+                            $(html).insertAfter(toInsertAfter);
+                            console.log("this is the item:"+html);
+                            console.log("This is after:" + afterHtml);
+                            fncCheckBoxVal();
+                            formEditType();
+    }
     //Form Unit Type
     $("form[name=AddUnitForm]").on("submit", function(event){
         event.preventDefault();
@@ -460,6 +463,7 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            $("#ItemName").val(newItemType);
                             $("#ItemType").val(newItemType);
                             $("#ItemTypeBtn").attr("data-id", newItemType);
                             $("#ItemTypeBtn").attr("data-actName", val);
