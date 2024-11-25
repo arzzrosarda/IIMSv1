@@ -1,10 +1,34 @@
 ﻿<script>
     @Html.Raw(ViewBag.Modal)
-        $(function () {
-            $("#ManageItemsLink").addClass("active");
-            $("#StocksLink").addClass("active");
-        });
+    $(function () {
+        $("#ManageItemsLink").addClass("active");
+        $("#StocksLink").addClass("active");
+    });
+    $("#stocksTbl").DataTable({
+           "ordering": true,
+           paging: false,
+           "bPaginate": false,
+           "bLengthChange": false,
+           "bFilter": false,
+           "bInfo": false
+       });
 
+    $("#btnSubmitAddStock").on("click", function () {
+        Swal.fire({
+            title: "NEW STOCK",
+            html: "Are you sure you want to add stocks in this item?",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#submitNewAddStock").click();
+            }
+        });
+    });
     $("#pageSel").on("change", function () {
         var val = $("#pageSel option:selected").val();
         $("#pageNumInput").val(val);
@@ -70,17 +94,6 @@
     if(Supply != ""){
        $("#SupplyFilter").val(Supply);
     }
-    $("#StatusSel").on("change", function () {
-        InMainLoader();
-        $("form[name=StocksForm]").submit();
-    });
-
-    $("#SupplyFilter").on("change", function(){
-        var val = $("#SupplyFilter option:selected").val();
-        $("#SupplyInput").val(val);
-        InMainLoader();
-        $("form[name=StocksForm]").submit();
-    });
 
     $("#txtsearch").on("input", function () {
         var val = $(this).val();

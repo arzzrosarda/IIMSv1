@@ -9,10 +9,12 @@ namespace IIMSv1.Models.Shared
         public string returnUrl { get; set; } = string.Empty;
         //ItemId
         [Required]
+        [Display(Name = "Item")]
         public string Item { get; set; } = string.Empty;
 
         //Quantity
         [Required]
+        [Display(Name = "Quantity")]
         [Range(0.01, int.MaxValue, ErrorMessage = "The quantity must be greater than or equal to 1")]
         public int Quantity { get; set; }
 

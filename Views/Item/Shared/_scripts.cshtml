@@ -45,6 +45,24 @@
         event.stopPropagation();
       }
     });
+    //BtnLoad
+    $(".btn-Edit-Type").on("click", function(){
+        InMainLoader();
+    });
+    $(".btn-Add-Unit-Type").on("click", function(){
+        InMainLoader();
+    });
+    $(".btn-Add-Supply-Type").on("click", function(){
+        InMainLoader();
+    });
+    $(".btn-Add-Item-Type").on("click", function(){
+        InMainLoader();
+    });
+    $(".btn-Add-Specs-Type").on("click", function(){
+        InMainLoader();
+    });
+
+    //Selects 
     //Select ItemType 
      $("#ItemType").attr("Disabled", "Disabled");
 
@@ -53,7 +71,6 @@
         var val = $("#SupplyType option:selected").val();
         var name = $("#SupplyType option:selected").text();
         var itemTypeSel = $("#ItemType");
-
         if (val != "") {
             //Ajax Change Value of select option itemtype
             itemTypeSel.removeAttr("Disabled", "Disabled");
@@ -80,6 +97,7 @@
         else {
             $("#supplyTypeBtn").attr("Disabled", "Disabled");
             $(".btnAddItemType").attr("Disabled", "Disabled");
+            $("#ItemTypeBtn").attr("Disabled", "Disabled");
             itemTypeSel.val("");
             itemTypeSel.attr("Disabled", "Disabled");
         }
@@ -99,6 +117,7 @@
             $("#ItemTypeBtn").attr("Disabled", "Disabled");
         }
     });
+    
     //Select Unit Type
     $("#unitSel").on("change", function () {
         var val = $("#unitSel option:selected").val();
@@ -110,6 +129,72 @@
         }
         else {
             $("#UnitTypeBtn").attr("Disabled", "Disabled");
+        }
+    });
+
+     //Select Edit Supply Type
+    $("#SupplyTypeEdit").on("change", function () {
+        var val = $("#SupplyTypeEdit option:selected").val();
+        var name = $("#SupplyTypeEdit option:selected").text();
+        var itemTypeSel = $("#ItemTypeEdit");
+        if (val != "") {
+            itemTypeSel.removeAttr("Disabled", "Disabled");
+             $.ajax({
+                url: "/Item/GetSupplyId",
+                method: "Post",
+                data: { supplyId: val },
+                success: function (result) {
+                    itemTypeSel.empty();
+                    var s = "";
+                    s += '<option value="">Select Item Type</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        s += '<option value="' + result[i].id + '">' + result[i].itemType + '</option>';
+                    }
+                    itemTypeSel.html(s);
+                }
+            });
+            $("#supplyTypeBtnEdit").attr("data-actName", name);
+            $("#supplyTypeBtnEdit").attr("data-id", val);
+            $("#ItemTypeBtnEdit").attr("data-suppId", val);
+            $("#supplyTypeBtnEdit").removeAttr("Disabled", "Disabled");
+            $(".btnAddItemTypeEdit").removeAttr("Disabled", "Disabled");
+        }
+        else {
+            $("#supplyTypeBtnEdit").attr("Disabled", "Disabled");
+            $(".btnAddItemTypeEdit").attr("Disabled", "Disabled");
+            $("#ItemTypeBtnEdit").attr("Disabled", "Disabled");
+            itemTypeSel.val("");
+            itemTypeSel.attr("Disabled", "Disabled");
+        }
+       
+    });
+
+    //Select Edit Item Type
+    $("#ItemTypeEdit").on("change", function () {
+        var val = $("#ItemTypeEdit option:selected").val();
+        var name = $("#ItemTypeEdit option:selected").text();
+        $("#ItemName").val(val);
+        if (val != "") {
+             $("#ItemTypeBtnEdit").attr("data-id", val);
+             $("#ItemTypeBtnEdit").attr("data-actName", name);
+             $("#ItemTypeBtnEdit").removeAttr("Disabled", "Disabled");
+        }
+        else {
+            $("#ItemTypeBtnEdit").attr("Disabled", "Disabled");
+        }
+    });
+
+    //Select Edit Unit Type
+    $("#unitSelEdit").on("change", function () {
+        var val = $("#unitSelEdit option:selected").val();
+        var name = $("#unitSelEdit option:selected").text();
+        if (val != "") {
+             $("#UnitTypeBtnEdit").attr("data-id", val);
+             $("#UnitTypeBtnEdit").attr("data-actName", name);
+             $("#UnitTypeBtnEdit").removeAttr("Disabled", "Disabled");
+        }
+        else {
+            $("#UnitTypeBtnEdit").attr("Disabled", "Disabled");
         }
     });
 
@@ -129,25 +214,146 @@
         $("#modal-edit-type").modal("show");
     });
 
-    function formEditType(){
-        $(".btnEditType").on("click", function(){
+    //Btn Edit Item Edit All Type
+    $(".btnEditTypeEdit").on("click", function(){
         var action = $(this).attr("data-type");
         var id = $(this).attr("data-id");
         var name = $(this).attr("data-actName");
         var supplyName = $(this).attr("data-suppId");
+        $("form[name=editTypeForm]")[0].reset();
         $(".title-type").text(action);
         $("#action").val(action);
         $("#TypeIdInput").val(id);
         $("#TypeName").val(name);
         $("#supplyIdInput").val(supplyName);
-        $("#modal-add-item").modal("hide");
+        $("#modal-edit-item").modal("hide");
         $("#modal-edit-type").modal("show");
     });
+
+    function formEditType(){
+        $(".btnEditType").on("click", function(){
+            var action = $(this).attr("data-type");
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-actName");
+            var supplyName = $(this).attr("data-suppId");
+            $(".title-type").text(action);
+            $("#action").val(action);
+            $("#TypeIdInput").val(id);
+            $("#TypeName").val(name);
+            $("#supplyIdInput").val(supplyName);
+            $("#modal-add-item").modal("hide");
+            $("#modal-edit-type").modal("show");
+        });
+         $(".btnEditTypeEdit").on("click", function(){
+            var action = $(this).attr("data-type");
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-actName");
+            var supplyName = $(this).attr("data-suppId");
+            $("form[name=editTypeForm]")[0].reset();
+            $(".title-type").text(action);
+            $("#action").val(action);
+            $("#TypeIdInput").val(id);
+            $("#TypeName").val(name);
+            $("#supplyIdInput").val(supplyName);
+            $("#modal-edit-item").modal("hide");
+            $("#modal-edit-type").modal("show");
+        });
     }
+
+    $(".newItemAdd").on("click", function(){
+        $("form[name=addItemForm]")[0].reset();
+        $(".dataInput").val("");
+    });
+
+    $(".btnViewItem").on("click", function () {
+        var Id = $(this).attr("data-itemId");
+        var itemCode = $(this).attr("data-ItemCode");
+        var itemUnit = $(this).attr("data-UnitId");
+        var itemType = $(this).attr("data-TypeId");
+        var itemQuantity = $(this).attr("data-Quantity");
+        var itemSupplyId = $(this).attr("data-supplyId");
+
+        $("#ItemIdEdit").val(Id);
+        $("#CodeNameEdit").val(itemCode);
+        $("#ItemNameEdit").val(itemType);
+        $("#SupplyTypeEdit").val(itemSupplyId);
+        $("#QuantityEdit").val(itemQuantity);
+        $("#unitSelEdit").val(itemUnit);
+        
+        $(".checkboxValueEdit").attr('checked', false);
+        $(".editValueof").val("");
+        $(".inputEditSpecs").val("");
+        $(".inputEditSpecs").removeAttr("Required", "Required");
+        $(".inputEditSpecs").attr("Disabled", "Disabled");
+
+        $(".dataInput").val("edit");
+
+        var supplyName = $("#SupplyTypeEdit option:selected").text();
+        $("#supplyTypeBtnEdit").attr("data-actName", supplyName);
+        $("#supplyTypeBtnEdit").attr("data-id", itemSupplyId);
+        $("#ItemTypeBtnEdit").attr("data-suppId", itemSupplyId);
+        $("#supplyTypeBtnEdit").removeAttr("Disabled", "Disabled");
+        $(".btnAddItemTypeEdit").removeAttr("Disabled", "Disabled");
+
+        var unitName = $("#unitSelEdit option:selected").text();
+         $("#UnitTypeBtnEdit").attr("data-id", itemUnit);
+         $("#UnitTypeBtnEdit").attr("data-actName", unitName);
+         $("#UnitTypeBtnEdit").removeAttr("Disabled", "Disabled");
+        InMainLoader();
+        var itemTypeSel = $("#ItemTypeEdit");
+        $.ajax({
+            url: "/Item/GetSupplyId",
+            method: "Post",
+            data: { supplyId: itemSupplyId },
+            success: function (result) {
+                itemTypeSel.empty(); //clear the options:
+                var s = "";
+                s += '<option value="">Select Item Type</option>';
+                for (var i = 0; i < result.length; i++) {
+                    s += '<option value="' + result[i].id + '">' + result[i].itemType + '</option>';
+                }
+                itemTypeSel.html(s);
+                itemTypeSel.val(itemType);
+                var ItemTypeName = $("#ItemTypeEdit option:selected").text();
+                 $("#ItemTypeBtnEdit").attr("data-id", itemType);
+                 $("#ItemTypeBtnEdit").attr("data-actName", ItemTypeName);
+                 $("#ItemTypeBtnEdit").removeAttr("Disabled", "Disabled");
+            }
+        });
+
+        $.ajax({
+            url: "/Item/GetSpecs",
+            method: "Post",
+            data: { ItemId: Id },
+            success: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    $("#Edit_" + result[i].itemSpecValue.itemSpecType.id).attr('checked', true);
+                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).removeAttr("Disabled", "Disabled");
+                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).attr("Required", "Required");
+                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecValue);
+                    $("#EditValueof_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecType.id + "," + result[i].itemSpecValue.itemSpecValue)
+                    $(".inputEditSpecs").on("change", function () {
+                        var Value = $(this).val();
+                        var dataValue = $(this).attr("data-value");
+                        var Id = $("#EditIDof_" + dataValue).val();
+                        $("#EditValueof_" + dataValue).val(Id + "," + Value);
+                    });
+                }
+
+                OutMainLoader();
+                $("#modal-edit-item").modal("show");
+            }
+        });
+    });
 
     //Btn Add Supply Type
     $(".btnAddSupplyType").on("click", function(){
         $("#modal-add-item").modal("hide");
+        $("#modal-add-supply").modal("show");
+    });
+     //Btn Add Supply Type Edit
+    $(".btnAddSupplyTypeEdit").on("click", function(){
+        $("#modal-edit-item").modal("hide");
         $("#modal-add-supply").modal("show");
     });
 
@@ -158,10 +364,22 @@
         $("#modal-add-item").modal("hide");
         $("#modal-add-itemtype").modal("show");
     });
+    //Btn Add Item Type Edit
+    $(".btnAddItemTypeEdit").on("click", function(){
+        var val = $("#SupplyTypeEdit option:selected").val();
+        $("#supplyIdAdd").val(val);
+        $("#modal-edit-item").modal("hide");
+        $("#modal-add-itemtype").modal("show");
+    });
 
     //Btn Add Unit Type
     $(".btnAddUnitType").on("click", function(){
         $("#modal-add-item").modal("hide");
+        $("#modal-add-unit").modal("show");
+    }); 
+    //Btn Add Unit Type Edit
+    $(".btnAddUnitTypeEdit").on("click", function(){
+        $("#modal-edit-item").modal("hide");
         $("#modal-add-unit").modal("show");
     });
 
@@ -169,11 +387,22 @@
     $(".btnAddSpecsType").on("click", function(){
         $("#modal-add-item").modal("hide");
         $("#modal-add-specs").modal("show");
+    }); 
+    //Btn Add Description Type Edit
+    $(".btnAddSpecsTypeEdit").on("click", function(){
+        $("#modal-edit-item").modal("hide");
+        $("#modal-add-specs").modal("show");
     });
 
     //Btn Cancel
     $(".btnCancelAdd").on("click", function(){
-        $("#modal-add-item").modal("show");
+        var val = $(".dataInput").val();
+        if(val != ""){
+            $("#modal-edit-item").modal("show");
+        }
+        else {
+            $("#modal-add-item").modal("show");
+        }
     });
 
     //Edit All Type
@@ -182,6 +411,7 @@
 
         var form = new FormData(this);
         var val = $("#action").val();
+        var dataInput = $(".dataInput").val();
         $.ajax({
             url: "/Item/ActionEditType",
             method: "Post",
@@ -191,11 +421,16 @@
             processData: false,
             success: function(data) {
                 if(data != "0" && data != "1"){
+                    $("form[name=editTypeForm]")[0].reset();
                     if(val == "Supply Type"){
                         var id = data.id;
                         var Name = data.supplyName
+                        //Add View
                         $("#SupplyType option[value=" + id +"]").text(Name);
+                        //Edit View
+                        $("#SupplyTypeEdit option[value=" + id +"]").text(Name);
                         $("#modal-edit-type").modal("hide");
+                        OutMainLoader();
                          Swal.fire({
                             title: "SUCCESS",
                             html: "Save changes successfull",
@@ -208,16 +443,29 @@
                             closeOnCancel: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                //Add View
                                 $("#supplyTypeBtn").attr("data-actName", Name);
-                                $("#modal-add-item").modal("show");
+                                //Edit View
+                                $("#supplyTypeBtnEdit").attr("data-actName", Name);
+
+                                if(dataInput != ""){
+                                    $("#modal-edit-item").modal("show");
+                                }
+                                else {
+                                    $("#modal-add-item").modal("show");
+                                }
                             }
                         });
                     }
                     else if(val == "Item Type"){
                         var id = data.id;
                         var Name = data.itemType;
+                        //Add View
                         $("#ItemType option[value=" + id +"]").text(Name);
+                         //Edit View
+                        $("#ItemTypeEdit option[value=" + id +"]").text(Name);
                         $("#modal-edit-type").modal("hide");
+                        OutMainLoader();
                          Swal.fire({
                             title: "SUCCESS",
                             html: "Save changes successfull",
@@ -230,16 +478,28 @@
                             closeOnCancel: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                //Add View
                                 $("#ItemTypeBtn").attr("data-actName", Name);
-                                $("#modal-add-item").modal("show");
+                                //Edit View
+                                $("#ItemTypeBtnEdit").attr("data-actName", Name);
+                                if(dataInput != ""){
+                                    $("#modal-edit-item").modal("show");
+                                }
+                                else {
+                                    $("#modal-add-item").modal("show");
+                                }
                             }
                         });
                     }
                     else if(val == "Unit Type"){
                         var id = data.id;
                         var Name = data.unitName;
+                        //Add View
                         $("#unitSel option[value=" + id +"]").text(Name);
+                        //Edit View
+                        $("#unitSelEdit option[value=" + id +"]").text(Name);
                         $("#modal-edit-type").modal("hide");
+                        OutMainLoader();
                         Swal.fire({
                             title: "SUCCESS",
                             html: "Save changes successfull",
@@ -252,15 +512,30 @@
                             closeOnCancel: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                //Add View
                                 $("#UnitTypeBtn").attr("data-actName", Name);
-                                $("#modal-add-item").modal("show");
+                                //Edit View
+                                $("#UnitTypeBtnEdit").attr("data-actName", Name);
+                                if(dataInput != ""){
+                                    $("#modal-edit-item").modal("show");
+                                }
+                                else {
+                                    $("#modal-add-item").modal("show");
+                                }
                             }
                         });
                     }
                     else if(val == "Description Type"){
                         var id = data.id;
                         var Name = data.itemSpecType;
+                        //Add View
+                        $("#label_"+id).text(Name);
+                        $("#"+id).attr("data-actName", Name);
+                        //Edit View
+                        $("#Editlabel_"+id).text(Name);
+                        $("#EditBtn_"+id).attr("data-actName", Name);
                         $("#modal-edit-type").modal("hide");
+                        OutMainLoader();
                         Swal.fire({
                             title: "SUCCESS",
                             html: "Save changes successfull",
@@ -273,14 +548,18 @@
                             closeOnCancel: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $("#label_"+id).text(Name);
-                                $("#"+id).attr("data-actName", Name);
-                                $("#modal-add-item").modal("show");
+                                if(dataInput != ""){
+                                    $("#modal-edit-item").modal("show");
+                                }
+                                else {
+                                    $("#modal-add-item").modal("show");
+                                }
                             }
                         });
                     }
                 }
                 else if (data == "1"){
+                    OutMainLoader();
                      Swal.fire({
                         title: "NO CHANGES",
                         html: "no current changes applied",
@@ -293,6 +572,9 @@
                         closeOnCancel: false,
                     });
                 }
+                else {
+                    OutMainLoader();
+                }
             }
         })
     });
@@ -302,6 +584,7 @@
         event.preventDefault();
 
         var form = new FormData(this);
+        var dataInput = $(".dataInput").val();
         $.ajax({
             url: "/Item/_AddSpecType",
             method: "Post",
@@ -310,22 +593,33 @@
             cache: false,
             processData: false,
             success: function(data) {
-                if(data != 0){
+                if(data != "0"){
                     var afterHtml = "";
                     for (var i = 0; i < data.length; i++) {
-                        var row = document.getElementById(data[i].itemSpecType + ' _ ' + data[i].id);
+                        var row = null;
+                        if(dataInput != ""){
+                           row = document.getElementById("Rowfor_" + data[i].itemSpecType + ' _ ' + data[i].id);
+                        }
+                        else {
+                           row = document.getElementById(data[i].itemSpecType + ' _ ' + data[i].id);
+                        }
                         if(row == null){
-
                             var Id = data[i].id;
                             var type = data[i].itemSpecType;
                             AddCheckBoxSpecs(type, Id, afterHtml);
                         }
                         else {
-                            afterHtml = data[i].itemSpecType + ' _ ' + data[i].id;
+                            if(dataInput != ""){
+                                afterHtml = "Rowfor_" + data[i].itemSpecType + ' _ ' + data[i].id;
+                            }
+                            else {
+                                afterHtml = data[i].itemSpecType + ' _ ' + data[i].id;
+                            }
                         }
                     }
                     $("#modal-add-specs").modal("hide");
                     $("form[name=addspecsForm]")[0].reset();
+                    OutMainLoader();
                     Swal.fire({
                         title: "SUCCESS",
                         html: "Description type successfully Added",
@@ -338,10 +632,17 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            $("#modal-add-item").modal("show");
+                            if(dataInput != ""){
+                                $("#modal-edit-item").modal("show");
+                            }
+                            else {
+                                $("#modal-add-item").modal("show");
+                            }
                         }
                     });
                     
+                }else {
+                    OutMainLoader();
                 }
             }
         });
@@ -349,38 +650,68 @@
 
 
     function AddCheckBoxSpecs(type, Id, afterHtml){
-         html = '<div class="form-group" id="'+ type + ' _ ' + Id +'">'
-                                    + '<div class="hstack gap-2">'
-                                    + '<label id="label_'+ Id +'" for="' + type +'">' + type + '</label>'
-                                        + '<a href="javascript:;" class="text-secondary pb-2 btnEditType" id="' + Id + '" data-actName="' + type + '"  data-id="'+ Id +'" data-type="Description Type">'
-                                        + '<i class="ri-lg ri-pencil-fill"></i> Edit'
-                                        + '</a>'
-                                    + '</div>'
-                                    + '<div class="hstack gap-2">'
-                                    + '<div class="input-group">'
-                                    + '<div class="input-group-text">'
-                                    + '<input type="checkbox" id="" class="form-check-input checkboxValue" value="' + type + '" required>'
-                                    + '</div>'
-                                    + '<input class="form-control" id="Valueof_' + type + '" name="NewItemSpecs" value="" type="hidden" />'
-                                    + '<input class="form-control" id="IDof_' + type + '" value="' + Id + '" type="hidden" />'
-                                    + '<input class="form-control" id="' + type + '" type="text" disabled autocomplete="off">'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</div>';
-
-                            var toInsertAfter = document.getElementById(afterHtml);
-                            $(html).insertAfter(toInsertAfter);
-                            console.log("this is the item:"+html);
-                            console.log("This is after:" + afterHtml);
-                            fncCheckBoxVal();
-                            formEditType();
+        var dataInput = $(".dataInput").val();
+        var html = "";
+          if(dataInput != ""){
+               html = '<div class="form-group" id="Rowfor_'+ type + ' _ ' + Id +'">'
+                    + '<div class="hstack gap-2">'
+                    + '<label id="Editlabel_'+ Id +'" for="' + type +'">' + type + '</label>'
+                    + '<a href="javascript:;" class="text-secondary pb-2 btnEditType" id="EditBtn_' + Id + '" data-actName="' + type + '"  data-id="'+ Id +'" data-type="Description Type">'
+                    + '<i class="ri-lg ri-pencil-fill"></i> Edit'
+                    + '</a>'
+                    + '</div>'
+                    + '<div class="hstack gap-2">'
+                    + '<div class="input-group">'
+                    + '<div class="input-group-text">'
+                    + '<input type="checkbox" id="" class="form-check-input checkboxValueEdit" value="' + type + '" required>'
+                    + '</div>'
+                    + '<input class="form-control" id="EditValueof_' + type + '" name="NewItemSpecs" value="" type="hidden" />'
+                    + '<input class="form-control" id="EditIDof_' + type + '" value="' + Id + '" type="hidden" />'
+                    + '<input class="form-control inputEditSpecs" id="EditInput_' + type + '" type="text" data-value="' + type + '" disabled autocomplete="off">'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
+          }
+          else {
+               html = '<div class="form-group" id="'+ type + ' _ ' + Id +'">'
+                    + '<div class="hstack gap-2">'
+                    + '<label id="label_'+ Id +'" for="' + type +'">' + type + '</label>'
+                    + '<a href="javascript:;" class="text-secondary pb-2 btnEditType" id="' + Id + '" data-actName="' + type + '"  data-id="'+ Id +'" data-type="Description Type">'
+                    + '<i class="ri-lg ri-pencil-fill"></i> Edit'
+                    + '</a>'
+                    + '</div>'
+                    + '<div class="hstack gap-2">'
+                    + '<div class="input-group">'
+                    + '<div class="input-group-text">'
+                    + '<input type="checkbox" id="" class="form-check-input checkboxValue" value="' + type + '" required>'
+                    + '</div>'
+                    + '<input class="form-control" id="Valueof_' + type + '" name="NewItemSpecs" value="" type="hidden" />'
+                    + '<input class="form-control" id="IDof_' + type + '" value="' + Id + '" type="hidden" />'
+                    + '<input class="form-control" id="' + type + '" type="text" disabled autocomplete="off">'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
+          }
+          var toInsertAfter = document.getElementById(afterHtml);
+          $(html).insertAfter(toInsertAfter);
+          fncCheckBoxVal();
+          fncCheckBoxValEdit();
+          formEditType();
     }
+
     //Form Unit Type
     $("form[name=AddUnitForm]").on("submit", function(event){
         event.preventDefault();
 
         var form = new FormData(this);
-        var UnitSel = $("#unitSel");
+        var dataInput = $(".dataInput").val();
+        var UnitSel = null;
+        if(dataInput != ""){
+            UnitSel = $("#unitSelEdit");
+        }
+        else {
+             UnitSel = $("#unitSel");
+        }
         var val = $("#itemUnitInput").val();
         $.ajax({
             url: "/Item/_AddUnitType",
@@ -398,9 +729,17 @@
                         s += '<option value="' + data[i].id + '">' + data[i].unitName + '</option>';
                     }
                     UnitSel.html(s);
-                    var newUnitType = $("#unitSel option:contains("+ val +")").val();
+                    var newUnitType = null;
+                    if(dataInput != ""){
+                        newUnitType = $("#unitSelEdit option:contains("+ val +")").val();
+                    }
+                    else {
+                        newUnitType = $("#unitSel option:contains("+ val +")").val();
+                    }
+                    
                     $("form[name=AddUnitForm]")[0].reset();
                     $("#modal-add-unit").modal("hide");
+                    OutMainLoader();
                     Swal.fire({
                         title: "SUCCESS",
                         html: "Unit type successfully Added",
@@ -413,11 +752,21 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            $("#unitSel").val(newUnitType);
-                            $("#UnitTypeBtn").attr("data-id", newUnitType);
-                            $("#UnitTypeBtn").attr("data-actName", val);
-                            $("#UnitTypeBtn").removeAttr("Disabled", "Disabled");
-                            $("#modal-add-item").modal("show");
+                            if(dataInput != ""){
+                                $("#unitSelEdit").val(newUnitType);
+                                $("#UnitTypeBtnEdit").attr("data-id", newUnitType);
+                                $("#UnitTypeBtnEdit").attr("data-actName", val);
+                                $("#UnitTypeBtnEdit").removeAttr("Disabled", "Disabled");
+                                $("#modal-edit-item").modal("show");
+                            }
+                            else {
+                                $("#unitSel").val(newUnitType);
+                                $("#UnitTypeBtn").attr("data-id", newUnitType);
+                                $("#UnitTypeBtn").attr("data-actName", val);
+                                $("#UnitTypeBtn").removeAttr("Disabled", "Disabled");
+                                $("#modal-add-item").modal("show");
+                            }
+                            
                         }
                     });
                 }
@@ -430,7 +779,14 @@
         event.preventDefault();
 
         var form = new FormData(this);
-        var itemTypeSel = $("#ItemType");
+        var dataInput = $(".dataInput").val();
+        var itemTypeSel = null;
+        if(dataInput != ""){
+            itemTypeSel = $("#ItemTypeEdit");
+        }
+        else {
+            itemTypeSel = $("#ItemType");
+        }
         var val = $("#ItemTypeInput").val();
         $.ajax({
             url: "/Item/_AddItemType",
@@ -448,9 +804,16 @@
                         s += '<option value="' + data[i].id + '">' + data[i].itemType + '</option>';
                     }
                     itemTypeSel.html(s);
-                    var newItemType = $("#ItemType option:contains("+ val +")").val();
+                    var newItemType = null;
+                    if(dataInput != ""){
+                        newItemType = $("#ItemTypeEdit option:contains("+ val +")").val();
+                    }
+                    else {
+                        newItemType = $("#ItemType option:contains("+ val +")").val();
+                    }
                     $("form[name=AddItemTypeForm]")[0].reset();
                     $("#modal-add-itemtype").modal("hide");
+                    OutMainLoader();
                     Swal.fire({
                         title: "SUCCESS",
                         html: "Item type successfully Added",
@@ -463,12 +826,22 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            $("#ItemName").val(newItemType);
-                            $("#ItemType").val(newItemType);
-                            $("#ItemTypeBtn").attr("data-id", newItemType);
-                            $("#ItemTypeBtn").attr("data-actName", val);
-                            $("#ItemTypeBtn").removeAttr("Disabled", "Disabled");
-                            $("#modal-add-item").modal("show");
+                            if(dataInput != ""){
+                                $("#ItemNameEdit").val(newItemType);
+                                $("#ItemTypeEdit").val(newItemType);
+                                $("#ItemTypeBtnEdit").attr("data-id", newItemType);
+                                $("#ItemTypeBtnEdit").attr("data-actName", val);
+                                $("#ItemTypeBtnEdit").removeAttr("Disabled", "Disabled");
+                                $("#modal-edit-item").modal("show");
+                            }
+                            else {
+                                $("#ItemName").val(newItemType);
+                                $("#ItemType").val(newItemType);
+                                $("#ItemTypeBtn").attr("data-id", newItemType);
+                                $("#ItemTypeBtn").attr("data-actName", val);
+                                $("#ItemTypeBtn").removeAttr("Disabled", "Disabled");
+                                $("#modal-add-item").modal("show");
+                            } 
                         }
                     });
 
@@ -482,7 +855,14 @@
         event.preventDefault();
 
         var form = new FormData(this);
-        var SupplySel = $("#SupplyType");
+         var dataInput = $(".dataInput").val();
+        var SupplySel = null;
+        if(dataInput != ""){
+            SupplySel = $("#SupplyTypeEdit");
+        }
+        else {
+            SupplySel = $("#SupplyType");
+        }
         var val = $("#SupplyInput").val();
         $.ajax({
             url: "/Item/_AddSupply",
@@ -501,8 +881,16 @@
                         s += '<option value="'+ data[i].id + '">'+ data[i].supplyName + '</option>';
                     }
                     SupplySel.html(s);
-                    var newSupply = $("#SupplyType option:contains("+ val +")").val();
+                     var newSupply = null;
+                     if(dataInput != ""){
+                         newSupply = $("#SupplyTypeEdit option:contains("+ val +")").val();
+                     }
+                     else {
+                         newSupply = $("#SupplyType option:contains("+ val +")").val();
+                     }
+                   
                     $("form[name=AddSupplyForm]")[0].reset();
+                    OutMainLoader();
                      Swal.fire({
                         title: "SUCCESS",
                         html: "Supply type successfully Added",
@@ -515,7 +903,14 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            var itemTypeSel = $("#ItemType");
+                            var itemTypeSel = null;
+                            
+                            if(dataInput != ""){
+                                itemTypeSel = $("#ItemTypeEdit");
+                            }
+                            else {
+                                itemTypeSel = $("#ItemType");
+                            }
                             itemTypeSel.removeAttr("Disabled", "Disabled");
                             $.ajax({
                                 url: "/Item/GetSupplyId",
@@ -531,13 +926,23 @@
                                     itemTypeSel.html(s);
                                 }
                             });
-                            $("#supplyTypeBtn").attr("data-id", newSupply);
-                            $("#supplyTypeBtn").attr("data-actName", val);
-                            $("#ItemTypeBtn").attr("data-suppId", newSupply);
-                            $("#supplyTypeBtn").removeAttr("Disabled", "Disabled");
-                            $(".btnAddItemType").removeAttr("Disabled", "Disabled");
-                            $("#SupplyType").val(newSupply);
-                            $("#modal-add-item").modal("show");
+                           if(dataInput != ""){
+                                $("#supplyTypeBtnEdit").attr("data-id", newSupply);
+                                $("#supplyTypeBtnEdit").attr("data-actName", val);
+                                $("#ItemTypeBtnEdit").attr("data-suppId", newSupply);
+                                $("#supplyTypeBtnEdit").removeAttr("Disabled", "Disabled");
+                                $(".btnAddItemTypeEdit").removeAttr("Disabled", "Disabled");
+                                $("#SupplyTypeEdit").val(newSupply);
+                                $("#modal-edit-item").modal("show");
+                           }else {
+                                $("#supplyTypeBtn").attr("data-id", newSupply);
+                                $("#supplyTypeBtn").attr("data-actName", val);
+                                $("#ItemTypeBtn").attr("data-suppId", newSupply);
+                                $("#supplyTypeBtn").removeAttr("Disabled", "Disabled");
+                                $(".btnAddItemType").removeAttr("Disabled", "Disabled");
+                                $("#SupplyType").val(newSupply);
+                                $("#modal-add-item").modal("show");
+                           }
                         }
                     });
                     
@@ -576,6 +981,7 @@
         $("#ItemIdDelete").val(val);
         $("#modal-delete-item").modal("show");
     });
+
     $(".checkboxValue").on("click", function () {
         var thisValue = $(this).val();
         if (this.checked) {
@@ -592,30 +998,8 @@
             $("#Valueof_" + thisValue).val("");
             $("#" + thisValue).val("");
         }
-
     });
-
-    function fncCheckBoxVal(){
-        $(".checkboxValue").on("click", function () {
-        var thisValue = $(this).val();
-        if (this.checked) {
-            $("#" + thisValue).removeAttr("Disabled", "Disabled");
-            $("#" + thisValue).attr("Required", "Required");
-            $("#" + thisValue).on("change", function () {
-                var Value = $(this).val();
-                var Id = $("#IDof_" + thisValue).val();
-                $("#Valueof_" + thisValue).val(Id + "," + Value);
-            });
-        } else if (!this.checked) {
-            $("#" + thisValue).attr("Disabled", "Disabled");
-            $("#" + thisValue).removeAttr("Required", "Required");
-            $("#Valueof_" + thisValue).val("");
-            $("#" + thisValue).val("");
-        }
-
-    });
-    }
-
+    function fncCheckBoxValEdit(){
     $(".checkboxValueEdit").on("click", function () {
         var thisValue = $(this).val();
         if (this.checked) {
@@ -633,119 +1017,43 @@
             $("#EditInput_" + thisValue).val("");
         }
     });
-    
-    $(".btnViewItem").on("click", function () {
-        var Id = $(this).attr("data-itemId");
-        var itemCode = $(this).attr("data-ItemCode");
-        var itemName = $(this).attr("data-ItemName");
-        var itemUnit = $(this).attr("data-UnitId");
-        var itemType = $(this).attr("data-TypeId");
-        var itemQuantity = $(this).attr("data-Quantity");
-        var itemSupplyId = $(this).attr("data-supplyId");
-
-        $("#ItemIdEdit").val(Id);
-        $("#CodeNameEdit").val(itemCode);
-        $("#ItemNameEdit").val(itemType);
-        $("#SupplyTypeEdit").val(itemSupplyId);
-        $("#QuantityEdit").val(itemQuantity);
-        $("#UnitEdit").val(itemUnit);
-
-        $(".checkboxValueEdit").attr('checked', false);
-        $(".editValueof").val("");
-        $(".inputEditSpecs").val("");
-        $(".inputEditSpecs").removeAttr("Required", "Required");
-        $(".inputEditSpecs").attr("Disabled", "Disabled");
-        InMainLoader();
-        var itemTypeSel = $("#ItemTypeEdit");
-        $.ajax({
-            url: "/Item/GetSupplyId",
-            method: "Post",
-            data: { supplyId: itemSupplyId },
-            success: function (result) {
-                itemTypeSel.empty(); //clear the options:
-                var s = "";
-                s += '<option value="">Select Item Type</option>';
-                for (var i = 0; i < result.length; i++) {
-                    s += '<option value="' + result[i].id + '">' + result[i].itemType + '</option>';
-                }
-                s += '<option value="others">Others</option>';
-                itemTypeSel.html(s);
-                itemTypeSel.val(itemType);
+    }
+    function fncCheckBoxVal(){
+        $(".checkboxValue").on("click", function () {
+            var thisValue = $(this).val();
+            if (this.checked) {
+                $("#" + thisValue).removeAttr("Disabled", "Disabled");
+                $("#" + thisValue).attr("Required", "Required");
+                $("#" + thisValue).on("change", function () {
+                    var Value = $(this).val();
+                    var Id = $("#IDof_" + thisValue).val();
+                    $("#Valueof_" + thisValue).val(Id + "," + Value);
+                });
+            } else if (!this.checked) {
+                $("#" + thisValue).attr("Disabled", "Disabled");
+                $("#" + thisValue).removeAttr("Required", "Required");
+                $("#Valueof_" + thisValue).val("");
+                $("#" + thisValue).val("");
             }
+
         });
+    }
 
-        $.ajax({
-            url: "/Item/GetSpecs",
-            method: "Post",
-            data: { ItemId: Id },
-            success: function (result) {
-                for (var i = 0; i < result.length; i++) {
-                    $("#Edit_" + result[i].itemSpecValue.itemSpecType.id).attr('checked', true);
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).removeAttr("Disabled", "Disabled");
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).attr("Required", "Required");
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecValue);
-                    $("#EditValueof_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecType.id + "," + result[i].itemSpecValue.itemSpecValue)
-                    $(".inputEditSpecs").on("change", function () {
-                        var Value = $(this).val();
-                        var dataValue = $(this).attr("data-value");
-                        var Id = $("#EditIDof_" + dataValue).val();
-                        $("#EditValueof_" + dataValue).val(Id + "," + Value);
-                    });
-                }
-
-                OutMainLoader();
-                $("#modal-edit-item").modal("show");
-            }
-        });
-
-    });
-
-    $("#SupplyTypeEdit").on("change", function () {
-        var val = $("#SupplyTypeEdit option:selected").val();
-        var itemTypeSel = $("#ItemTypeEdit");
-        if (val == "") {
-            $("#OtherItemTypeEdit").attr("Disabled", "Disabled");
-            $("#OtherItemTypeEdit").removeAttr("required", "required");
-            $("#ItemTypeEdit").attr("Disabled", "Disabled");
-            $("#ItemTypeEdit").val("");
-        }
-        else {
-            $("#ItemTypeEdit").removeAttr("Disabled", "Disabled");
-        }
-        $.ajax({
-            url: "/Item/GetSupplyId",
-            method: "Post",
-            data: { supplyId: val },
-            success: function (result) {
-                itemTypeSel.empty();
-                var s = "";
-                s += '<option value="">Select Item Type</option>';
-                for (var i = 0; i < result.length; i++) {
-                    s += '<option value="' + result[i].id + '">' + result[i].itemType + '</option>';
-                }
-                itemTypeSel.html(s);
-            }
-        });
-    });
-
-    $("#ItemTypeEdit").on("change", function () {
-        var val = $("#ItemTypeEdit option:selected").val();
-        if (val == "others") {
-            $("#OtherItemTypeEdit").removeAttr("Disabled", "Disabled");
-            $("#OtherItemTypeEdit").attr("required", "required");
-        }
-        else {
-            $("#ItemNameEdit").val(val);
-            $("#OtherItemTypeEdit").attr("Disabled", "Disabled");
-            $("#OtherItemTypeEdit").removeAttr("required", "required");
-        }
-    });
-    $("#unitInput").on("change", function(){
-        var val = $("#unitInput option:selected").val();
-        if(val != ""){
-            $(".btnEditUnitType").removeAttr("Disabled", "Disabled");
-        }else {
-            $(".btnEditUnitType").attr("Disabled", "Disabled");
+    $(".checkboxValueEdit").on("click", function () {
+        var thisValue = $(this).val();
+        if (this.checked) {
+            $("#EditInput_" + thisValue).removeAttr("Disabled", "Disabled");
+            $("#EditInput_" + thisValue).attr("Required", "Required");
+            $("#EditInput_" + thisValue).on("change", function () {
+                var Value = $(this).val();
+                var Id = $("#EditIDof_" + thisValue).val();
+                $("#EditValueof_" + thisValue).val(Id + "," + Value);
+            });
+        } else if (!this.checked) {
+            $("#EditInput_" + thisValue).attr("Disabled", "Disabled");
+            $("#EditInput_" + thisValue).removeAttr("Required", "Required");
+            $("#EditValueof_" + thisValue).val("");
+            $("#EditInput_" + thisValue).val("");
         }
     });
    

@@ -607,252 +607,121 @@ namespace IIMSv1.Controllers
             ItemPrice? price = await _context.ItemPrice
                 .SingleOrDefaultAsync(x => x.itemId == model.ItemId);
 
-            if (model.ItemType == "others")
-            {
-                var date = DateOnly.FromDateTime(DateTime.Now);
-                var time = TimeOnly.FromDateTime(DateTime.Now);
-                ItemType newItemType = new ItemType()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    itemType = model.OtherItemType.Trim().ToString(),
-                    SuppliesId = model.Supply.ToString(),
-                    IsEnabled = true,
-                };
-                _context.AddAsync(newItemType);
-                _context.SaveChanges();
+            var date = DateOnly.FromDateTime(DateTime.Now);
+            var time = TimeOnly.FromDateTime(DateTime.Now);
 
-                ItemType? itemType = await _context.ItemType
+            ItemType? itemType = await _context.ItemType
                     .Include(x => x.supplies)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(newItemType.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(model.Item));
 
-                string[] Supptype = itemType.supplies.supplyName.Split(" ");
-                string Supplytype = "";
-                foreach (var ty in Supptype)
-                {
-                    Supplytype += ty.Substring(0, 1);
-                }
-
-                
-                string[] splitItemCode = item.ItemCode.Split("_");
-
-
-                        string ItemCode = Supplytype + "_" + itemType.itemType.Trim().ToUpper();
-                        List<Items> getNewitem = _context.Items
-                            .Where(x => x.ItemCode.Contains(ItemCode))
-                            .ToList();
-
-                        var itemCodeCount = getNewitem.Count() + 1;
-                        item.ItemCode = ItemCode + "_" + itemCodeCount.ToString().Trim();
-
-                item.ItemName = itemType.itemType + " ";
-                item.ItemTypeId = newItemType.Id;
-                item.itemUnitId = model.Unit.Trim().ToString();
-                item.dateUpdated = date;
-                item.timeUpdated = time;
-
-                List<ItemSpecs> getItemSpecs = _context.ItemSpecs
-                    .Where(x => x.itemId.Equals(item.Id))
-                    .ToList();
-
-                foreach (var specitem in getItemSpecs)
-                {
-                    _context.Remove(specitem);
-                }
-                foreach (var specs in NewItemSpecs)
-                {
-                    if (specs != null)
-                    {
-                        string[] Value = specs.Split(',');
-                        string SpecTypeId = Value[0];
-                        string SpecValue = "";
-                        foreach (var val in Value)
-                        {
-                            if (val != SpecTypeId)
-                            {
-                                SpecValue += val.ToString();
-                            }
-                        }
-                        ItemSpecValue? itemSpecValue = await _context.ItemSpecValue
-                            .Include(x => x.ItemSpecType)
-                            .SingleOrDefaultAsync(x => x.itemSpecValue.Equals(SpecValue) && x.SpecTypeId.Equals(SpecTypeId));
-
-                        if (itemSpecValue != null)
-                        {
-                                ItemSpecs newSpecs = new ItemSpecs()
-                                {
-                                    Id = Guid.NewGuid().ToString(),
-                                    itemId = item.Id,
-                                    SpecValueId = itemSpecValue.Id,
-                                };
-                                _context.AddAsync(newSpecs);
-                        }
-                        else
-                        {
-                            ItemSpecValue newItemSpecValue = new ItemSpecValue()
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                itemSpecValue = SpecValue,
-                                SpecTypeId = SpecTypeId,
-                                IsEnabled = true
-                            };
-                            ItemSpecs newSpecs = new ItemSpecs()
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                itemId = item.Id,
-                                SpecValueId = newItemSpecValue.Id,
-                            };
-                            _context.AddAsync(newItemSpecValue);
-                            _context.AddAsync(newSpecs);
-                        }
-                    }
-                }
-
-                await _context.SaveChangesAsync(currUser.Id, "Item: Update Changes");
-                Items? getItem = await _context.Items
-                        .SingleOrDefaultAsync(x => x.Id.Equals(item.Id));
-
-                List<ItemSpecs> getspec = _context.ItemSpecs
-                    .Include(x => x.itemSpecValue)
-                    .ThenInclude(x => x.ItemSpecType)
-                    .OrderBy(x => x.itemSpecValue.ItemSpecType.itemSpecType)
-                    .Where(x => x.itemId.Equals(item.Id))
-                    .ToList();
-
-                if (getspec.Count() > 0)
-                {
-                    foreach (var spec in getspec)
-                    {
-                        if (item != null)
-                        {
-                            item.ItemName = item.ItemName + spec.itemSpecValue.itemSpecValue + " ";
-                        }
-                    }
-                }
-                
-                await _context.SaveChanges(currUser.Id, "Item: Update Changes");
-
-                TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
-                return LocalRedirect(returnUrl);
-
-            }
-            else
+            string[] Supptype = itemType.supplies.supplyName.Split(" ");
+            string Supplytype = "";
+            foreach (var ty in Supptype)
             {
-                var date = DateOnly.FromDateTime(DateTime.Now);
-                var time = TimeOnly.FromDateTime(DateTime.Now);
-
-                ItemType? itemType = await _context.ItemType
-                        .Include(x => x.supplies)
-                        .SingleOrDefaultAsync(x => x.Id.Equals(model.Item));
-
-                string[] Supptype = itemType.supplies.supplyName.Split(" ");
-                string Supplytype = "";
-                foreach (var ty in Supptype)
-                {
-                    Supplytype += ty.Substring(0, 1);
-                }
-
-                string ItemCode = Supplytype + "_" + itemType.itemType.Trim().ToUpper();
-                List<Items> getNewitem = _context.Items
-                    .Where(x => x.ItemCode.Contains(ItemCode))
-                    .ToList();
-
-                var itemCodeCount = getNewitem.Count() + 1;
-
-                string[] splitItemCode = item.ItemCode.Split("_");
-                if (splitItemCode[0] != Supplytype || splitItemCode[1] != itemType.itemType.Trim().ToUpper())
-                {
-                    item.ItemCode = ItemCode + "_" + itemCodeCount.ToString().Trim();
-                }
-                
-                item.ItemName = itemType.itemType + " ";
-                item.ItemTypeId = model.ItemType.ToString();
-                item.itemUnitId = model.Unit.Trim().ToString();
-                item.dateUpdated = date;
-                item.timeUpdated = time;
-
-                List<ItemSpecs> getItemSpecs = _context.ItemSpecs
-                    .Where(x => x.itemId.Equals(item.Id))
-                    .ToList();
-
-                foreach(var specitem in getItemSpecs)
-                {
-                    _context.Remove(specitem);
-                }
-                foreach (var specs in NewItemSpecs)
-                {
-                    if (specs != null)
-                    {
-                        string[] Value = specs.Split(',');
-                        string SpecTypeId = Value[0];
-                        string SpecValue = "";
-                        foreach (var val in Value)
-                        {
-                            if (val != SpecTypeId)
-                            {
-                                SpecValue += val.ToString();
-                            }
-                        }
-                        ItemSpecValue? itemSpecValue = await _context.ItemSpecValue
-                            .Include(x => x.ItemSpecType)
-                            .SingleOrDefaultAsync(x => x.itemSpecValue.Equals(SpecValue) && x.SpecTypeId.Equals(SpecTypeId));
-
-                        if (itemSpecValue != null)
-                        {
-                                ItemSpecs newSpecs = new ItemSpecs()
-                                {
-                                    Id = Guid.NewGuid().ToString(),
-                                    itemId = item.Id,
-                                    SpecValueId = itemSpecValue.Id,
-                                };
-                                _context.AddAsync(newSpecs);
-                        }
-                        else
-                        {
-                            ItemSpecValue newItemSpecValue = new ItemSpecValue()
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                itemSpecValue = SpecValue,
-                                SpecTypeId = SpecTypeId,
-                                IsEnabled = true
-                            };
-                            ItemSpecs newSpecs = new ItemSpecs()
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                itemId = item.Id,
-                                SpecValueId = newItemSpecValue.Id,
-                            };
-                            _context.AddAsync(newItemSpecValue);
-                            _context.AddAsync(newSpecs);
-                        }
-                    }
-                }
-                await _context.SaveChangesAsync(currUser.Id, "Item: Update Changes");
-                Items? getItem = await _context.Items
-                    .SingleOrDefaultAsync(x => x.Id.Equals(item.Id));
-
-                List<ItemSpecs> getspec = _context.ItemSpecs
-                    .Include(x => x.itemSpecValue)
-                    .ThenInclude(x => x.ItemSpecType)
-                    .OrderBy(x => x.itemSpecValue.ItemSpecType.itemSpecType)
-                    .Where(x => x.itemId.Equals(item.Id))
-                    .ToList();
-
-                if (getspec.Count() > 0)
-                {
-                    foreach (var spec in getspec)
-                    {
-
-                        if (item != null)
-                        {
-                            item.ItemName = item.ItemName + spec.itemSpecValue.itemSpecValue + " ";
-                        }
-                    }
-                }
-                await _context.SaveChanges(currUser.Id, "Item: Update Changes");
-
-                TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
-                return LocalRedirect(returnUrl);
+                Supplytype += ty.Substring(0, 1);
             }
+
+            string ItemCode = Supplytype + "_" + itemType.itemType.Trim().ToUpper();
+            List<Items> getNewitem = _context.Items
+                .Where(x => x.ItemCode.Contains(ItemCode))
+                .ToList();
+
+            var itemCodeCount = getNewitem.Count() + 1;
+
+            string[] splitItemCode = item.ItemCode.Split("_");
+            if (splitItemCode[0] != Supplytype || splitItemCode[1] != itemType.itemType.Trim().ToUpper())
+            {
+                item.ItemCode = ItemCode + "_" + itemCodeCount.ToString().Trim();
+            }
+
+            item.ItemName = itemType.itemType + " ";
+            item.ItemTypeId = model.ItemType.ToString();
+            item.itemUnitId = model.Unit.Trim().ToString();
+            item.dateUpdated = date;
+            item.timeUpdated = time;
+
+            List<ItemSpecs> getItemSpecs = _context.ItemSpecs
+                .Where(x => x.itemId.Equals(item.Id))
+                .ToList();
+
+            foreach (var specitem in getItemSpecs)
+            {
+                _context.Remove(specitem);
+            }
+            foreach (var specs in NewItemSpecs)
+            {
+                if (specs != null)
+                {
+                    string[] Value = specs.Split(',');
+                    string SpecTypeId = Value[0];
+                    string SpecValue = "";
+                    foreach (var val in Value)
+                    {
+                        if (val != SpecTypeId)
+                        {
+                            SpecValue += val.ToString();
+                        }
+                    }
+                    ItemSpecValue? itemSpecValue = await _context.ItemSpecValue
+                        .Include(x => x.ItemSpecType)
+                        .SingleOrDefaultAsync(x => x.itemSpecValue.Equals(SpecValue) && x.SpecTypeId.Equals(SpecTypeId));
+
+                    if (itemSpecValue != null)
+                    {
+                        ItemSpecs newSpecs = new ItemSpecs()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            itemId = item.Id,
+                            SpecValueId = itemSpecValue.Id,
+                        };
+                        _context.AddAsync(newSpecs);
+                    }
+                    else
+                    {
+                        ItemSpecValue newItemSpecValue = new ItemSpecValue()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            itemSpecValue = SpecValue,
+                            SpecTypeId = SpecTypeId,
+                            IsEnabled = true
+                        };
+                        ItemSpecs newSpecs = new ItemSpecs()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            itemId = item.Id,
+                            SpecValueId = newItemSpecValue.Id,
+                        };
+                        _context.AddAsync(newItemSpecValue);
+                        _context.AddAsync(newSpecs);
+                    }
+                }
+            }
+            await _context.SaveChangesAsync(currUser.Id, "Item: Update Changes");
+            Items? getItem = await _context.Items
+                .SingleOrDefaultAsync(x => x.Id.Equals(item.Id));
+
+            List<ItemSpecs> getspec = _context.ItemSpecs
+                .Include(x => x.itemSpecValue)
+                .ThenInclude(x => x.ItemSpecType)
+                .OrderBy(x => x.itemSpecValue.ItemSpecType.itemSpecType)
+                .Where(x => x.itemId.Equals(item.Id))
+                .ToList();
+
+            if (getspec.Count() > 0)
+            {
+                foreach (var spec in getspec)
+                {
+
+                    if (item != null)
+                    {
+                        item.ItemName = item.ItemName + spec.itemSpecValue.itemSpecValue + " ";
+                    }
+                }
+            }
+            await _context.SaveChanges(currUser.Id, "Item: Update Changes");
+
+            TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            return LocalRedirect(returnUrl);
         }
 
         //GetSpecs

@@ -48,10 +48,6 @@ namespace IIMSv1.Models.Shared
         [Display(Name = "Item Type")]
         public string ItemType { get; set; } = string.Empty;
 
-        [Display(Name = "Other")]
-        [Remote("CheckItemTypeDuplicate", "Inventory", AdditionalFields = "Supply")]
-        public string OtherItemType { get; set; } = string.Empty;
-
         //Unit
         [Required]
         [Display(Name = "Item Unit")]

@@ -103,22 +103,7 @@ $("#btnSubmitReleaseItemBulk").on("click", function () {
         } 
     });
 });
-$("#btnSubmitAddStock").on("click", function () {
-    Swal.fire({
-        title: "NEW STOCK",
-        html: "Are you sure you want to add stocks in this item?",
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#submitNewAddStock").click();
-        }
-    });
-});
+
 
 $("#logBtn").on("click", function () {
     Swal.fire({
@@ -182,15 +167,6 @@ $(document).ready(function () {
         "bFilter": false,
         "bInfo": false
     });
-    
-    $("#stocksTbl").DataTable({
-        "ordering": false,
-        paging: false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": false,
-        "bInfo": false
-    }); 
     $("#supplyTable").DataTable({
         pageLength: 10,
         layout: {

@@ -1,0 +1,49 @@
+﻿<form asp-action="Filter" asp-controller="Stocks" name="StocksForm">
+    <div id="modal-filter" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-filter" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-3">FILTER: </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                    <input type="hidden" class="form-control" placeholder="Search" id="txtsubmitsearch" name="search" value="@Model.SearchText" />
+                    <input class="form-control" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Status: </label>
+                                    <select class="form-select" name="status" id="StatusSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Status</option>
+                                        <option value="InStock">In Stock</option>
+                                        <option value="Out of Stock">Out of Stock</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Supply Type: </label>
+                                    <select name="Supply" id="SupplyFilter" asp-items="@(new SelectList(Model.supplies, "Id", "supplyName"))" class="form-select" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Supply Type</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("Index", "Stocks")" class="btn btn-light waves-effect waves-light">Reset</a>
+                    <button type="submit" class="btn btn-secondary waves-effect waves-light">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -3,7 +3,7 @@
 @model AddItemTypeModel
 
 <form name="AddItemTypeForm">
-    <div id="modal-add-itemtype" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-itemtype">
+    <div id="modal-add-itemtype" class="modal zoomIn" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,7 +25,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-light waves-effect waves-light btnCancelAdd" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-label btn-secondary waves-effect waves-light btnAddItemType">
+                    <button type="submit" class="btn btn-label btn-secondary waves-effect waves-light btn-Add-Item-Type">
                         <i class="ri-lg ri-save-3-line label-icon align-middle fs-16 me-2"></i>
                         Save
                     </button>
