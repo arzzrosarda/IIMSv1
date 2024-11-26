@@ -27,17 +27,74 @@ namespace IIMSv1.Controllers
             _signInManager = signInManager;
         }
 
-        //Add More Stocks
+        //Edit Stocks
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Inventory Administrator")]
-        public async Task<IActionResult> _UpdateStocks(StockEditModel model)
+        public async Task<IActionResult> _EditStocks(StockEditModel model)
         {
             AccountUser? currUser = await _userManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                return LocalRedirect(model.returnUrl);
+            }
+            Items? item = await _context.Items
+                .SingleOrDefaultAsync(x => x.Id.Equals(model.ItemId));
+
+            DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+            TimeOnly time = TimeOnly.FromDateTime(DateTime.Now);
+
+            if (item != null)
+            {
+                item.itemQuantity = model.Quantity;
+                await _context.SaveChangesAsync(currUser.Id, "Edit Stocks");
+
+                ItemQuantityHistory newQuantityHistory = new ItemQuantityHistory()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = currUser.Id.ToString(),
+                    ItemId = item.Id.ToString(),
+                    QuantityFrom = model.QuantityBefore,
+                    QuantityTo = model.Quantity,
+                    Activity = "Edited Stocks",
+                    Date = date,
+                    Time = time
+                };
+                _context.AddAsync(newQuantityHistory);
+                _context.SaveChanges();
+                TempData["alert"] = Global.GenerateToast("",
+                    "<b>ITEM: </b>" + item.ItemName
+                    + "<ul>"
+                    + "<li> Quantity Before: " + model.QuantityBefore + " </li> "
+                    + "<li> New Quantity: " + model.Quantity + "</li> "
+                    + "</ul>",
+                    "topRight",
+                    Global.BsStatusColor.Success,
+                    Global.BsStatusIcon.None);
+
+                return LocalRedirect(model.returnUrl);
+            }
+            else
+            {
+                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                return LocalRedirect(model.returnUrl);
+            }
+
+        }
+
+        //Add More Stocks
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> _AddStocks(StockEditModel model)
+        {
+            AccountUser? currUser = await _userManager.GetUserAsync(User);
+            if (!ModelState.IsValid)
+            {
+                string errors = Global.GetModelStateErrors(ModelState);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(model.returnUrl);
             }
             Items? item = await _context.Items
@@ -66,19 +123,21 @@ namespace IIMSv1.Controllers
                 _context.AddAsync(newQuantityHistory);
                 _context.SaveChanges();
                 TempData["alert"] = Global.GenerateToast("",
-                    "<b>ADDED QUANTITY: </b>" + item.ItemName
-                    + " <br /><b> Quantity Before: </b> " + model.QuantityBefore
-                    + " <br /><b> Added Quantity: </b> " + model.Quantity
-                    + " <br /><b> Total Quantity: </b> " + addQuantity,
+                    "<b>ITEM: </b>" + item.ItemName
+                    + "<ul>"
+                    + "<li> Quantity Before: " + model.QuantityBefore + " </li> " 
+                    + "<li> Added Quantity: " + model.Quantity + "</li> " 
+                    + "<li> Total Quantity: " + addQuantity + "</li> "
+                    + "</ul>",
                     "topRight",
-                    Global.BsStatusIcon.Success,
-                    Global.BsStatusColor.Success);
+                    Global.BsStatusColor.Success,
+                    Global.BsStatusIcon.None);
 
                 return LocalRedirect(model.returnUrl);
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "topRight", Global.BsStatusIcon.Warning, Global.BsStatusColor.Warning);
+                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return LocalRedirect(model.returnUrl);
             }
 
@@ -89,13 +148,13 @@ namespace IIMSv1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Inventory Administrator")]
-        public async Task<IActionResult> _AddStocks(StockInputModel model)
+        public async Task<IActionResult> _AddItem(StockInputModel model)
         {
             AccountUser? currUser = await _userManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(model.returnUrl);
             }
             Items? item = await _context.Items
@@ -119,16 +178,16 @@ namespace IIMSv1.Controllers
                     Time = time
                 };
                 item.itemQuantity = model.Quantity;
-                await _context.SaveChangesAsync(currUser.Id, "Stocks: New Stocks and Price Added ");
+                await _context.SaveChangesAsync(currUser.Id, "Stocks: New Item added to stocks table");
 
                 _context.QuantityHistory.AddAsync(newQuantityHistory);
                 _context.SaveChanges();
-                TempData["alert"] = Global.GenerateToast("", "<b>NEW STOCKS: </b>" + item.ItemName + " <br /><b>Quantity: </b> " + model.Quantity, "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+                TempData["alert"] = Global.GenerateToast("", "<b>NEW ITEM: </b>" + item.ItemName, "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return LocalRedirect(model.returnUrl);
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("NEW STOCKS", "Something went wrong", "topRight", Global.BsStatusIcon.Warning, Global.BsStatusColor.Warning);
+                TempData["alert"] = Global.GenerateToast("NEW STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return LocalRedirect(model.returnUrl);
             }
 

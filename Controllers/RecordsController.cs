@@ -30,7 +30,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
             }
             AccountUser? currUser = await _context.AccountCredentials
                 .Include(x => x.Employee)
@@ -87,7 +87,7 @@ namespace IIMSv1.Controllers
                     + " <br /> <b>FOR:</b> "
                     + released.Department.NormalizedName 
                     + " <br /> <b>PULLOUT QUANTITY:</b> "
-                    + ReleaseQuantity.ToString(), "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                    + ReleaseQuantity.ToString(), "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
                
                 return Json("");
             }

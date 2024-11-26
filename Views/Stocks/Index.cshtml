@@ -145,8 +145,9 @@
     </div>
 </div>
 @section modals {
-    @await Html.PartialAsync("~/Views/Stocks/Modal/_AddStocks.cshtml", Model.StockInputModel)
+    @await Html.PartialAsync("~/Views/Stocks/Modal/_AddItem.cshtml", Model.StockInputModel)
     @await Html.PartialAsync("~/Views/Stocks/Modal/_EditQuantity.cshtml", Model.StockEditModel)
+    @await Html.PartialAsync("~/Views/Stocks/Modal/_AddQuantity.cshtml", Model.StockEditModel)
     @await Html.PartialAsync("~/Views/Stocks/Modal/_Filter.cshtml")
 }
 @section scripts {

@@ -68,12 +68,30 @@
         var ItemId = $(this).attr("data-ItemId");
         var Quantity = $(this).attr("data-Quantity");
         var ItemName = $(this).attr("data-ItemName");
-        $("#BeforeQuantityStock").val(Quantity);
-        $("#QuantityEditStock").text(Quantity);
-        $("#ItemNameEditStock").text(ItemName);
+        $("#AddBeforeQuantityStock").val(Quantity);
+        $("#AddQuantityStock").text(Quantity);
+        $("#AddItemNameStock").text(ItemName);
 
-        $("#ItemQuantityStock").attr("min", "1");
-        $("#ItemIdInputStock").val(ItemId);
+        $("#AddItemQuantityStock").attr("min", "1");
+         $("#EditItemQuantityStock").val("");
+        $("#AddItemIdStock").val(ItemId);
+
+        OutMainLoader();
+        $("#modal-add-stocks").modal("show");
+    });
+    $(".editItemStocks").on("click", function () {
+        InMainLoader();
+        var ItemId = $(this).attr("data-ItemId");
+        var Quantity = $(this).attr("data-Quantity");
+        var ItemName = $(this).attr("data-ItemName");
+        $("#EditBeforeQuantityStock").val(Quantity);
+        $("#EditQuantityStock").text(Quantity);
+        $("#EditItemNameStock").text(ItemName);
+
+        $("#EditItemQuantityStock").attr("min", "1");
+        $("#EditItemQuantityStock").attr("max", Quantity);
+        $("#EditItemQuantityStock").val(Quantity);
+        $("#EditItemIdStock").val(ItemId);
 
         OutMainLoader();
         $("#modal-edit-stocks").modal("show");

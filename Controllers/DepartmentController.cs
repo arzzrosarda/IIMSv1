@@ -34,7 +34,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             Department? department = await _context.Departments
@@ -47,7 +47,7 @@ namespace IIMSv1.Controllers
                 department.DepartmentClusterID = model.Cluster.ToString();
                 await _context.SaveChangesAsync(currUser.Id, "Department: user edited department");
             }
-            TempData["alert"] = Global.GenerateToast(department.NormalizedName, "Changes Successfully Saved", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            TempData["alert"] = Global.GenerateToast(department.NormalizedName, "Changes Successfully Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -61,7 +61,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             Department? department = await _context.Departments
@@ -72,7 +72,7 @@ namespace IIMSv1.Controllers
                 _context.Remove(department);
             }
             await _context.SaveChangesAsync(currUser.Id, "Department: Deleted");
-            TempData["alert"] = Global.GenerateToast(department.Name, "Deleted Successfully", "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+            TempData["alert"] = Global.GenerateToast(department.Name, "Deleted Successfully", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
             return LocalRedirect(returnUrl);
         }
 
@@ -85,7 +85,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             Department? department = await _context.Departments
@@ -105,7 +105,7 @@ namespace IIMSv1.Controllers
                 }
                 department.IsActive = true;
                 await _context.SaveChangesAsync(currUser.Id, "Department: Enabled");
-                TempData["alert"] = Global.GenerateToast(department.Name, "Enabled Successfully", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+                TempData["alert"] = Global.GenerateToast(department.Name, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             }
             return LocalRedirect(returnUrl);
         }
@@ -120,7 +120,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -141,7 +141,7 @@ namespace IIMSv1.Controllers
                 }
                 department.IsActive = false;
                 await _context.SaveChangesAsync(currUser.Id, "Department: Disabled");
-                TempData["alert"] = Global.GenerateToast(department.Name, "Disabled Successfully", "topRight", Global.BsStatusIcon.Warning, Global.BsStatusColor.Warning);
+                TempData["alert"] = Global.GenerateToast(department.Name, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
             }
             return LocalRedirect(returnUrl);
         }
@@ -195,7 +195,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -211,7 +211,7 @@ namespace IIMSv1.Controllers
 
             _context.AddAsync(newdept);
             await _context.SaveChangesAsync(currUser.Id, "Department: Added a new department");
-            TempData["alert"] = Global.GenerateToast(model.Name, "Successfully Added Department", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            TempData["alert"] = Global.GenerateToast(model.Name, "Successfully Added Department", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 

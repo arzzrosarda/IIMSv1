@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Drawing;
 
 namespace IIMSv1
 {
@@ -63,6 +64,7 @@ namespace IIMSv1
             Info,
             Warning,
             Danger,
+            None
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace IIMSv1
         /// <param name="dismissible">Flag whether the generated alert box will have a close button.</param>
         /// <param name="icon">(optional) The bootstrap icon class to display alongside the message.</param>
         /// <returns></returns>
-        public static string GenerateToast(string title, string message, string position,BsStatusIcon Icon, BsStatusColor color)
+        public static string GenerateToast(string title, string message, string position, BsStatusColor color, BsStatusIcon Icon)
         {
             string colorclass;
             switch (color)
@@ -96,13 +98,16 @@ namespace IIMSv1
                 case BsStatusIcon.Info: iconClass = "ri-lg ri-error-warning-fill"; break;
                 case BsStatusIcon.Warning: iconClass = "ri-lg ri-alert-fill"; break;
                 case BsStatusIcon.Danger: iconClass = "ri-lg ri-spam-2-fill"; break;
+                case BsStatusIcon.None: iconClass = ""; break;
                 default: iconClass = ""; break;
             }
 
-            string alert = "<div class=\"alert "+ colorclass +" alert-border-left alert-dismissible fade shadow show\" role=\"alert\">"
-                                + "<i class=\"" + iconClass + " me-3 align-middle\"></i> <strong>"+ title + "</strong> " + message
-                                + "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>"
-                            + "</div>";
+            string alert = "<div class=\"alert " + colorclass + " alert-border-left alert-dismissible fade shadow show\" role=\"alert\">";
+             if(iconClass != "")
+            {
+                alert += "<i class=\"" + iconClass + " me-3 align-middle\"></i>";
+            } 
+            alert += "<strong>"+ title + "</strong> " + message + "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>" + "</div>";
 
             return alert;
         }

@@ -547,7 +547,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -557,7 +557,7 @@ namespace IIMSv1.Controllers
 
             item.IsEnabled = true;
             await _context.SaveChangesAsync(currUser.Id, "Item: Enabled");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Enabled Successfully", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -571,7 +571,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -581,7 +581,7 @@ namespace IIMSv1.Controllers
 
             item.IsEnabled = false;
             await _context.SaveChangesAsync(currUser.Id, "Item: Disabled");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Disabled Successfully", "topRight", Global.BsStatusIcon.Warning, Global.BsStatusColor.Warning);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
             return LocalRedirect(returnUrl);
         }
 
@@ -595,7 +595,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -720,7 +720,7 @@ namespace IIMSv1.Controllers
             }
             await _context.SaveChanges(currUser.Id, "Item: Update Changes");
 
-            TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -748,7 +748,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             Items? item = await _context.Items
@@ -756,7 +756,7 @@ namespace IIMSv1.Controllers
 
             _context.Items.Remove(item);
             await _context.SaveChangesAsync(currUser.Id, "Item: Deleted");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Deleted Successfully", "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Deleted Successfully", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
             return LocalRedirect(returnUrl);
         }
 
@@ -787,7 +787,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -899,7 +899,7 @@ namespace IIMSv1.Controllers
                 }
             }
             await _context.SaveChanges(currentUser.Id, "Item: Update Changes");
-            TempData["alert"] = Global.GenerateToast(newItem.ItemName, "Added Successfully", "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+            TempData["alert"] = Global.GenerateToast(newItem.ItemName, "Added Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 

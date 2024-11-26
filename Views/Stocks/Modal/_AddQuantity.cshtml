@@ -6,12 +6,12 @@
     var QueryStrings = Context.Request.QueryString;
     var returnURl = Path + QueryStrings;
 }
-<form asp-action="_EditStocks" asp-controller="Stocks">
-    <div id="modal-edit-stocks" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-edit-stocks" aria-hidden="true">
+<form asp-action="_AddStocks" asp-controller="Stocks">
+    <div id="modal-add-stocks" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-add-stocks" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-light pt-3 pb-3">
-                    <h5 class="modal-title">EDIT</h5>
+                    <h5 class="modal-title">ADD STOCK</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         
                     </button>
@@ -22,22 +22,22 @@
                             <table class="table table-bordered">
                                 <tbody>
                                     <tr>
-                                        <td>ITEM: </td>
-                                        <td id="EditItemNameStock"></td>
+                                        <td class="text-right">ITEM: </td>
+                                        <td id="AddItemNameStock"></td>
                                     </tr>
                                     <tr>
-                                        <td>REMAINING STOCKS: </td>
-                                        <td id="EditQuantityStock"></td>
+                                        <td class="text-right">REMAINING STOCKS: </td>
+                                        <td id="AddQuantityStock"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                        <div class="col-lg-12 border border-white p-3">
                             <input class="form-control" asp-for="returnUrl" value="@returnURl" type="hidden" />
-                            <input class="form-control" asp-for="ItemId" id="EditItemIdStock" type="hidden" />
-                            <input class="form-control" asp-for="QuantityBefore" id="EditBeforeQuantityStock" type="hidden" />
+                            <input class="form-control" asp-for="ItemId" id="AddItemIdStock" type="hidden" />
+                            <input class="form-control" asp-for="QuantityBefore" id="AddBeforeQuantityStock" type="hidden" />
                            <label asp-for="Quantity"></label>
-                           <input class="form-control" asp-for="Quantity" id="EditItemQuantityStock" type="text"/>
+                           <input class="form-control" asp-for="Quantity" id="AddItemQuantityStock" value=""/>
                            <span class="text-danger" asp-validation-for="Quantity"></span>
                        </div>
                     </div>
@@ -45,8 +45,8 @@
                 <div class="modal-footer">
                     <button class="btn btn-light waves-effect waves-light" data-bs-dismiss="modal" type="reset">Cancel</button>
                     <button type="submit" class="btn btn-label btn-secondary waves-effect waves-light">
-                        <i class="ri-lg ri-save-2-line label-icon align-middle fs-16 me-2"></i>
-                        Save
+                        <i class="ri-lg ri-add-fill label-icon align-middle fs-16 me-2"></i>
+                        Add
                     </button>
                 </div>
             </div>

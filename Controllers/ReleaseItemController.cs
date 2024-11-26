@@ -33,7 +33,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "ReleaseItem");
             }
 
@@ -139,14 +139,14 @@ namespace IIMSv1.Controllers
                         _context.SaveChanges();
 
                 }
-                TempData["alert"] = Global.GenerateToast("RELEASE", "Successfully released <strong>" + ItemQuantity.Count() + " Items</strong>" , "topRight", Global.BsStatusIcon.Success, Global.BsStatusColor.Success);
+                TempData["alert"] = Global.GenerateToast("RELEASE", "Successfully released <strong>" + ItemQuantity.Count() + " Items</strong>" , "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 TempData["releaseId"] = GetItem;
                 TempData["releaseInfo"] = releaseNum + "-" + CountReleased + "," + department.NormalizedName + "," + date.ToShortDateString();
                 return RedirectToAction("Index", "ReleaseItem");
             }
             else
             { 
-                TempData["alert"] = Global.GenerateToast("ERROR", "Department field is required!", "topRight", Global.BsStatusIcon.Danger, Global.BsStatusColor.Danger);
+                TempData["alert"] = Global.GenerateToast("ERROR", "Department field is required!", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
                 return RedirectToAction("Index", "ReleaseItem");
             }
            
