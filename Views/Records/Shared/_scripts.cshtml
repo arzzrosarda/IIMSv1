@@ -3,128 +3,31 @@
         $("#ManageItemsLink").addClass("active");
         $("#RecordsLink").addClass("active");
     });
-    $(".btnToReceiveList").on("click", function () {
-        var val = $(this).attr("data-bool");
-        InMainLoader();
-        if (val == "true") {
-            $("#ToReceiveInput").val("");
-            $("form[name=relNumForm]").submit();
-        }
-        else {
-            $("#ToReceiveInput").val("true");
-            $("#PulloutInput").val("");
-            $("#ReceivedInput").val("");
-            $("form[name=relNumForm]").submit();
-        }
-    });
-    $(".btnPulloutList").on("click", function () {
-        var val = $(this).attr("data-bool");
-        InMainLoader();
-        if (val == "true") {
-            $("#PulloutInput").val("");
-            $("form[name=relNumForm]").submit();
-        }
-        else {
-            $("#ToReceiveInput").val("");
-            $("#ReceivedInput").val("");
-            $("#PulloutInput").val("true");
-            $("form[name=relNumForm]").submit();
-        }
-    });
-    $(".btnReceivedList").on("click", function () {
-        var val = $(this).attr("data-bool");
-        InMainLoader();
-        if (val == "true") {
-            $("#ReceivedInput").val("");
-            $("form[name=relNumForm]").submit();
-        }
-        else {
-            $("#ToReceiveInput").val("");
-            $("#PulloutInput").val("");
-            $("#ReceivedInput").val("true");
-            $("form[name=relNumForm]").submit();
-        }
-    });
-    $("#ReleaseInfoTbl").dataTable({
-        "ordering": false,
-        paging: false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": false,
-        "bInfo": false
-    });
+    // $("#ReleaseInfoTbl").dataTable({
+    //     responsive: true,
+    //     "ordering": false,
+    //     paging: false,
+    //     "bPaginate": false,
+    //     "bLengthChange": false,
+    //     "bFilter": false,
+    //     "bInfo": false
+    // });
 
-    $("#pageSel").on("change", function () {
-            var val = $("#pageSel option:selected").val();
-            $("#pageNumInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
-        $("#firstUrlBtn").on("click", function () {
-            var val = $(this).attr("data-page");
-            $("#pageNumInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
-        $("#previousUrlBtn").on("click", function () {
-            var val = $(this).attr("data-page");
-            $("#pageNumInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
-        $("#nextUrlBtn").on("click", function () {
-            var val = $(this).attr("data-page");
-            $("#pageNumInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
-        $("#lastUrlBtn").on("click", function () {
-            var val = $(this).attr("data-page");
-            $("#pageNumInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
+    // $("#releasesRecord").DataTable({
+    //     responsive: true,
+    //     "ordering": false,
+    //     paging: false,
+    //     "bPaginate": false,
+    //     "bLengthChange": false,
+    //     "bFilter": false,
+    //     "bInfo": false
+    // });
 
     var yeartxt = "@Model.yeartxt";
     var relnum = "@Model.relnum";
-    var perNum = "@Model.perPage";
-    var toReceive = "@Model.ToReceive";
-    var Pullout = "@Model.Pullout";
-    var Received = "@Model.Received";
 
-    if (toReceive == "true") {
-        $(".btnToReceiveList").removeClass("btn-outline-primary")
-        $(".btnToReceiveList span").removeClass("badge-secondary");
-        $(".btnToReceiveList").addClass("btn-primary");
-        $(".btnToReceiveList span").addClass("bg-white");
-        $(".btnToReceiveList span").addClass("text-dark");
-    }
-    if (Pullout == "true") {
-        $(".btnPulloutList").removeClass("btn-outline-primary")
-        $(".btnPulloutList span").removeClass("badge-secondary");
-        $(".btnPulloutList").addClass("btn-primary");
-        $(".btnPulloutList span").addClass("bg-white");
-        $(".btnPulloutList span").addClass("text-dark");
-    }
-    if (Received == "true") {
-        $(".btnReceivedList").removeClass("btn-outline-primary")
-        $(".btnReceivedList span").removeClass("badge-secondary");
-        $(".btnReceivedList").addClass("btn-primary");
-        $(".btnReceivedList span").addClass("bg-white");
-        $(".btnReceivedList span").addClass("text-dark");
-    }
-
-    $("#pagenumToDisplaySel").val(perNum);
-    if(relnum != "000000"){
-       $("#relnumTxt").val(relnum);
-    }
     $("#yearRelNum").val(yeartxt);
-      $("#pagenumToDisplaySel").on("change", function () {
-            var val = $(this).val();
-            $("#pageNumPerInput").val(val);
-            InMainLoader();
-            $("form[name=relNumForm]").submit();
-        });
+
     const input = document.getElementById("relnumTxt");
 
     input.onkeydown = (event) => {

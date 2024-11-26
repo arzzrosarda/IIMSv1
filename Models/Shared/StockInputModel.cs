@@ -15,6 +15,7 @@ namespace IIMSv1.Models.Shared
         //Quantity
         [Required]
         [Display(Name = "Quantity")]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
         [Range(0.01, int.MaxValue, ErrorMessage = "The quantity must be greater than or equal to 1")]
         public int Quantity { get; set; }
 
@@ -35,6 +36,7 @@ namespace IIMSv1.Models.Shared
         //Quantity
         [Required]
         [Display(Name = "Quantity")]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
         public int Quantity { get; set; }
     }
 }

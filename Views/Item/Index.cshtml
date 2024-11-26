@@ -68,10 +68,10 @@
                             <table class="table table-bordered" id="itemTbl">
                                 <thead class="table-light">
                                     <tr>
+                                        <th scope="col" class="align-content-center text-center">STATUS</th>
                                         <th scope="col" class="align-content-center">ITEM</th>
                                         <th scope="col" class="align-content-center text-center">SUPPLY TYPE</th>
                                         <th scope="col" class="align-content-center text-center">DATE</th>
-                                        <th scope="col" class="align-content-center text-center">STATUS</th>
                                         <th scope="col" class="text-center align-content-center ">ACTION</th>
                                     </tr>
                                 </thead>
@@ -81,10 +81,6 @@
                                         @foreach (var item in items)
                                         {
                                             <tr>
-
-                                                <td class="font-weight-bold align-content-center" width="40%">@item.ItemName</td>
-                                                <td class="align-content-center text-center" width="16%">@item.itemType.supplies.supplyName</td>
-                                                <td class="align-content-center text-center" width="16%">@item.dateCreated.ToShortDateString()</td>
                                                 <td class="text-center align-content-center" width="12%">
                                                     @if (item.IsEnabled == true)
                                                     {
@@ -95,6 +91,9 @@
                                                         <span class="badge badge-label bg-warning"><i class="mdi mdi-circle-medium"></i> Disabled</span>
                                                     }
                                                 </td>
+                                                <td class="font-weight-bold align-content-center" width="40%">@item.ItemName</td>
+                                                <td class="align-content-center text-center" width="16%">@item.itemType.supplies.supplyName</td>
+                                                <td class="align-content-center text-center" width="16%">@item.dateCreated.ToShortDateString()</td>
                                                 <td class="text-center align-content-center" width="16%">
                                                     <div class="dropdown dropend">
                                                         <a href="javascript:;" class="btn btn-label btn-sm btn-secondary waves-effect waves-light" role="button" id="dropdownActionItem" data-bs-toggle="dropdown" aria-expanded="false">

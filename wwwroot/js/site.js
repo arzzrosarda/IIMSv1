@@ -148,6 +148,8 @@ $("#logBtn").on("click", function () {
     });
 });
 $(document).ready(function () {
+    $("#ItemSel").select2();
+
     $("#releasedListTbl").DataTable({
         scrollY: '450px',
         scrollCollapse: true,
@@ -159,14 +161,6 @@ $(document).ready(function () {
         "bInfo": false
     });
    
-    $("#releasesRecord").DataTable({
-        "ordering": false,
-        paging: false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": false,
-        "bInfo": false
-    });
     $("#supplyTable").DataTable({
         pageLength: 10,
         layout: {
@@ -285,15 +279,19 @@ $("[data-checkboxes]").each(function () {
     var me = $(this),
         group = me.data("checkboxes"),
         role = me.data("checkbox-role");
-
+    mecheck(me, group, role);
+});
+function mecheck(me, group, role) {
     me.change(function () {
         var Container = $("#ItemsSelContainer");
         var itemChecked = $("[data-checkboxes]:checked");
         var array = [];
+        console.log(array.toString());
         for (var i = 0; i < itemChecked.length; i++) {
             array.push(itemChecked[i].value);
         }
         Container.val(array.toString());
+
         var all = $("[data-checkboxes=" + group + "]:not([data-checkbox-role=dad])"),
             checked = $("[data-checkboxes=" + group + "]:not([data-checkbox-role=dad]):checked"),
             dad = $("[data-checkboxes=" + group + "][data-checkbox-role=dad]"),
@@ -319,7 +317,7 @@ $("[data-checkboxes]").each(function () {
                 all.prop("checked", false);
                 all.each(function () {
                     var val = $(this).attr("data-itemId");
-                    
+
                     $("#tr_" + val).removeClass("bg-light");
                 });
             }
@@ -333,27 +331,24 @@ $("[data-checkboxes]").each(function () {
             }
 
             all.each(function () {
-                    var ethis = $(this);
-                    if (ethis.is(":checked")) {
-
-                        var val = ethis.attr("data-itemId");
-                        $("#tr_" + val).addClass("bg-light");
-                    } else {
-
-                        var val = ethis.attr("data-itemId");
-                        $("#tr_" + val).removeClass("bg-light");
-                    }
-                });
+                var ethis = $(this);
+                if (ethis.is(":checked")) {
+                    var val = ethis.attr("data-itemId");
+                    $("#tr_" + val).addClass("bg-light");
+                } else {
+                    var val = ethis.attr("data-itemId");
+                    $("#tr_" + val).removeClass("bg-light");
+                }
+            });
         }
         if (all.is(":checked")) {
 
         } else {
         }
-       
+
 
     });
-});
-
+}
 const removeVowels = function (string) {
     let vowels = ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"];
     return [...string].filter((c) => !vowels.includes(c)).join("");

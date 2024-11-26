@@ -20,7 +20,7 @@
             <div class="card border-primary border-top">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-3 pt-xs-1 pt-sm-1 pt-t-md-1">
                             <form asp-action="FilterCluster" asp-controller="Cluster" name="ClusterForm">
                                 <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
                                 <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
@@ -30,7 +30,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-xs-4 col-sm-6 col-md-6 col-lg-7 col-xl-7">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 pt-xs-1 pt-sm-1 pt-t-md-1">
                             <button class="btn btn-label btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-deptCluster">
                                 <i class="ri-lg ri-add-line label-icon align-middle fs-16 me-2"></i>
                                 New Cluster

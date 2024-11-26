@@ -171,22 +171,31 @@ namespace IIMSv1.Controllers
         [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> GetItems(string ItemId)
         {
-            string[] SeperatedIds = ItemId.Split(',');
-
-            List<Items> item = new List<Items>();
-            foreach (var Id in SeperatedIds)
+            if(ItemId != null)
             {
-                Items? items = await _context.Items
-                    .Include(x => x.itemUnit)
-                    .SingleOrDefaultAsync(x => x.Id == Id);
-
-                if(items != null)
+                string[] SeperatedIds = ItemId.Split(',');
+                List<Items> item = new List<Items>();
+                foreach (var Id in SeperatedIds)
                 {
-                    item.Add(items);
-                }
-            }
+                    Items? items = await _context.Items
+                        .Include(x => x.itemUnit)
+                        .SingleOrDefaultAsync(x => x.Id == Id);
 
-            return Json(item);
+                    if (items != null)
+                    {
+                        item.Add(items);
+                    }
+                }
+
+                return Json(item);
+            }
+            else
+            {
+                return Json(0);
+            }
+            
+
+            
         }
 
         //Index

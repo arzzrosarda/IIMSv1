@@ -12,8 +12,8 @@
            "bFilter": false,
            "bInfo": false
        });
-
     $("#btnSubmitAddStock").on("click", function () {
+        $("#modal-new-item").modal("hide");
         Swal.fire({
             title: "NEW STOCK",
             html: "Are you sure you want to add stocks in this item?",
@@ -26,6 +26,9 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $("#submitNewAddStock").click();
+            }
+            else {
+                $("#modal-new-item").modal("show");
             }
         });
     });

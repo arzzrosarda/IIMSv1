@@ -10,7 +10,6 @@
     ViewBag.breadcrumbs = "<div class=\"breadcrumb-item active\">"
                         + ViewBag.title
                         + "</div>";
-    List<_RecordInputModel> releases = Model.releases;
     List<_RecordInputModel> record = Model.record;
 }
 <div class="row">
@@ -18,220 +17,145 @@
         <div class="card border-bottom border-right border-left">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
                         <div class="row">
                             <form asp-action="_SearchRelNum" asp-controller="Records" name="relNumForm">
                                 <div class="col-lg-12 pb-3">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <input class="form-select" type="hidden" name="toreceive" id="ToReceiveInput" value="@Model.ToReceive" />
-                                            <input class="form-select" type="hidden" name="pullout" id="PulloutInput" value="@Model.Pullout" />
-                                            <input class="form-select" type="hidden" name="received" id="ReceivedInput" value="@Model.Received" />
-
-                                            <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
-                                            <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
                                             <label>Record Number: <span class="text-danger">*</span></label>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col-lg-4 pr-0">
-                                            <input class="form-select text-center" type="text" value="RLSD" disabled style="height: 30px; font-size: 12px;" />
-                                        </div>
-                                        <div class="col-lg-4 pr-0">
-                                            <select class="form-select" name="year" id="yearRelNum" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;" required>
+                                        <div class="hstack gap-1">
+                                            <input class="form-control text-center" type="text" value="RLSD" disabled />
+                                            <span>-</span>
+                                            <select class="form-select" name="year" id="yearRelNum" required>
                                                 <option value="">Year</option>
-                                                @foreach(var y in Model.year)
+                                                @foreach (var y in Model.year)
                                                 {
                                                     <option value="@y">@y</option>
                                                 }
                                             </select>
+                                            <span>-</span>
+                                            <input type="text" maxlength="6" class="form-control form-select-icon w-100" placeholder="Number" id="relnumTxt" name="relnum" value="@(Model.relnum != "000000" ? Model.relnum: "")" required />
                                         </div>
-                                        <div class="col-lg-4">
-                                            <input type="text" maxlength="6" class="form-select form-select-icon w-100" placeholder="Number" id="relnumTxt" name="relnum" value="" style="height: 30px; font-size: 12px;" required/>
-                                        </div>
-
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <button class="btn btn-primary btn-sm w-100 mb-2" type="submit">Submit</button>
-                                            <a href="@Url.Action("Index", "Records")" class="btn btn-light btn-sm w-100">Reset</a>
+                                            <button class="btn btn-secondary w-100 mb-2" type="submit">Submit</button>
+                                            <a href="@Url.Action("Index", "Records")" class="btn btn-light w-100">Reset</a>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                        <div class="row">
                             <div class="col-lg-12">
-                                <table class="table-bordered table-striped" id="ReleaseInfoTbl" style="font-size: 12px;">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>
-                                                <form asp-action="Index" asp-controller="PrintRecords" target="_blank">
-                                                    <input class="form-select" type="hidden" name="toReceive" value="@Model.ToReceive" />
-                                                    <input class="form-select" type="hidden" name="pullout" value="@Model.Pullout" />
-                                                    <input class="form-select" type="hidden" name="received" value="@Model.Received" />
-                                                    <input class="form-select" type="hidden" name="relnum" value="@(record.Count > 0 ? Model.relnumtext : "")" />
-                                                    <div class="row">
-                                                        <div class="col-lg-6 align-content-center">
-                                                            <span><strong>INFORMATION</strong></span>
-                                                        </div>
-                                                        <div class="col-lg-6 text-right">
-                                                            <button type="submit" class="btn btn-light btn-sm " data-bs-toggle="tooltip" data-bs-placement="top" title="print" @(record.Count > 0 ? "" : "disabled")>
-                                                                <span class="text-primary"><i class="bi bi-printer-fill"></i></span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </th>
+                                <div class="row">
+                                    <div class="hstack">
+                                        <table class="table table-bordered table-striped" id="ReleaseInfoTbl">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <form asp-action="Index" asp-controller="PrintRecords" target="_blank">
+                                                            <input class="form-select" type="hidden" name="relnum" value="@(record.Count > 0 ? Model.relnumtext : "")" />
+                                                            <div class="hstack gap-2">
+                                                                <span><strong>INFORMATION</strong></span>
+                                                                <button type="submit" class="btn btn-secondary btn-sm ms-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="print" @(record.Count > 0 ? "" : "disabled")>
+                                                                    <i class="ri-lg ri-printer-fill"></i>
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><b>Record No.:</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pl-4">
-                                                @if (record.Count() > 0)
-                                                {
-                                                    @Model.relnumtext
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Department:</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pl-4">@Model.depttxt</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Date Released:</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pl-4">@Model.dateReleased</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Total Item:</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pl-4">
-                                                @if (record.Count() > 0)
-                                                {
-                                                    @record.Count()
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Total Quantity:</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pl-4">
-                                                @if (record.Count() > 0)
-                                                {
-                                                    @Model.totalQuantity
-                                                }
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><b>Record No.:</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pl-4">
+                                                        @if (record.Count() > 0)
+                                                        {
+                                                            @Model.relnumtext
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Department:</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pl-4">@Model.depttxt</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Date:</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pl-4">@Model.dateReleased</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Total Item:</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pl-4">
+                                                        @if (record.Count() > 0)
+                                                        {
+                                                            @record.Count()
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-9">
                         <div class="row">
                             <div class="col-lg-12">
-                                @if(record.Count() > 0)
-                                {
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                            <div class="col-lg-12">
-                                                <div class="row">
-                                                    <div class="col-lg-2">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btnToReceiveList" data-bool="@Model.ToReceive">
-                                                            To Receive <span class="badge badge-secondary">@record.Count(x => x.IsReceived == false && x.IsPullout == false)</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btnReceivedList" data-bool="@Model.Received">
-                                                            Received <span class="badge badge-secondary">@record.Count(x => x.IsReceived == true && x.IsPullout == false)</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btnPulloutList" data-bool="@Model.Pullout">
-                                                            Pullout <span class="badge badge-secondary">@record.Count(x => x.IsPullout == true && x.IsReceived == false)</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        @await Html.PartialAsync("~/Views/Shared/_Entries.cshtml")
-                                    </div>
-                                }
-                                else if(Model.relnum != "" && Model.yeartxt != "")
-                                {
-                                     <ul class="list-group mt-3">
-                                        <li class="list-group-item"> * No Records Found *</li>
-                                    </ul>
-                                }
-                                else
+                                @if (record.Count() == 0 && Model.relnumtext != "" && Model.yeartxt != "")
                                 {
                                     <ul class="list-group mt-3">
-                                        <li class="list-group-item"> * Please enter record number to see release records * </li>
+
+                                        <li class="list-group-item">* No Records Found *</li>
                                     </ul>
                                 }
+                                else if (Model.relnumtext == "" && Model.yeartxt == ""){
+                                    <ul class="list-group mt-3">
+                                        <li class="list-group-item">* Please enter record number to see release records *</li>
+                                    </ul>
+                                }
+                                
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 @if (record.Count() > 0)
                                 {
-                                    <table class="table-bordered table-striped" id="releasesRecord" style="font-size: 12px;">
-                                        <thead @* class="table-dark" *@>
-                                            <tr>
-                                                <th class="text-center align-content-center">NO.</th>
-                                                <th class="align-content-center">ITEM</th>
-                                                <th class="text-center align-content-center">QUANTITY</th>
-                                                <th class="text-center align-content-center">STATUS</th>
-                                                <th class="text-center align-content-center">DATE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var rel in releases)
-                                            {
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped" id="releasesRecord">
+                                            <thead>
                                                 <tr>
-                                                    <td class="text-center align-content-center">@rel.num</td>
-                                                    <td class="align-content-center">@rel.Item</td>
-                                                    <td class="text-center align-content-center">@rel.Quantity</td>
-                                                    <td class="text-center align-content-center">
-                                                        @if (rel.IsReceived == false && rel.IsPullout == false)
-                                                        {
-                                                            <span class="text-primary">TO RECEIVE</span>
-                                                        }
-                                                        else if (rel.IsReceived == true && rel.IsPullout == false)
-                                                        {
-                                                            <span class="text-success">RECEIVED</span>
-                                                        }
-                                                        else if (rel.IsReceived == false && rel.IsPullout == true)
-                                                        {
-                                                            <span class="text-warning">PULLOUT</span>
-                                                        }
-                                                    </td>
-                                                    <td class="text-center align-content-center">@rel.Date</td>
+                                                    <th class="text-center align-content-center">NO.</th>
+                                                    <th class="align-content-center">ITEM</th>
+                                                    <th class="text-center align-content-center">QUANTITY</th>
                                                 </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var rel in record)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center align-content-center">@rel.num</td>
+                                                        <td class="align-content-center">@rel.Item</td>
+                                                        <td class="text-center align-content-center">@rel.Quantity</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 } 
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                @if(releases.Count() > 0)
-                                {
-                                    @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.PaginationModel)
-                                }
                             </div>
                         </div>
                     </div>

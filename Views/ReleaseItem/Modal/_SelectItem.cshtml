@@ -1,81 +1,64 @@
-﻿@{
-    var Path = Context.Request.Path;
-    var QueryStrings = Context.Request.QueryString;
-    var returnUrl = Path + QueryStrings;
-}
-<div id="modal-select-item" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+﻿<div id="modal-select-item" class="modal zoomIn" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header bg-light pt-3 pb-3">
+            <div class="modal-header">
                 <h5 class="modal-title">SELECT ITEM</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    
+                <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12 table-responsive">
-                        <input class="form-select" type="hidden" id="ItemsSelContainer" />
-                        <table class="table table-bordered table-hover" id="selectItemTbl" width="100%" style="font-size: 12px;">
-                            <thead>
-                                <tr style="display:table; width: 100%; table-layout:fixed;" >
-                                    <td class="text-center" width="10%">
-                                       
+                <div class="hstack gap-2">
+                    <button class="btn btn-label btn-secondary waves-effect waves-light btn-sm" onclick="select();">
+                        <i class="ri-lg ri-checkbox-multiple-fill label-icon align-middle fs-16 me-2"></i>
+                        Select All
+                    </button>
+                    <button class="btn btn-label btn-light waves-effect waves-light btn-sm" onclick="Unselect();">
+                        <i class="ri-lg ri-checkbox-multiple-line label-icon align-middle fs-16 me-2"></i>
+                        Unselect All
+                    </button>
+                </div>
+               <div class="table-responsive">
+                    <table class="table table-bordered table-nowrap responsive" id="selectItemTbl" width="100%">
+                        <thead>
+                            <tr>
+                                <td class="text-center">
+                                    <input class="form-control" type="hidden" id="ItemsSelContainer" />
+                                </td>
+                                <td>
+                                    ITEM NAME
+                                </td>
+                                <td class="text-center">
+                                    REMAINING STOCKS
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.items)
+                            {
+                                <tr id="tr_@item.Id" class="@(item.itemQuantity == 0 ? "" : "btnSelectItemCheck")" data-itemId="@(item.itemQuantity == 0 ? "" : item.Id)" style="cursor: @(item.itemQuantity == 0 ? "default" : "pointer")">
+                                    <td class="text-center">
+                                        <div class="custom-checkbox custom-control">
+                                            <input type="checkbox" data-checkboxes="@(item.itemQuantity == 0 ? "" : "mygroup")" class="custom-control-input" data-itemId="@(item.itemQuantity == 0 ? "" : item.Id)" id="checkbox_@item.Id" value="@item.Id" @(item.itemQuantity == 0 ? "disabled" : "")>
+                                            <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
+                                        </div>
                                     </td>
-                                    <td width="70%">
-                                        ITEM NAME
+                                    <td class="@(item.itemQuantity == 0 ? "text-muted" : "")">
+                                        @item.ItemName
                                     </td>
-                                    <td class="text-center" width="22%">
-                                        REMAINING STOCKS
+                                    <td class="text-center @(item.itemQuantity == 0 ? "text-muted" : "")">
+                                        @item.itemQuantity
                                     </td>
                                 </tr>
-                            </thead>
-                            <tbody style="display:block;max-height:575px;overflow-y:auto;">
-                                @foreach (var item in Model.items)
-                                {
-                                    if (item.itemQuantity == 0)
-                                    {
-                                        
-                                        <tr id="tr_@item.Id" style="display:table; width: 100%; table-layout:fixed;">
-                                            <td class="text-center text-light" width="10%">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkboxes="" class="custom-control-input" id="checkbox_@item.Id" value="@item.Id" disabled>
-                                                    <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td width="70%" class="text-muted">
-                                                @item.ItemName
-                                            </td>
-                                            <td class="text-center text-muted" width="20%">
-                                                @item.itemQuantity
-                                            </td>
-                                        </tr>
-                                    }
-                                    else
-                                    { 
-                                        <tr id="tr_@item.Id" class="btnSelectItemCheck" style="display:table; width: 100%; table-layout:fixed;cursor: pointer;" data-itemId="@item.Id">
-                                            <td class="text-center" width="10%">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" data-itemId="@item.Id" id="checkbox_@item.Id" value="@item.Id">
-                                                    <label for="checkbox_@item.Id" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td width="70%">
-                                                @item.ItemName
-                                            </td>
-                                            <td class="text-center" width="20%">
-                                                @item.itemQuantity
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            }
+                        </tbody>
+                    </table>
+               </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary w-100" id="btnContinuetoSel" data-bs-dismiss="modal">Continue</button>
+                <button type="reset" class="btn btn-light waves-effect waves-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-label btn-secondary waves-effect waves-light" id="btnContinuetoSel" data-bs-dismiss="modal">
+                    <i class="ri-lg ri-arrow-right-line label-icon align-middle fs-16 me-2"></i> Continue
+                </button>
             </div>
         </div>
     </div>
