@@ -94,18 +94,18 @@ namespace IIMSv1
             string iconClass;
             switch(Icon)
             {
-                case BsStatusIcon.Success: iconClass = "ri-lg ri-check-double-fill"; break;
-                case BsStatusIcon.Info: iconClass = "ri-lg ri-error-warning-fill"; break;
-                case BsStatusIcon.Warning: iconClass = "ri-lg ri-alert-fill"; break;
-                case BsStatusIcon.Danger: iconClass = "ri-lg ri-spam-2-fill"; break;
+                case BsStatusIcon.Success: iconClass = "ri-check-double-fill"; break;
+                case BsStatusIcon.Info: iconClass = "ri-error-warning-fill"; break;
+                case BsStatusIcon.Warning: iconClass = "ri-alert-fill"; break;
+                case BsStatusIcon.Danger: iconClass = "ri-spam-2-fill"; break;
                 case BsStatusIcon.None: iconClass = ""; break;
                 default: iconClass = ""; break;
             }
 
-            string alert = "<div class=\"alert " + colorclass + " alert-border-left alert-dismissible fade shadow show\" role=\"alert\">";
+            string alert = "<div class=\"alert " + colorclass + " alert-dismissible alert-label-icon label-arrow fade shadow show\" role=\"alert\">";
              if(iconClass != "")
             {
-                alert += "<i class=\"" + iconClass + " me-3 align-middle\"></i>";
+                alert += "<i class=\"" + iconClass + " label-icon\"></i>";
             } 
             alert += "<strong>"+ title + "</strong> " + message + "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>" + "</div>";
 

@@ -150,17 +150,6 @@ $("#logBtn").on("click", function () {
 $(document).ready(function () {
     $("#ItemSel").select2();
 
-    $("#releasedListTbl").DataTable({
-        scrollY: '450px',
-        scrollCollapse: true,
-        'ordering': false,
-        paging: false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": false,
-        "bInfo": false
-    });
-   
     $("#supplyTable").DataTable({
         pageLength: 10,
         layout: {

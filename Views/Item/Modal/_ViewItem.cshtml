@@ -7,7 +7,7 @@
     var QueryStrings = Context.Request.QueryString;
     var returnURl = Path + QueryStrings;
 }
-<form asp-action="_UpdateItem" asp-controller="Item" name="updateItemForm">
+<form asp-action="_UpdateItem" asp-controller="Item" id="updateItemForm">
     <div id="modal-edit-item" class="modal zoomIn" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -108,7 +108,7 @@
                                                         <div class="input-group-text">
                                                             <input type="checkbox" id="Edit_@itemSpec.Id" class="form-check-input checkboxValueEdit" value="@itemSpec.itemSpecType" required>
                                                         </div>
-                                                        <input class="form-control" id="EditValueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
+                                                        <input class="form-control" id="EditValueof_@itemSpec.itemSpecType" asp-for="NewItemSpecs" value="" type="hidden" />
                                                         <input class="form-control" id="EditIDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
                                                         <input class="form-control inputEditSpecs" id="EditInput_@itemSpec.itemSpecType" type="text" data-value="@itemSpec.itemSpecType" disabled autocomplete="off">
                                                     </div>
@@ -116,6 +116,10 @@
                                             </div>
                                         }
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-lg-12" id="alertContainer">
                                 </div>
                             </div>
                         </div>

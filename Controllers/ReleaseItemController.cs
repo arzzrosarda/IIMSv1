@@ -33,7 +33,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "ReleaseItem");
             }
 
@@ -83,7 +83,8 @@ namespace IIMSv1.Controllers
                     string[] valSplit = q.Split(',');
 
                     Items? item = await _context.Items
-                   .SingleOrDefaultAsync(x => x.Id.Equals(valSplit[0]));
+                        .Include(x => x.itemType)
+                        .SingleOrDefaultAsync(x => x.Id.Equals(valSplit[0]));
 
                     
                     int Quantity = Convert.ToInt32(valSplit[1]);
@@ -139,14 +140,14 @@ namespace IIMSv1.Controllers
                         _context.SaveChanges();
 
                 }
-                TempData["alert"] = Global.GenerateToast("RELEASE", "Successfully released <strong>" + ItemQuantity.Count() + " Items</strong>" , "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast("RELEASE", "Successfully released <strong>" + ItemQuantity.Count() + " Items</strong>" , "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 TempData["releaseId"] = GetItem;
                 TempData["releaseInfo"] = releaseNum + "-" + CountReleased + "," + department.NormalizedName + "," + date.ToShortDateString();
                 return RedirectToAction("Index", "ReleaseItem");
             }
             else
             { 
-                TempData["alert"] = Global.GenerateToast("ERROR", "Department field is required!", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
+                TempData["alert"] = Global.GenerateToast("ERROR", "Department field is required!", "", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
                 return RedirectToAction("Index", "ReleaseItem");
             }
            
@@ -160,7 +161,7 @@ namespace IIMSv1.Controllers
         public async Task<IActionResult> GetPerItems(string ItemId)
         {
             Items? items = await _context.Items
-                //.Include(x => x.itemUnit)
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id == ItemId);
 
             return Json(items);
@@ -178,6 +179,7 @@ namespace IIMSv1.Controllers
                 foreach (var Id in SeperatedIds)
                 {
                     Items? items = await _context.Items
+                        .Include(x => x.itemType)
                         .Include(x => x.itemUnit)
                         .SingleOrDefaultAsync(x => x.Id == Id);
 
@@ -211,7 +213,8 @@ namespace IIMSv1.Controllers
                 .ToList();
 
             List<Items> items = _context.Items
-                .OrderBy(x => x.ItemName)
+                .Include(x => x.itemType)
+                .OrderBy(x => x.itemType.itemType)
                 .Where(x => x.itemQuantity != null && x.IsEnabled == true)
                 .ToList();
 

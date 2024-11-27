@@ -37,10 +37,11 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(model.returnUrl);
             }
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id.Equals(model.ItemId));
 
             DateOnly date = DateOnly.FromDateTime(DateTime.Now);
@@ -78,7 +79,7 @@ namespace IIMSv1.Controllers
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return LocalRedirect(model.returnUrl);
             }
 
@@ -94,10 +95,11 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(model.returnUrl);
             }
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id.Equals(model.ItemId));
 
             DateOnly date = DateOnly.FromDateTime(DateTime.Now);
@@ -120,7 +122,7 @@ namespace IIMSv1.Controllers
                     Date = date,
                     Time = time
                 };
-                _context.AddAsync(newQuantityHistory);
+                await _context.AddAsync(newQuantityHistory);
                 _context.SaveChanges();
                 TempData["alert"] = Global.GenerateToast("",
                     "<b>ITEM: </b>" + item.ItemName
@@ -137,7 +139,7 @@ namespace IIMSv1.Controllers
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast("STOCKS", "Something went wrong", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return LocalRedirect(model.returnUrl);
             }
 
@@ -154,16 +156,16 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(model.returnUrl);
             }
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id.Equals(model.Item));
 
             if (item != null)
             {
                
-                var YearNow = DateTime.Now.Year;
                 DateOnly date = DateOnly.FromDateTime(DateTime.Now);
                 TimeOnly time = TimeOnly.FromDateTime(DateTime.Now);
                 ItemQuantityHistory newQuantityHistory = new ItemQuantityHistory()
@@ -173,21 +175,21 @@ namespace IIMSv1.Controllers
                     ItemId = item.Id.ToString(),
                     QuantityFrom = 0,
                     QuantityTo = model.Quantity,
-                    Activity = "New Stocks",
+                    Activity = "New Item Stocks",
                     Date = date,
                     Time = time
                 };
                 item.itemQuantity = model.Quantity;
                 await _context.SaveChangesAsync(currUser.Id, "Stocks: New Item added to stocks table");
 
-                _context.QuantityHistory.AddAsync(newQuantityHistory);
+                await _context.QuantityHistory.AddAsync(newQuantityHistory);
                 _context.SaveChanges();
-                TempData["alert"] = Global.GenerateToast("", "<b>NEW ITEM: </b>" + item.ItemName, "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast("NEW ITEM:", item.ItemName, "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return LocalRedirect(model.returnUrl);
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("NEW STOCKS", "Something went wrong", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast("NEW STOCKS", "Something went wrong", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return LocalRedirect(model.returnUrl);
             }
 
@@ -237,11 +239,10 @@ namespace IIMSv1.Controllers
 
             //Query
             IQueryable<Items> SearchItems = _context.Items
-                //.Include(x => x.itemUnit)
                 .Include(x => x.itemType)
                 .ThenInclude(x => x.supplies)
-                .Where(x => x.ItemCode.Contains(searchtxt)
-                || x.ItemName.Contains(searchtxt));
+                .Where(x => x.itemDescription.Contains(searchtxt)
+                || x.itemType.itemType.Contains(searchtxt));
 
             IQueryable<Items> ItemTypeItems = SearchItems
                 .Where(x => x.ItemTypeId.Contains(Itemtypetxt)
@@ -295,7 +296,7 @@ namespace IIMSv1.Controllers
             }
 
             List<Items> WithStockItems = CItems
-                  .OrderBy(x => x.ItemName)
+                  .OrderBy(x => x.itemType.itemType)
                   .Skip(recordsperpage * (page - 1))
                   .Take(recordsperpage)
                   .Where(x => x.IsEnabled.Equals(true))
@@ -329,7 +330,8 @@ namespace IIMSv1.Controllers
                 .ToList();
 
             List<Items> Items = _context.Items
-                  .OrderBy(x => x.ItemName)
+                  .Include(x => x.itemType)
+                  .OrderBy(x => x.itemType.itemType)
                   .Where(x => x.IsEnabled.Equals(true) && x.itemQuantity == null)
                   .ToList();
             

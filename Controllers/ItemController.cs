@@ -21,6 +21,7 @@ using System.Data;
 using Microsoft.AspNetCore.Http.Extensions;
 using IIMSv1.Models.ViewModel;
 using System.Drawing.Drawing2D;
+using Newtonsoft.Json;
 
 namespace IIMSv1.Controllers
 {
@@ -547,17 +548,18 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
 
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id == ItemId);
 
             item.IsEnabled = true;
             await _context.SaveChangesAsync(currUser.Id, "Item: Enabled");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Enabled Successfully", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -571,17 +573,18 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
 
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id == ItemId);
 
             item.IsEnabled = false;
             await _context.SaveChangesAsync(currUser.Id, "Item: Disabled");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Disabled Successfully", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
             return LocalRedirect(returnUrl);
         }
 
@@ -589,13 +592,13 @@ namespace IIMSv1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Inventory Administrator")]
-        public async Task<IActionResult> _UpdateItem(EditItemInputModel model, string returnUrl, string[] NewItemSpecs)
+        public async Task<IActionResult> _UpdateItem(EditItemInputModel model, string returnUrl)
         {
             AccountUser? currUser = await _userManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -604,9 +607,6 @@ namespace IIMSv1.Controllers
                 .ThenInclude(x => x.supplies)
                 .SingleOrDefaultAsync(x => x.Id == model.ItemId);
 
-            ItemPrice? price = await _context.ItemPrice
-                .SingleOrDefaultAsync(x => x.itemId == model.ItemId);
-
             var date = DateOnly.FromDateTime(DateTime.Now);
             var time = TimeOnly.FromDateTime(DateTime.Now);
 
@@ -614,41 +614,13 @@ namespace IIMSv1.Controllers
                     .Include(x => x.supplies)
                     .SingleOrDefaultAsync(x => x.Id.Equals(model.Item));
 
-            string[] Supptype = itemType.supplies.supplyName.Split(" ");
-            string Supplytype = "";
-            foreach (var ty in Supptype)
-            {
-                Supplytype += ty.Substring(0, 1);
-            }
-
-            string ItemCode = Supplytype + "_" + itemType.itemType.Trim().ToUpper();
-            List<Items> getNewitem = _context.Items
-                .Where(x => x.ItemCode.Contains(ItemCode))
-                .ToList();
-
-            var itemCodeCount = getNewitem.Count() + 1;
-
-            string[] splitItemCode = item.ItemCode.Split("_");
-            if (splitItemCode[0] != Supplytype || splitItemCode[1] != itemType.itemType.Trim().ToUpper())
-            {
-                item.ItemCode = ItemCode + "_" + itemCodeCount.ToString().Trim();
-            }
-
-            item.ItemName = itemType.itemType + " ";
             item.ItemTypeId = model.ItemType.ToString();
             item.itemUnitId = model.Unit.Trim().ToString();
             item.dateUpdated = date;
             item.timeUpdated = time;
 
-            List<ItemSpecs> getItemSpecs = _context.ItemSpecs
-                .Where(x => x.itemId.Equals(item.Id))
-                .ToList();
-
-            foreach (var specitem in getItemSpecs)
-            {
-                _context.Remove(specitem);
-            }
-            foreach (var specs in NewItemSpecs)
+            List<DescriptionModel> descriptionModels = new List<DescriptionModel>();
+            foreach (var specs in model.NewItemSpecs)
             {
                 if (specs != null)
                 {
@@ -662,80 +634,113 @@ namespace IIMSv1.Controllers
                             SpecValue += val.ToString();
                         }
                     }
-                    ItemSpecValue? itemSpecValue = await _context.ItemSpecValue
-                        .Include(x => x.ItemSpecType)
-                        .SingleOrDefaultAsync(x => x.itemSpecValue.Equals(SpecValue) && x.SpecTypeId.Equals(SpecTypeId));
+                    DescriptionModel newDescriptionModel = new DescriptionModel()
+                    {
+                        Description = SpecTypeId,
+                        Details = SpecValue,
+                    };
 
-                    if (itemSpecValue != null)
-                    {
-                        ItemSpecs newSpecs = new ItemSpecs()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemId = item.Id,
-                            SpecValueId = itemSpecValue.Id,
-                        };
-                        _context.AddAsync(newSpecs);
-                    }
-                    else
-                    {
-                        ItemSpecValue newItemSpecValue = new ItemSpecValue()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemSpecValue = SpecValue,
-                            SpecTypeId = SpecTypeId,
-                            IsEnabled = true
-                        };
-                        ItemSpecs newSpecs = new ItemSpecs()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemId = item.Id,
-                            SpecValueId = newItemSpecValue.Id,
-                        };
-                        _context.AddAsync(newItemSpecValue);
-                        _context.AddAsync(newSpecs);
-                    }
+                    descriptionModels.Add(newDescriptionModel);
                 }
             }
+            string serializeDescription = JsonConvert.SerializeObject(descriptionModels);
+
+            item.itemDescription = serializeDescription;
+
             await _context.SaveChangesAsync(currUser.Id, "Item: Update Changes");
             Items? getItem = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id.Equals(item.Id));
 
-            List<ItemSpecs> getspec = _context.ItemSpecs
-                .Include(x => x.itemSpecValue)
-                .ThenInclude(x => x.ItemSpecType)
-                .OrderBy(x => x.itemSpecValue.ItemSpecType.itemSpecType)
-                .Where(x => x.itemId.Equals(item.Id))
-                .ToList();
-
-            if (getspec.Count() > 0)
-            {
-                foreach (var spec in getspec)
-                {
-
-                    if (item != null)
-                    {
-                        item.ItemName = item.ItemName + spec.itemSpecValue.itemSpecValue + " ";
-                    }
-                }
-            }
             await _context.SaveChanges(currUser.Id, "Item: Update Changes");
 
-            TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(getItem.ItemName, "Changes Successfully Saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
-        //GetSpecs
         [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
+        public async Task<IActionResult> CheckforNoChanges(EditItemInputModel model)
+        {
+
+            List<DescriptionModel> descriptionModels = new List<DescriptionModel>();
+            foreach (var specs in model.NewItemSpecs)
+            {
+                if (specs != null)
+                {
+                    string[] Value = specs.Split(',');
+                    string SpecTypeId = Value[0];
+                    string SpecValue = "";
+                    foreach (var val in Value)
+                    {
+                        if (val != SpecTypeId)
+                        {
+                            SpecValue += val.ToString();
+                        }
+                    }
+                    DescriptionModel newDescriptionModel = new DescriptionModel()
+                    {
+                        Description = SpecTypeId,
+                        Details = SpecValue,
+                    };
+
+                    descriptionModels.Add(newDescriptionModel);
+                }
+            }
+            string serializeDescription = JsonConvert.SerializeObject(descriptionModels);
+            Items? item = await _context.Items
+                .Include(x => x.itemType)
+                .SingleOrDefaultAsync(x => x.Id.Equals(model.ItemId)
+                        && x.itemDescription.Equals(serializeDescription)
+                        && x.itemType.SuppliesId.Equals(model.Supply)
+                        && x.ItemTypeId.Equals(model.ItemType)
+                        && x.itemUnitId.Equals(model.Unit));
+
+            if (item != null)
+            {
+                return Json(1);
+            }
+            else
+            {
+                return Json(0);
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Inventory Administrator")]
         public async Task<IActionResult> GetSpecs(string ItemId)
         {
-            List<ItemSpecs> itemSpecs = _context.ItemSpecs
-                .Include(x => x.itemSpecValue)
-                .ThenInclude(x => x.ItemSpecType)
-                .AsNoTracking()
-                .Where(x => x.itemId.Equals(ItemId))
-                .ToList();
+            Items? item = await _context.Items
+                .SingleOrDefaultAsync(x => x.Id.Equals(ItemId));
 
-            return Json(itemSpecs);
+            if(item != null)
+            {
+                List<DescriptionModel> ObjOrderList = JsonConvert.DeserializeObject<List<DescriptionModel>>(item.itemDescription);
+
+                List<EditItemModel> newEditItem = new List<EditItemModel>();
+                foreach(var obj in ObjOrderList)
+                {
+                    ItemSpecType? specType = await _context.ItemSpecType
+                        .SingleOrDefaultAsync(x => x.Id.Equals(obj.Description));
+
+                    if(specType != null)
+                    {
+                        EditItemModel newEdit = new EditItemModel()
+                        {
+                            DescriptionId = obj.Description,
+                            Desc = specType.itemSpecType,
+                            Value = obj.Details,
+                        };
+                        newEditItem.Add(newEdit);
+                    }
+
+                }
+                return Json(newEditItem);
+            }
+            else
+            {
+
+                return Json(0);
+            }
         }
 
         //Delete Item 
@@ -748,15 +753,16 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id == ItemId);
 
             _context.Items.Remove(item);
             await _context.SaveChangesAsync(currUser.Id, "Item: Deleted");
-            TempData["alert"] = Global.GenerateToast(item.ItemName, "Deleted Successfully", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Deleted Successfully", "", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
             return LocalRedirect(returnUrl);
         }
 
@@ -776,7 +782,7 @@ namespace IIMSv1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Inventory Administrator")]
-        public async Task<IActionResult> _AddItem(_ItemInputModel model, string returnUrl, string[] NewItemSpecs)
+        public async Task<IActionResult> _AddItem(_ItemInputModel model, string returnUrl)
         {
             AccountUser? currentUser = await _userManager.GetUserAsync(User);
 
@@ -787,36 +793,17 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
             var date = DateOnly.FromDateTime(DateTime.Now);
             var time = TimeOnly.FromDateTime(DateTime.Now);
-            ItemType? itemType = await _context.ItemType
-                .Include(x => x.supplies)
-                .SingleOrDefaultAsync(x => x.Id.Equals(model.ItemType));
-
-            string[] Supptype = itemType.supplies.supplyName.Split(" ");
-
-            string Supplytype = "";
-            foreach (var ty in Supptype)
-            {
-                Supplytype += ty.Substring(0, 1);
-            }
-
-            string ItemCode = Supplytype + "_" + itemType.itemType.Trim().ToUpper();
-            List<Items> getNewitem = _context.Items
-                .Where(x => x.ItemCode.Contains(ItemCode))
-                .ToList();
-
-            var itemCodeCount = getNewitem.Count() + 1;
+           
             Items newItem = new Items()
             {
                 Id = Guid.NewGuid().ToString(),
-                ItemCode = ItemCode + "_" + itemCodeCount,
-                ItemName = itemType.itemType.Trim().ToString() + " ",
-                ItemTypeId = model.ItemType,
+                ItemTypeId = model.ItemType.Trim().ToString(),
                 itemUnitId = model.Unit.Trim().ToString(),
                 dateCreated = date,
                 timeCreated = time,
@@ -824,7 +811,8 @@ namespace IIMSv1.Controllers
                 timeUpdated = time,
                 IsEnabled = true,
             };
-            foreach (var specs in NewItemSpecs)
+            List<DescriptionModel> descriptionModels = new List<DescriptionModel>();
+            foreach (var specs in model.NewItemSpecs)
             {
                 if (specs != null)
                 {
@@ -838,68 +826,27 @@ namespace IIMSv1.Controllers
                             SpecValue += val.ToString();
                         }
                     }
-                    ItemSpecValue? itemSpecValue = await _context.ItemSpecValue
-                        .Include(x => x.ItemSpecType)
-                        .SingleOrDefaultAsync(x => x.itemSpecValue.Equals(SpecValue) && x.SpecTypeId.Equals(SpecTypeId));
-
-                    if (itemSpecValue != null)
+                    DescriptionModel newDescriptionModel = new DescriptionModel()
                     {
-                        ItemSpecs newSpecs = new ItemSpecs()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemId = newItem.Id,
-                            SpecValueId = itemSpecValue.Id,
-                        };
-                        _context.AddAsync(newSpecs);
-                    }
-                    else
-                    {
-                        ItemSpecValue newItemSpecValue = new ItemSpecValue()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemSpecValue = SpecValue,
-                            SpecTypeId = SpecTypeId,
-                            IsEnabled = true
-                        };
-                        ItemSpecs newSpecs = new ItemSpecs()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            itemId = newItem.Id,
-                            SpecValueId = newItemSpecValue.Id,
-                        };
+                        Description = SpecTypeId,
+                        Details = SpecValue,
+                    };
 
-                        _context.AddAsync(newItemSpecValue);
-                        _context.AddAsync(newSpecs);
-                    }
+                    descriptionModels.Add(newDescriptionModel);
                 }
             }
+            string serializeDescription = JsonConvert.SerializeObject(descriptionModels);
+            newItem.itemDescription = serializeDescription;
+
             _context.AddAsync(newItem);
             await _context.SaveChangesAsync(currentUser.Id, "Item : Added a new item");
 
             Items? item = await _context.Items
+                .Include(x => x.itemType)
                 .SingleOrDefaultAsync(x => x.Id.Equals(newItem.Id));
 
-            var getSpecs = "";
-            List<ItemSpecs> getspec = _context.ItemSpecs
-                .Include(x => x.itemSpecValue)
-                .ThenInclude(x => x.ItemSpecType)
-                .OrderBy(x => x.itemSpecValue.ItemSpecType.itemSpecType)
-                .Where(x => x.itemId.Equals(item.Id))
-                .ToList();
-
-            if (getspec.Count() > 0)
-            {
-                foreach (var spec in getspec)
-                {
-                    if (item != null)
-                    {
-                        item.ItemName = item.ItemName + spec.itemSpecValue.itemSpecValue + " ";
-
-                    }
-                }
-            }
             await _context.SaveChanges(currentUser.Id, "Item: Update Changes");
-            TempData["alert"] = Global.GenerateToast(newItem.ItemName, "Added Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(item.ItemName, "Added Successfully", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -961,10 +908,10 @@ namespace IIMSv1.Controllers
             IQueryable<Items> SearchItems = _context.Items
                 .Include(x => x.itemType)
                 .ThenInclude(x => x.supplies)
-                .OrderBy(x => x.ItemName)
+                .OrderBy(x => x.itemType.itemType)
                 .ThenBy(x => x.dateCreated)
-                .Where(x => x.ItemCode.Contains(searchtxt)
-                || x.ItemName.Contains(searchtxt));
+                .Where(x => x.itemDescription.Contains(searchtxt)
+                || x.itemType.itemType.Contains(searchtxt));
 
             IQueryable<Items> ItemTypeItems = SearchItems
                 .Include(x => x.itemType)

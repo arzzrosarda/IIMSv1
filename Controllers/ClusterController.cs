@@ -31,7 +31,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
             DepartmentCluster? departmentCluster = await _context.departmentClusters
@@ -43,7 +43,7 @@ namespace IIMSv1.Controllers
                 departmentCluster.NormalizedName = model.ClusterName.Trim().ToUpper();
                 await _context.SaveChangesAsync(currUser.Id, "Cluster: user edited department cluster");
             }
-            TempData["alert"] = Global.GenerateToast(model.ClusterName, "Changes Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(model.ClusterName, "Changes Saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 
@@ -96,7 +96,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return LocalRedirect(returnUrl);
             }
 
@@ -110,7 +110,7 @@ namespace IIMSv1.Controllers
             _context.AddAsync(newdeptcluster);
             await _context.SaveChangesAsync(currUser.Id, "Cluser: user added new department cluster");
 
-            TempData["alert"] = Global.GenerateToast(model.ClusterName, "Successfully Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(model.ClusterName, "Successfully Saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return LocalRedirect(returnUrl);
         }
 

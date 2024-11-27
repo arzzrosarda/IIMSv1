@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IIMSv1.Models.Shared;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IIMSv1.Models
@@ -9,21 +11,34 @@ namespace IIMSv1.Models
     public class Items
     {
         public string Id { get; set; } = string.Empty;
-        public string ItemCode { get; set; } = string.Empty;
-        public string ItemName { get; set; } = string.Empty;
         public string ItemTypeId { get; set; } = string.Empty;
         [ForeignKey(nameof(ItemTypeId))]
         public ItemType itemType { get; set; }
         public int? itemQuantity { get; set; }
         public string itemUnitId { get; set; } = string.Empty;
         [ForeignKey(nameof(itemUnitId))]
+        public string? itemDescription { get; set; } = string.Empty;
         public ItemUnit itemUnit { get; set; }
         public DateOnly dateCreated { get; set; }
         public TimeOnly timeCreated { get; set; }
         public DateOnly dateUpdated { get; set; }
         public TimeOnly timeUpdated {  get; set; }
         public bool IsEnabled { get; set; }
+        public string ItemName
+        {
+            get
+            {
+                var item_name = itemType.itemType + " ";
 
+                List<DescriptionModel> descriptionModels = JsonConvert.DeserializeObject<List<DescriptionModel>>(itemDescription);
+
+                foreach(var desc in descriptionModels)
+                {
+                    item_name += desc.Details + " ";
+                }
+                return item_name;
+            }
+        }
     }
     [PrimaryKey(nameof(Id))]
     public class ItemUnit
@@ -60,29 +75,6 @@ namespace IIMSv1.Models
         public decimal itemEstPrice {  get; set; }
         public string Year { get; set; } = string.Empty;
         public bool IsEnabled { set; get; }
-    }
-    [PrimaryKey(nameof(Id))]
-    public class ItemSpecs
-    {
-        public string Id { set; get; } = string.Empty;
-        public string itemId {  set; get; } = string.Empty;
-        [ForeignKey(nameof(itemId))]
-        public Items items { get; set; }
-        public string SpecValueId {  get; set; } = string.Empty;
-        [ForeignKey(nameof(SpecValueId))]
-        public ItemSpecValue itemSpecValue { get; set; }
-
-    }
-    [PrimaryKey(nameof(Id))]
-    public class ItemSpecValue
-    {
-        public string Id { set; get; } = string.Empty;
-        public string SpecTypeId { get; set; } = string.Empty;
-        [ForeignKey(nameof(SpecTypeId))]
-        public ItemSpecType ItemSpecType { get; set; }
-        public string itemSpecValue {  get; set; } = string.Empty;
-        public bool IsEnabled { set; get; }
-
     }
     [PrimaryKey(nameof(Id))]
     public class ItemSpecType

@@ -4,6 +4,7 @@ using IIMSv1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IIMSv1.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127024105_del-specval-specs")]
+    partial class delspecvalspecs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,6 +288,14 @@ namespace IIMSv1.Migrations
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ItemCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemTypeId")
                         .IsRequired()

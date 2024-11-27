@@ -5478,17 +5478,17 @@ var Zoom = Control.extend({
 	options: {
 		position: 'topleft',
 
-		// @option zoomInText: String = '<span aria-hidden="true">+</span>'
+		// @option zoomInText: String = '<span >+</span>'
 		// The text set on the 'zoom in' button.
-		zoomInText: '<span aria-hidden="true">+</span>',
+		zoomInText: '<span >+</span>',
 
 		// @option zoomInTitle: String = 'Zoom in'
 		// The title set on the 'zoom in' button.
 		zoomInTitle: 'Zoom in',
 
-		// @option zoomOutText: String = '<span aria-hidden="true">&#x2212;</span>'
+		// @option zoomOutText: String = '<span >&#x2212;</span>'
 		// The text set on the 'zoom out' button.
-		zoomOutText: '<span aria-hidden="true">&#x2212;</span>',
+		zoomOutText: '<span >&#x2212;</span>',
 
 		// @option zoomOutTitle: String = 'Zoom out'
 		// The title set on the 'zoom out' button.
@@ -5734,7 +5734,7 @@ var scale = function (options) {
 	return new Scale(options);
 };
 
-var ukrainianFlag = '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"/><path fill="#FFD500" d="M0 4h12v3H0z"/><path fill="#E0BC00" d="M0 7h12v1H0z"/></svg>';
+var ukrainianFlag = '<svg  xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"/><path fill="#FFD500" d="M0 4h12v3H0z"/><path fill="#E0BC00" d="M0 7h12v1H0z"/></svg>';
 
 
 /*
@@ -5850,7 +5850,7 @@ var Attribution = Control.extend({
 			prefixAndAttribs.push(attribs.join(', '));
 		}
 
-		this._container.innerHTML = prefixAndAttribs.join(' <span aria-hidden="true">|</span> ');
+		this._container.innerHTML = prefixAndAttribs.join(' <span >|</span> ');
 	}
 });
 
@@ -10298,7 +10298,7 @@ var Popup = DivOverlay.extend({
 			closeButton.setAttribute('role', 'button'); // overrides the implicit role=link of <a> elements #7399
 			closeButton.setAttribute('aria-label', 'Close popup');
 			closeButton.href = '#close';
-			closeButton.innerHTML = '<span aria-hidden="true">&#215;</span>';
+			closeButton.innerHTML = '<span >&#215;</span>';
 
 			on(closeButton, 'click', function (ev) {
 				preventDefault(ev);

@@ -23,6 +23,7 @@ namespace IIMSv1.Models.Shared
         [Display(Name = "Item Unit")]
         public string Unit { get; set; } = string.Empty;
 
+        public string[] NewItemSpecs { get; set; }
         public List<ItemSpecType> itemSpecTypes { get; set; } = new List<ItemSpecType>();
 
         public List<Supplies> supplies { get; set; } = new List<Supplies>();
@@ -52,6 +53,8 @@ namespace IIMSv1.Models.Shared
         [Required]
         [Display(Name = "Item Unit")]
         public string Unit { get; set; } = string.Empty;
+
+        public string[] NewItemSpecs { get; set; }
 
         public List<ItemSpecType> itemSpecTypes { get; set; } = new List<ItemSpecType>();
 

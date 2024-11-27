@@ -9,67 +9,31 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
-                <div class="card card-statistic-2">
-                    <div class="card-icon shadow-primary bg-primary">
-                        <i class="bi bi-boxes text-white"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>TOTAL RELEASED</h4>
+                <div class="card card-height-100">
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Recent Releases</h4>
+                    </div><!-- end card header -->
+
+                    <div class="card-body p-0">
+                        <div data-simplebar="init" style="max-height: 257px;" class="simplebar-scrollable-y">
+                            <div class="simplebar-wrapper" style="margin: 0px;">
+                                <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
+                                    <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                        <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden scroll;">
+                                            <div class="simplebar-content" style="padding: 0px;">
+                                                <div class="row p-5 m-5 align-conten-center justify-content-center" id="partialTblLoader">
+                                                    @await Html.PartialAsync("~/Views/Shared/_LoaderElement.cshtml")
+                                                </div>
+                                                <ul class="list-group list-group-flush border-dashed px-3" id="cardlistReleased" style="display: none;">
+                                                    
+                                                </ul><!-- end ul -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><div class="simplebar-placeholder" style="width: 731px; height: 268px;"></div>
+                            </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 246px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div>
                         </div>
-                        <div class="card-body" id="ReleasesText">
-                            @Model.Releases
-                        </div>
-                    </div>
-                    <div class="card-stats">
-                        <div class="card-stats-title">
-                            <span>Item Records</span> -
-                            <div class="dropdown d-inline">
-                                <a class="font-weight-600 dropdown-toggle" data-bs-toggle="dropdown" href="javascript:;" id="select-department">All Department</a>
-                                <ul class="dropdown-menu dropdown-menu-sm" style="width: fit-content">
-                                    <li><a href="javascript:;" class="dropdown-item btnSelectDept active" data-DeptId="All" data-DeptName="All Department" style="font-size: 12px;">All Department</a></li>
-                                    @foreach (var dept in Model.departments)
-                                    {
-                                        <li><a href="javascript:;" class="dropdown-item btnSelectDept" data-DeptId="@dept.Id" data-DeptName="@dept.Name" style="font-size: 12px;">@dept.Name - @dept.NormalizedName</a></li>
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-stats-items">
-                            <div class="card-stats-item">
-                                <div class="card-stats-item-count" id="ToReceiveText">@Model.ToReceive</div>
-                                <div class="card-stats-item-label">To Receive</div>
-                            </div>
-                            <div class="card-stats-item">
-                                <div class="card-stats-item-count" id="ReceivedText">@Model.Received</div>
-                                <div class="card-stats-item-label">Received</div>
-                            </div>
-                            <div class="card-stats-item">
-                                <div class="card-stats-item-count" id="PulloutText">@Model.Pullout</div>
-                                <div class="card-stats-item-label">Pullout</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row p-3">
-                        <div class="col-lg-12">
-                            <div class="row partialTblLoader p-5 m-5 align-conten-center justify-content-center">
-                                @await Html.PartialAsync("~/Views/Shared/_LoaderElement.cshtml")
-                            </div>
-                        </div>
-                        <div class="col-lg-12 ">
-                            <div class="table-responsive">
-                                <table class="table-bordered table-striped" id="releasedListTbl" style="font-size: 12px; display: none;">
-                                    <thead>
-                                        <tr>
-                                            <th>RELEASES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tBodyRelListTbl">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    </div><!-- end card body -->
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
@@ -133,74 +97,6 @@
                                     </div><!-- end row -->
                                 </div><!-- end card body -->
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-lg-1 mt-1 pl-3 pr-0 align-content-center">
-                                            <label>Department:</label>
-                                        </div>
-                                        <div class="col-lg-3 pr-0">
-                                            <select class="form-select w-100" id="departmentSel" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
-                                                <option value="">Department</option>
-                                                @foreach (var dept in Model.departments)
-                                                {
-                                                    <option value="@dept.Id">@dept.Name - @dept.NormalizedName</option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-1 text-center mt-1 pl-2 pr-1 align-content-center">
-                                            <label>From:</label>
-                                        </div>
-                                        <div class="col-lg-2 pr-0">
-                                            <select class="form-select w-100" id="yearly1" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
-                                                <option value="">Year</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-1 text-center mt-1 pl-1 pr-1 align-content-center">
-                                            <label>To:</label>
-                                        </div>
-                                        <div class="col-lg-2 pl-0">
-                                            <select class="form-select w-100" id="yearly2" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;" disabled>
-                                                <option value="">Year</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <div class="row pr-3 pl-3 justify-content-end">
-                                                <a href="@Url.Action("Index", "Released")" class="btn btn-light btn-sm mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View Released">
-                                                    <span class="text-primary">
-                                                        <i class="bi bi-eye-fill" style="font: 25px;"></i>
-                                                    </span>
-                                                </a>
-                                                <form asp-action="Index" asp-controller="PrintReleased" method="post" target="_blank">
-                                                    <input class="form-select" name="department" id="departmentprint" type="hidden" />
-                                                    <input class="form-select" name="year1" id="year1print" type="hidden" />
-                                                    <input class="form-select" name="year2" id="year2print" type="hidden" />
-                                                    <button type="submit" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
-                                                        <span class="text-primary">
-                                                            <i class="bi bi-printer-fill" style="font: 25px;"></i>
-                                                        </span>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 pl-4 pr-0 ">
-                                            <div class="row partialLoader p-5 m-5 align-conten-center justify-content-center">
-                                                @await Html.PartialAsync("~/Views/Shared/_LoaderElement.cshtml")
-                                            </div>
-                                            <div class="releaseChart" style="display: none;">
-                                                <canvas id="release-Chart" height="140"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

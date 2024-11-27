@@ -4,6 +4,7 @@ using IIMSv1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IIMSv1.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127011647_serializeDesc")]
+    partial class serializeDesc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,6 +241,51 @@ namespace IIMSv1.Migrations
                     b.ToTable("ItemSpecType");
                 });
 
+            modelBuilder.Entity("IIMSv1.Models.ItemSpecValue", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SpecTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("itemSpecValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecTypeId");
+
+                    b.ToTable("ItemSpecValue");
+                });
+
+            modelBuilder.Entity("IIMSv1.Models.ItemSpecs", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SpecValueId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("itemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecValueId");
+
+                    b.HasIndex("itemId");
+
+                    b.ToTable("ItemSpecs");
+                });
+
             modelBuilder.Entity("IIMSv1.Models.ItemType", b =>
                 {
                     b.Property<string>("Id")
@@ -285,6 +333,14 @@ namespace IIMSv1.Migrations
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ItemCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemTypeId")
                         .IsRequired()
@@ -698,6 +754,36 @@ namespace IIMSv1.Migrations
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("items");
+                });
+
+            modelBuilder.Entity("IIMSv1.Models.ItemSpecValue", b =>
+                {
+                    b.HasOne("IIMSv1.Models.ItemSpecType", "ItemSpecType")
+                        .WithMany()
+                        .HasForeignKey("SpecTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemSpecType");
+                });
+
+            modelBuilder.Entity("IIMSv1.Models.ItemSpecs", b =>
+                {
+                    b.HasOne("IIMSv1.Models.ItemSpecValue", "itemSpecValue")
+                        .WithMany()
+                        .HasForeignKey("SpecValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IIMSv1.Models.Items", "items")
+                        .WithMany()
+                        .HasForeignKey("itemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("itemSpecValue");
 
                     b.Navigation("items");
                 });

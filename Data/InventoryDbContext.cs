@@ -18,8 +18,6 @@ namespace IIMSv1.Data
         public DbSet<ItemType> ItemType { get; set; }
         public DbSet<Supplies> Supplies { get; set; }
         public DbSet<ItemPrice> ItemPrice { get; set; }
-        public DbSet<ItemSpecs> ItemSpecs { get; set; }
-        public DbSet<ItemSpecValue> ItemSpecValue { get; set; }
         public DbSet<ItemSpecType> ItemSpecType { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Released> Released { get; set; }

@@ -51,7 +51,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Profile", new { Id = model.UserId });
             }
             AccountUser? user = await _context.AccountCredentials
@@ -65,7 +65,7 @@ namespace IIMSv1.Controllers
             var ChangePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!ChangePasswordResult.Succeeded)
             {
-                TempData["alert"] = Global.GenerateToast("ERROR", "The system encountered at least 1 error when processing data: Password failed to change", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
+                TempData["alert"] = Global.GenerateToast("ERROR", "The system encountered at least 1 error when processing data: Password failed to change", "", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
                 return RedirectToAction("Details", "User", new { Id = model.UserId });
             }
             user.Employee.DateUpdated = date;
@@ -73,7 +73,7 @@ namespace IIMSv1.Controllers
 
             await _context.SaveChangesAsync(currentUser.Id, "Changed Password");
             //await _signInManager.RefreshSignInAsync(user);
-            TempData["alert"] = Global.GenerateToast("PASSWORD", "User Password Successfully Changed", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast("PASSWORD", "User Password Successfully Changed", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return RedirectToAction("Details", "User", new { Id = model.UserId });
         }
 
@@ -86,7 +86,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = model.UserId });
             }
 
@@ -114,7 +114,7 @@ namespace IIMSv1.Controllers
                 var result1 = await _userManager.AddPasswordAsync(accUser, model.Password);
                 if (result1.Succeeded)
                 {
-                    TempData["alert"] = Global.GenerateToast("ACCOUNT CREDENTIALS", "Successfully Changed", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                    TempData["alert"] = Global.GenerateToast("ACCOUNT CREDENTIALS", "Successfully Changed", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                     return RedirectToAction("Details", "User", new { Id = model.UserId });
                 }
                 else
@@ -124,7 +124,7 @@ namespace IIMSv1.Controllers
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                     string errors = Global.GetModelStateErrors(ModelState);
-                    TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                    TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                     return RedirectToAction("Details", "User", new { Id = model.UserId });
                 }
             }
@@ -135,7 +135,7 @@ namespace IIMSv1.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = model.UserId });
             }
 
@@ -151,7 +151,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = UserId });
             }
             AccountUser? user = await _context.AccountCredentials
@@ -163,7 +163,7 @@ namespace IIMSv1.Controllers
             var userName = user.Employee.fullName_LFM;
             _context.Employees.Remove(user.Employee);
             await _context.SaveChangesAsync(currUser.Id, "User deleted a user account and it's data");
-            TempData["alert"] = Global.GenerateToast(userName, "User Account Successfully Deleted", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast(userName, "User Account Successfully Deleted", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Success);
             return RedirectToAction("Index", "User");
         }
 
@@ -175,7 +175,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = model.Id });
             }
             AccountUser currUser = await _userManager.GetUserAsync(User);
@@ -205,7 +205,7 @@ namespace IIMSv1.Controllers
 
             await _context.SaveChangesAsync(currUser.Id, "Updated user profile");
 
-            TempData["alert"] = Global.GenerateToast("UPDATE", "Changes Successfully Saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+            TempData["alert"] = Global.GenerateToast("UPDATE", "Changes Successfully Saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
             return RedirectToAction("Details", new { Id = user.Id });
         }
 
@@ -219,7 +219,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = UserId });
             }
             AccountUser? user = await _context.AccountCredentials
@@ -235,7 +235,7 @@ namespace IIMSv1.Controllers
             user.Employee.TimeUpdated = time;
             user.IsActive = false;
             await _context.SaveChangesAsync(accountUser.Id, "Disabled User Account");
-            TempData["alert"] = Global.GenerateToast(user.Employee.fullName_LFM, "User Account Successfully Disabled", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+            TempData["alert"] = Global.GenerateToast(user.Employee.fullName_LFM, "User Account Successfully Disabled", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
             return LocalRedirect(returnUrl);
         }
         // Activate
@@ -248,7 +248,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = UserId });
             }
             AccountUser? user = await _context.AccountCredentials
@@ -269,12 +269,12 @@ namespace IIMSv1.Controllers
                 user.Employee.DateUpdated = date;
                 user.Employee.TimeUpdated = time;
                 await _context.SaveChangesAsync(accountUser.Id, "Enabled User Account");
-                TempData["alert"] = Global.GenerateToast(user.Employee.fullName_LFM, "User Account Successfully Enabled", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(user.Employee.fullName_LFM, "User Account Successfully Enabled", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return LocalRedirect(returnUrl);
             }
             else
             {
-                TempData["alert"] = Global.GenerateToast("ERROR", "Enable department to enable this user account", "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
+                TempData["alert"] = Global.GenerateToast("ERROR", "Enable department to enable this user account", "", Global.BsStatusColor.Danger, Global.BsStatusIcon.Danger);
                 return LocalRedirect(returnUrl);
             }
         }
@@ -301,7 +301,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "User");
             }
             var date = DateOnly.FromDateTime(DateTime.Now);
@@ -348,7 +348,7 @@ namespace IIMSv1.Controllers
                 newuser = await _context.AccountCredentials.SingleAsync(x => x.Id.Equals(newuserid));
                 newuser.UserID = employee.Id;
                 await _context.SaveChangesAsync(currentuser.Id, "User added a new user account");
-                TempData["alert"] = Global.GenerateToast(employee.fullName_LFM, "User Account Successfully Added", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(employee.fullName_LFM, "User Account Successfully Added", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Details", "User", new { Id = newuserid });
             }
             else
@@ -358,7 +358,7 @@ namespace IIMSv1.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "User");
             }
 
@@ -371,7 +371,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Details", "User", new { Id = Id });
             }
 

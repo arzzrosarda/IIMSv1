@@ -272,7 +272,8 @@
         var itemType = $(this).attr("data-TypeId");
         var itemQuantity = $(this).attr("data-Quantity");
         var itemSupplyId = $(this).attr("data-supplyId");
-
+        var container = $("#alertContainer");
+        container.empty();
         $("#ItemIdEdit").val(Id);
         $("#CodeNameEdit").val(itemCode);
         $("#ItemNameEdit").val(itemType);
@@ -326,22 +327,24 @@
             method: "Post",
             data: { ItemId: Id },
             success: function (result) {
-                for (var i = 0; i < result.length; i++) {
-                    $("#Edit_" + result[i].itemSpecValue.itemSpecType.id).attr('checked', true);
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).removeAttr("Disabled", "Disabled");
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).attr("Required", "Required");
-                    $("#EditInput_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecValue);
-                    $("#EditValueof_" + result[i].itemSpecValue.itemSpecType.itemSpecType).val(result[i].itemSpecValue.itemSpecType.id + "," + result[i].itemSpecValue.itemSpecValue)
-                    $(".inputEditSpecs").on("change", function () {
-                        var Value = $(this).val();
-                        var dataValue = $(this).attr("data-value");
-                        var Id = $("#EditIDof_" + dataValue).val();
-                        $("#EditValueof_" + dataValue).val(Id + "," + Value);
-                    });
+                if(result != 0){
+                    var arraySpecs = [];
+                    for (var i = 0; i < result.length; i++) {
+                        $("#Edit_" + result[i].descriptionId).attr('checked', true);
+                        $("#EditInput_" + result[i].desc).removeAttr("Disabled", "Disabled");
+                        $("#EditInput_" + result[i].desc).attr("Required", "Required");
+                        $("#EditInput_" + result[i].desc).val(result[i].value);
+                        $("#EditValueof_" + result[i].desc).val(result[i].descriptionId + "," + result[i].value)
+                        $(".inputEditSpecs").on("change", function () {
+                            var Value = $(this).val();
+                            var dataValue = $(this).attr("data-value");
+                            var Id = $("#EditIDof_" + dataValue).val();
+                            $("#EditValueof_" + dataValue).val(Id + "," + Value);
+                        });
+                    }
+                    OutMainLoader();
+                    $("#modal-edit-item").modal("show");
                 }
-
-                OutMainLoader();
-                $("#modal-edit-item").modal("show");
             }
         });
     });
@@ -1069,17 +1072,44 @@
             closeOnCancel: true
         }).then((result) => {
             if (result.isConfirmed) {
-                var container = $("#SubmitUpdateItemBtnContainer");
-                container.empty();
-                var btn = "";
-                btn += '<button class="btn btn-primary w-100" type="submit" id="updateItemBtn" style="display: none;">Update Item</button>';
-                container.html(btn);
-                $("#updateItemBtn").click();
-                InMainLoader();
+                var thisForm = document.forms.updateItemForm;
+                var form = new FormData(thisForm);
+                 $.ajax({
+                    url: "/Item/CheckforNoChanges",
+                    method: "Post",
+                    data: form,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(data) {
+                        InMainLoader();
+                        if(data == 0){
+                            var container = $("#SubmitUpdateItemBtnContainer");
+                            container.empty();
+                            var btn = "";
+                            btn += '<button class="btn btn-primary w-100" type="submit" id="updateItemBtn" style="display: none;">Update Item</button>';
+                            container.html(btn);
+                            $("#updateItemBtn").click();
+                        }
+                        else {
+                            addAlert();
+                            OutMainLoader();
+                        }
+                    }
+                });
+                
             }
         });
     });
-
+    function addAlert(){
+         var container = $("#alertContainer");
+         container.empty();
+         var alert = '<div class="alert alert-danger alert-dismissible alert-label-icon label-arrow shadow fade show" role="alert">'
+                    + '<i class="ri-error-warning-line label-icon"></i><strong>UPDATE FAILED</strong> - no changes can be made'
+                    + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
+                    +'</div>';
+         container.html(alert);
+    }
     $("#SaveItem").on("click", function () {
         Swal.fire({
             title: "NEW ITEM",

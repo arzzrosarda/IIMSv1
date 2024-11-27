@@ -106,7 +106,7 @@
                                                         <div class="input-group-text">
                                                             <input type="checkbox" id="" class="form-check-input checkboxValue" value="@itemSpec.itemSpecType" required>
                                                         </div>
-                                                        <input class="form-control" id="Valueof_@itemSpec.itemSpecType" name="NewItemSpecs" value="" type="hidden" />
+                                                        <input class="form-control" id="Valueof_@itemSpec.itemSpecType" asp-for="NewItemSpecs" value="" type="hidden" />
                                                         <input class="form-control" id="IDof_@itemSpec.itemSpecType" value="@itemSpec.Id" type="hidden" />
                                                         <input class="form-control" id="@itemSpec.itemSpecType" type="text" disabled autocomplete="off">
                                                     </div>

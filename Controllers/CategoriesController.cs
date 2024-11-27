@@ -95,27 +95,27 @@ namespace IIMSv1.Controllers
             {
                 itemSpecType.itemSpecType = Value;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Edit: Specification Type");
-                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else if (unit != null)
             {
                 unit.UnitName = Value;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Edit: Unit Type");
-                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else if (supplies != null)
             {
                 supplies.supplyName = Value;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Edit: Supply Type");
-                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(Value, "Successfully saved", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
         }
@@ -141,7 +141,7 @@ namespace IIMSv1.Controllers
             {
                 itemSpecType.IsEnabled = true;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Enable: Specification Type");
-                TempData["alert"] = Global.GenerateToast(itemSpecType.itemSpecType, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(itemSpecType.itemSpecType, "Enabled Successfully", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else if (unit != null)
@@ -149,20 +149,20 @@ namespace IIMSv1.Controllers
                 unit.IsEnabled = true;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Enable: Unit Type");
 
-                TempData["alert"] = Global.GenerateToast(unit.UnitName, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(unit.UnitName, "Enabled Successfully", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else if (supplies != null)
             {
                 supplies.IsEnabled = true;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Enable: Supply Type");
-                TempData["alert"] = Global.GenerateToast(supplies.supplyName, "Enabled Successfully", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(supplies.supplyName, "Enabled Successfully", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
             else
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
         }
@@ -187,27 +187,27 @@ namespace IIMSv1.Controllers
             {
                 itemSpecType.IsEnabled = false;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Disabled: Specification Type");
-                TempData["alert"] = Global.GenerateToast(itemSpecType.itemSpecType, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast(itemSpecType.itemSpecType, "Disabled Successfully", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return RedirectToAction("Index", "Categories");
             }
             else if (unit != null)
             {
                 unit.IsEnabled = false;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Disabled: Unit Type");
-                TempData["alert"] = Global.GenerateToast(unit.UnitName, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast(unit.UnitName, "Disabled Successfully", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return RedirectToAction("Index", "Categories");
             }
             else if (supplies != null)
             {
                 supplies.IsEnabled = false;
                 await _context.SaveChangesAsync(currUser.Id, "Categories Disabled: Supply Type");
-                TempData["alert"] = Global.GenerateToast(supplies.supplyName, "Disabled Successfully", "topRight", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
+                TempData["alert"] = Global.GenerateToast(supplies.supplyName, "Disabled Successfully", "", Global.BsStatusColor.Warning, Global.BsStatusIcon.Warning);
                 return RedirectToAction("Index", "Categories");
             }
             else
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
         }
@@ -221,7 +221,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
             else
@@ -242,7 +242,7 @@ namespace IIMSv1.Controllers
                 _context.AddAsync(itemSpecType);
 
                 await _context.SaveChangesAsync(currentUser.Id, "Categories Added: Specification Type");
-                TempData["alert"] = Global.GenerateToast(model.SpecType, "Successfully added in description type", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(model.SpecType, "Successfully added in description type", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
 
@@ -256,7 +256,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
             else
@@ -276,7 +276,7 @@ namespace IIMSv1.Controllers
 
                 _context.AddAsync(newItemUnit);
                 await _context.SaveChangesAsync(currentUser.Id, "Categories Added: Unit Type");
-                TempData["alert"] = Global.GenerateToast(model.Unit, "Successfully added in unit type", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(model.Unit, "Successfully added in unit type", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
         }
@@ -290,7 +290,7 @@ namespace IIMSv1.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = Global.GetModelStateErrors(ModelState);
-                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "topRight", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
+                TempData["alert"] = Global.GenerateToast("", "The system encountered at least 1 error when processing data:" + errors, "", Global.BsStatusColor.Danger, Global.BsStatusIcon.None);
                 return RedirectToAction("Index", "Categories");
             }
             else
@@ -311,7 +311,7 @@ namespace IIMSv1.Controllers
                 _context.AddAsync(newsupplies);
                 await _context.SaveChangesAsync(currentUser.Id, "Categories Added: Supply Type");
 
-                TempData["alert"] = Global.GenerateToast(model.Supply, "Successfully added in supply type", "topRight", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
+                TempData["alert"] = Global.GenerateToast(model.Supply, "Successfully added in supply type", "", Global.BsStatusColor.Success, Global.BsStatusIcon.Success);
                 return RedirectToAction("Index", "Categories");
             }
 

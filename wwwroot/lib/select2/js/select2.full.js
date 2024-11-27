@@ -6003,7 +6003,7 @@ S2.define('select2/core',[
     var $container = $(
       '<span class="select2 select2-container">' +
         '<span class="selection"></span>' +
-        '<span class="dropdown-wrapper" aria-hidden="true"></span>' +
+        '<span class="dropdown-wrapper" ></span>' +
       '</span>'
     );
 
