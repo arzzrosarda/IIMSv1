@@ -30,12 +30,19 @@ namespace IIMSv1.Models
             {
                 var item_name = itemType.itemType + " ";
 
-                List<DescriptionModel> descriptionModels = JsonConvert.DeserializeObject<List<DescriptionModel>>(itemDescription);
+                
 
-                foreach(var desc in descriptionModels)
+                if(itemDescription != null)
                 {
-                    item_name += desc.Details + " ";
+                    List<DescriptionModel> descriptionModels = JsonConvert.DeserializeObject<List<DescriptionModel>>(itemDescription);
+                    foreach (var desc in descriptionModels)
+                    {
+                        item_name += desc.Details + " ";
+                    }
                 }
+
+                
+               
                 return item_name;
             }
         }
