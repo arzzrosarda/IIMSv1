@@ -94,7 +94,7 @@ namespace IIMSv1.Models.Shared
     public class AddSpecModel
     {
         [Required]
-        [Display(Name = "Description Type")]
+        [Display(Name = "Specification Type")]
         [Remote("CheckDuplicateSpecType", "Item")]
         public string SpecType { get; set; } = string.Empty;
 

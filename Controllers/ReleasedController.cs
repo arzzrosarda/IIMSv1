@@ -64,6 +64,7 @@ namespace IIMSv1.Controllers
 
             IQueryable<Released> deptReleased = _context.Released
                 .Include(x => x.item)
+                .ThenInclude(x => x.itemType)
                 .Include(x => x.Department)
                 .Where(x => x.DepartmentId.Contains(deptId) && x.Department.IsActive.Equals(true));
 
@@ -89,10 +90,12 @@ namespace IIMSv1.Controllers
                 }
 
             }
-            IQueryable<Items> item = _context.Items
-                .OrderBy(x => x.ItemName)
+            List<Items> item = _context.Items
+                .Include(x => x.itemType)
+                .OrderBy(x => x.itemType.itemType)
                 .Where(x => x.IsEnabled.Equals(true) && x.itemQuantity != null
-                 && x.ItemName.Contains(searchTxt));
+                 && x.itemType.itemType.Contains(searchTxt))
+                .ToList();
 
             List<_ItemReleasedModel> items1 = new List<_ItemReleasedModel>();
             int index = 0;

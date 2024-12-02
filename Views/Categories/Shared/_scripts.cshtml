@@ -3,21 +3,132 @@
         $("#SpecificationLink").addClass("active")
     });
 
-    $(".btnDisabledType").on("click", function () {
-        var val = $(this).attr("data-typeId");
+    $("#supplyTable").DataTable({
+        pageLength: 10,
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: '<i class="ri-lg ri-add-fill label-icon align-middle fs-16 me-2"></i> Add Supply Type',
+                        className: 'btn btn-label btn-secondary btn-sm waves-effect waves-light',
+                        tag: 'span',
+                        action: function (e, dt, node, config) {
+                            $("#modal-add-supply").modal("show");
+                        }
+                    }
+                ]
+            },
+            bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        },
+        //language: {
+        //    paginate: {
+        //        first: '<i class="fas fa-angle-double-left" style="font-size: 13px;"></i>',
+        //        next: '&nbsp;<i class="fas fa-angle-right" style="font-size: 13px;"></i>',
+        //        previous: '<i class="fas fa-angle-left" style="font-size: 13px;"></i>&nbsp;',
+        //        last: '<i class="fas fa-angle-double-right" style="font-size: 13px;"></i>',
+        //    }
+        //},
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous',
+            }
+        },
+        paging: true,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": true,
+        "bAutoWidth": false
+    });
+    $("#unitTable").DataTable({
+        pageLength: 10,
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+
+                        text: '<i class="ri-lg ri-add-fill label-icon align-middle fs-16 me-2"></i> Add Unit Type',
+                        className: 'btn btn-label btn-secondary btn-sm waves-effect waves-light',
+                        tag: 'span',
+                        action: function (e, dt, node, config) {
+                            $("#modal-add-unit").modal("show");
+                        }
+                    }
+                ]
+            },
+            bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        },
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous',
+            }
+        },
+        paging: true,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": true,
+        "bAutoWidth": false
+    });
+
+    $("#specsTable").DataTable({
+        pageLength: 10,
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: '<i class="ri-lg ri-add-fill label-icon align-middle fs-16 me-2"></i> Add Specification Type',
+                        className: 'btn btn-label btn-secondary btn-sm waves-effect waves-light',
+                        tag: 'span',
+                        action: function (e, dt, node, config) {
+                            $("#modal-add-specs").modal("show");
+                        }
+                    }
+                ]
+            },
+             bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        },
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous',
+            }
+        },
+        paging: true,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": true,
+        "bAutoWidth": false
+    });
+    function disable(val){
         $("#TypeId").val(val);
         $("#modal-disable-type").modal("show");
-    });
-    $(".btnEnableType").on("click", function () {
-        var val = $(this).attr("data-typeId");
+    }
+    function enable(val){
         $("#EnableTypeId").val(val);
         $("#modal-enable-type").modal("show");
-    });
-    $(".btnEditType").on("click", function () {
-        var Id = $(this).attr("data-typeId");
-        var val = $(this).attr("data-ValueEdit");
-        $("#TypeIdEdit").val(Id);
-        $("#ValueEdit").val(val);
+    }
+    function editType(action, supplyId, Id, val){
+        $(".title-type").text(action);
+        $("#action").val(action);
+        $("#supplyIdInput").val(supplyId);
+        $("#TypeIdInput").val(Id);
+        $("#TypeName").val(val);
         $("#modal-edit-type").modal("show");
-    });
+    }
 </script>

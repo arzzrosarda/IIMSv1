@@ -6,12 +6,44 @@
             window.onbeforeunload = null;
         });
     });
-    $("#selectItemTbl").dataTable({
+    $("#selectItemTbl").dataTable({ layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: '<i class="ri-lg ri-checkbox-multiple-fill label-icon align-middle fs-16 me-2"></i> Select All',
+                        className: 'btn btn-label btn-secondary btn-sm waves-effect waves-light',
+                        tag: 'span',
+                        action: function (e, dt, node, config) {
+                            select();
+                        }
+                    },
+                    {
+                        text: '<i class="ri-lg ri-checkbox-multiple-line label-icon align-middle fs-16 me-2"></i> Unselect All',
+                        className: 'btn btn-label btn-light btn-sm waves-effect waves-light',
+                        tag: 'span',
+                        action: function (e, dt, node, config) {
+                            Unselect();
+                        }
+                    }
+                ]
+            },
+             bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        },
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous',
+            }
+        },
+        // pageLength: 10,
         "ordering": true,
-        paging: false,
         "bPaginate": false,
         "bLengthChange": false,
-        "bFilter": false,
+        "bFilter": true,
         "bInfo": false
     });
 
@@ -66,10 +98,10 @@
         $("#click-offcanvas").click();
     }
     $("#btnSelectItemModalOpen").on("click", function () {
-        $(".btnSelectItemCheck").each(function (){
+        $("#selectItemTbl tbody tr").each(function (){
             $(this).removeClass("bg-light");
         });
-        $(".custom-control-input").each(function(){
+        $("#selectItemTbl tbody tr td .custom-control-input").each(function(){
             $(this).prop("checked", false);
         });
         var val = $("#ItemContainerPrev").val();
@@ -86,20 +118,20 @@
     });
 
     function Unselect(){
-        $(".btnSelectItemCheck").each(function (){
+        $("#selectItemTbl tbody tr").each(function (){
             $(this).removeClass("bg-light");
         });
-        $(".custom-control-input").each(function(){
+        $("#selectItemTbl tbody tr .custom-control-input").each(function(){
             $(this).prop("checked", false);
         });
         $("#ItemsSelContainer").val("");
     }
     var array = [];
-     function select(){
-        $(".btnSelectItemCheck").each(function (){
+    function select(){
+        $("#selectItemTbl tbody tr").each(function (){
             $(this).addClass("bg-light");
         });
-        $(".custom-control-input").each(function(){
+        $("#selectItemTbl tbody tr .custom-control-input").each(function(){
             $(this).prop("checked", true);
             var val = $(this).val();
             array.push(val);
@@ -128,7 +160,7 @@
         "bInfo": false
     });
     
-    $(".btnSelectItemCheck").on("click", function(){
+    $("#selectItemTbl").on("click", "tbody tr", function(){
         var dataVal = $(this).attr("data-itemId");
         checkBoxOnClick(dataVal);
     });
@@ -166,7 +198,6 @@
         var value = $("#ItemsSelContainer").val();
         var arrVal = [];
         arrVal = value.split(",");
-        console.log(arrVal.toString());
         $("#ItemContainerPrev").val(value);
         $("#ItemSel").val(arrVal).trigger('change');
     });
@@ -233,9 +264,9 @@
                     }
                     $(".numColumn").text("");
                     var x = 1;
-                    $("#btnDeptCheckifSel").show();
                     var item = response.length;
                     for (var i = 0; i < response.length; i++) {
+                        $("#btnDeptCheckifSel").show();
                         var row = document.getElementById('Rowfor' + response[i].id);
                         if (row == null) {
                             var TotalQuantityText = $("#EstPriceToReleaseContainer").text();
@@ -245,17 +276,16 @@
                                 + '<td class="align-content-center pt-2 pb-2" style="white-space: nowrap;">'
                                 + response[i].itemName
                                 + '</td>'
-                                + '<td id="Quantity' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 allQuantity" style="white-space: nowrap; width: fit-content;">'
+                                + '<td id="Quantity' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 allQuantity" style="width: fit-content;">'
                                 + response[i].itemQuantity
                                 + '</td>'
                                 + '<td class="pt-2 pb-2">'
-                                + '<input id="ItemQuantity' + response[i].id + '" type="hidden" name="ItemQuantity" class="form-select" style="height: 30px; font-size: 12px;"/>'
+                                + '<input id="ItemQuantity' + response[i].id + '" type="hidden" name="ItemQuantity" class="form-control" style="height: 30px; font-size: 12px;"/>'
                                 + '<input id="ItemQValue' + response[i].id + '"  class="form-control ItemQValue" type="number" required max="' + response[i].itemQuantity + '" data-ValueId="' + response[i].id + '" min="1" style="height: 30px; font-size: 12px;"/>'
                                 + '</td>'
-                                + '<td id="Remaining' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 RemainingQuantity" style="white-space: nowrap; width: fit-content;">'
-
+                                + '<td id="Remaining' + response[i].id + '" class="text-center align-content-center pt-2 pb-2 RemainingQuantity" style="width: fit-content;">'
                                 + '</td>'
-                                + '<td class="text-center align-content-center pt-2 pb-2" style="white-space: nowrap; width: fit-content;">'
+                                + '<td class="text-center align-content-center pt-2 pb-2" style="width: fit-content;">'
                                 + response[i].itemUnit.unitName
                                 + '</td>'
                                 + '</tr>';

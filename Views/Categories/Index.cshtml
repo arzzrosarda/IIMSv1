@@ -53,7 +53,7 @@
     @await Html.PartialAsync("~/Views/Categories/Modal/_AddUnit.cshtml", Model.AddUnitInputModel)
     @await Html.PartialAsync("~/Views/Categories/Modal/_DisableTypes.cshtml")
     @await Html.PartialAsync("~/Views/Categories/Modal/_EnableTypes.cshtml")
-    @await Html.PartialAsync("~/Views/Categories/Modal/_EditType.cshtml")
+    @await Html.PartialAsync("~/Views/Categories/Modal/_EditType.cshtml", Model.EditTypeModel)
 }
 @section scripts {
     @await Html.PartialAsync("~/Views/Categories/Shared/_scripts.cshtml")

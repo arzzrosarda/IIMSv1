@@ -1,0 +1,62 @@
+﻿@using IIMSv1.Models.ViewModel
+@model ReleasedViewModel
+<form asp-action="Filter" asp-controller="Released" name="ReleasedForm">
+    <div id="modal-filter" class="modal zoomIn" tabindex="-1" aria-labelledby="modal-filter" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-3">FILTER: </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="hidden" name="search" id="searchInputVal" value="@Model.searchtxt" />
+                    <input class="form-select" type="hidden" name="page" id="pageNumInput" value="@Model.PaginationModel.PageNum" />
+                    <input class="form-select" type="hidden" name="entries" id="pageNumPerInput" value="@Model.perPage" />
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Department: </label>
+                                    <select class="form-select" id="DepartmentSel" name="dept" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                        <option value="">Select</option>
+                                        @foreach (var dept in Model.departments)
+                                        {
+                                            <option value="@dept.Id">@dept.Name - @dept.NormalizedName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Yearly: </label>
+                                </div>
+                                <div class="row">
+                                    <div class="hstack gap-1">
+                                        <span>From:</span>
+                                        <select class="form-select w-100" id="yearly1" name="yearFrom" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;">
+                                            <option value="">Year</option>
+                                        </select>
+                                        <span>To:</span>
+                                        <select class="form-select w-100" id="yearly2" name="yearTo" style="height: 30px; padding-top: 5px; padding-bottom: 5px; font-size: 12px;" disabled>
+                                            <option value="">Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("Index", "Released")" class="btn btn-light waves-effect waves-light">Reset</a>
+                    <button type="submit" class="btn btn-secondary waves-effect waves-light">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

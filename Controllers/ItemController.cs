@@ -68,7 +68,7 @@ namespace IIMSv1.Controllers
                         IsEnabled = true,
                     };
                     _context.Add(newSpecType);
-                    await _context.SaveChanges(currUser.Id, "New Description Type");
+                    await _context.SaveChanges(currUser.Id, "New Specification Type");
 
                     List<ItemSpecType> getType = _context.ItemSpecType
                         .OrderBy(x => x.itemSpecType)
@@ -288,7 +288,7 @@ namespace IIMSv1.Controllers
                             }
                         }
                     }
-                case "Description Type":
+                case "Specification Type":
                     ItemSpecType? SpecType = await _context.ItemSpecType
                         .SingleOrDefaultAsync(x => x.Id != model.typeId && x.itemSpecType.Equals(model.type));
 
@@ -377,7 +377,7 @@ namespace IIMSv1.Controllers
                     return Json(true);
                 }
             }
-            else if(actionSel == "Description Type")
+            else if(actionSel == "Specification Type")
             {
                 ItemSpecType? actType = await _context.ItemSpecType
                   .SingleOrDefaultAsync(x => x.Id != typeId && x.itemSpecType.Equals(type));
@@ -509,7 +509,7 @@ namespace IIMSv1.Controllers
 
             if (type != null)
             {
-                return Json("The type of description already exists.");
+                return Json("The type of specification already exists.");
             }
             else
             {
@@ -714,27 +714,35 @@ namespace IIMSv1.Controllers
 
             if(item != null)
             {
-                List<DescriptionModel> ObjOrderList = JsonConvert.DeserializeObject<List<DescriptionModel>>(item.itemDescription);
-
-                List<EditItemModel> newEditItem = new List<EditItemModel>();
-                foreach(var obj in ObjOrderList)
+                if(item.itemDescription != null)
                 {
-                    ItemSpecType? specType = await _context.ItemSpecType
-                        .SingleOrDefaultAsync(x => x.Id.Equals(obj.Description));
+                    List<DescriptionModel> ObjOrderList = JsonConvert.DeserializeObject<List<DescriptionModel>>(item.itemDescription);
 
-                    if(specType != null)
+                    List<EditItemModel> newEditItem = new List<EditItemModel>();
+                    foreach (var obj in ObjOrderList)
                     {
-                        EditItemModel newEdit = new EditItemModel()
-                        {
-                            DescriptionId = obj.Description,
-                            Desc = specType.itemSpecType,
-                            Value = obj.Details,
-                        };
-                        newEditItem.Add(newEdit);
-                    }
+                        ItemSpecType? specType = await _context.ItemSpecType
+                            .SingleOrDefaultAsync(x => x.Id.Equals(obj.Description));
 
+                        if (specType != null)
+                        {
+                            EditItemModel newEdit = new EditItemModel()
+                            {
+                                DescriptionId = obj.Description,
+                                Desc = specType.itemSpecType,
+                                Value = obj.Details,
+                            };
+                            newEditItem.Add(newEdit);
+                        }
+
+                    }
+                    return Json(newEditItem);
                 }
-                return Json(newEditItem);
+                else
+                {
+                    return Json(0);
+                }
+               
             }
             else
             {

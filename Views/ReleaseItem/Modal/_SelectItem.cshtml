@@ -7,22 +7,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="hstack gap-2">
-                    <button class="btn btn-label btn-secondary waves-effect waves-light btn-sm" onclick="select();">
-                        <i class="ri-lg ri-checkbox-multiple-fill label-icon align-middle fs-16 me-2"></i>
-                        Select All
-                    </button>
-                    <button class="btn btn-label btn-light waves-effect waves-light btn-sm" onclick="Unselect();">
-                        <i class="ri-lg ri-checkbox-multiple-line label-icon align-middle fs-16 me-2"></i>
-                        Unselect All
-                    </button>
-                </div>
+                <input class="form-control" type="hidden" id="ItemsSelContainer" />
                <div class="table-responsive">
                     <table class="table table-bordered table-nowrap responsive" id="selectItemTbl" width="100%">
                         <thead>
                             <tr>
                                 <td class="text-center">
-                                    <input class="form-control" type="hidden" id="ItemsSelContainer" />
                                 </td>
                                 <td>
                                     ITEM NAME

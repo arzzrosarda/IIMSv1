@@ -10,5 +10,6 @@ namespace IIMSv1.Models.ViewModel
         public AddSupplyInputModel AddSupplyInputModel { get; set; } = new AddSupplyInputModel();
         public AddUnitInputModel AddUnitInputModel { get; set; } = new AddUnitInputModel();
         public AddSpecinputModel AddSpecinputModel { get; set; } = new AddSpecinputModel();
+        public EditTypeInputModel EditTypeModel { get; set; } = new EditTypeInputModel();
     }
 }
